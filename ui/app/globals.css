@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: 'Google Sans Flex', 'Google Sans', system-ui, -apple-system, sans-serif;
+  --font-google-sans: 'Google Sans Flex', 'Google Sans', system-ui, -apple-system, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Google Sans Flex', 'Google Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* Swiper Custom Pagination Container & Bullets Centering */
+.tour-pagination {
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  top: auto !important;
+  width: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 24px;
+}
+
+.tour-pagination .swiper-pagination-bullet {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  opacity: 1;
+  margin: 0 3px !important;
+  border-radius: 9999px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.tour-pagination .swiper-pagination-bullet-active {
+  width: 22px !important;
+  height: 9px !important;
+  background: #021b38 !important;
+  border-color: #021b38 !important;
+  border-radius: 9999px !important;
+}
