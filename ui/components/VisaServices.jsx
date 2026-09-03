@@ -143,7 +143,7 @@ export default function VisaServices() {
                   <h3 className="text-xl font-semibold tracking-tight text-white leading-tight">
                     Need Help With Visa?
                   </h3>
-                  <p className="text-xs text-slate-300 font-normal mt-2 leading-relaxed">
+                  <p className="text-sm text-slate-300 font-normal mt-2 leading-relaxed">
                     Our experts will guide you through the entire process, Hassle-free visa assistance for all major countries.
                   </p>
                 </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   FaGlobe,
@@ -18,12 +19,40 @@ import {
   FaShieldHalved,
   FaHeadset,
   FaCreditCard,
+  FaAward,
 } from "react-icons/fa6";
 
 export default function Footer() {
+  const [showWhatsApp, setShowWhatsApp] = React.useState(false);
+  const [isRinging, setIsRinging] = React.useState(false);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  // Show WhatsApp button only after scrolling down 200px
+  React.useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 200) {
+        setShowWhatsApp(true);
+      } else {
+        setShowWhatsApp(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Trigger ring/shake animation every 3 seconds
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setIsRinging(true);
+      setTimeout(() => setIsRinging(false), 1000);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <footer className="w-full bg-[#011226] text-white font-sans border-t border-slate-800/80 relative z-10 overflow-hidden">
@@ -31,42 +60,57 @@ export default function Footer() {
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
-      {/* ================= NEWSLETTER CTA BANNER ================= */}
-      <div className="w-11/12 mx-auto pt-12 pb-10 border-b border-slate-800/80">
-        <div className="relative rounded-2xl bg-gradient-to-r from-[#021b38] via-[#042852] to-[#011630] p-8 lg:p-10 border border-blue-900/40 shadow-2xl overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8">
-          <div className="space-y-4 text-center lg:text-left max-w-xl">
-            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-medium border border-blue-400/30">
-              <FaPaperPlane className="text-amber-400" /> Exclusive Offers
-            </span>
-            <h3 className="text-2xl sm:text-3xl font-medium tracking-tight text-white">
-              Stay Inspired for Your Next Journey
-            </h3>
-            <p className="text-slate-300 text-sm font-normal leading-relaxed">
-              Subscribe to get secret holiday deals, express visa updates, and
-              curated travel guides sent directly to your inbox.
-            </p>
+      {/* ================= PROMO CTA BANNER (MATCHING EXACT REFERENCE) ================= */}
+      <div className="w-11/12 mx-auto py-10  border-b border-slate-800/80">
+        <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-[#021b38] border border-blue-900/40 p-6 sm:p-8 lg:p-10 min-h-[220px] flex flex-col md:flex-row items-center justify-between gap-6">
+          
+          {/* Background Mountain/Hiker Image Overlay */}
+          <div className="absolute inset-0 z-0 pointer-events-none">
+            <Image
+              src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1600&q=85"
+              alt="Hiker overlooking scenic mountain landscape"
+              fill
+              sizes="100vw"
+              quality={90}
+              className="object-cover object-[center_35%]"
+            />
+            {/* Dark Navy Gradient Overlay to ensure text readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#021b38] via-[#021b38]/30 to-[#021b38]/5 w-full " />
+            <div className="absolute inset-0 bg-black/30 md:hidden" />
           </div>
 
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            className="w-full lg:w-auto flex flex-col sm:flex-row items-center gap-3"
-          >
-            <div className="relative w-full sm:w-80">
-              <input
-                type="email"
-                placeholder="Enter your email address..."
-                required
-                suppressHydrationWarning
-                className="w-full px-4 py-3.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 text-sm focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 backdrop-blur-md transition-all"
-              />
+          {/* Left Text Content & Action Buttons */}
+          <div className="relative z-10 space-y-4 max-w-xl text-center md:text-left">
+            <div className="space-y-1">
+              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-white leading-tight">
+                Let's Make Your Next Trip Unforgettable
+              </h3>
+              <p className="text-slate-200 text-xs sm:text-sm font-normal">
+                Get personalized packages, best deals & expert advice.
+              </p>
             </div>
-            <button
-              type="submit"
-              className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-medium text-sm shadow-lg hover:shadow-amber-400/25 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
-            >
-              Subscribe Now
-            </button>
-          </form>
+
+            {/* 2 CTA Action Buttons */}
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-1">
+              <Link
+                href="/contact"
+                className="px-6 py-3 rounded-xl bg-[#ffb703] hover:bg-[#e0a200] text-slate-950 font-semibold text-xs sm:text-sm shadow-md active:scale-95 transition-all duration-200 cursor-pointer"
+              >
+                Get a Free Quote
+              </Link>
+              <a
+                href="https://wa.me/7025144666"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/40 text-white font-semibold text-xs sm:text-sm backdrop-blur-md active:scale-95 transition-all duration-200 cursor-pointer"
+              >
+                <FaWhatsapp className="text-emerald-400 text-base" />
+                <span>Chat on WhatsApp</span>
+              </a>
+            </div>
+          </div>
+
+
         </div>
       </div>
 
@@ -354,6 +398,35 @@ export default function Footer() {
           </div>
         </div>
       </div>
+
+      {/* ================= FLOATING STICKY WHATSAPP BUTTON WITH SHAKE RING ANIMATION ================= */}
+      {showWhatsApp && (
+        <a
+          href="https://wa.me/7025144666"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Chat on WhatsApp"
+          className="fixed bottom-20 md:bottom-32 right-5 md:right-10 z-50 group flex items-center justify-center cursor-pointer focus:outline-none"
+        >
+          {/* Outer Pulsing Glow Rings */}
+          <span className="absolute inline-flex h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-emerald-500/40 animate-ping opacity-75" />
+          <span className="absolute inline-flex h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-emerald-500/20 animate-pulse" />
+
+          {/* Main Floating WhatsApp Circle Button with Ring Shake Animation */}
+          <div
+            className={`relative w-14 h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center text-2xl sm:text-3xl shadow-2xl hover:scale-110 active:scale-95 transition-transform duration-300 ${
+              isRinging ? "" : ""
+            }`}
+          >
+            <FaWhatsapp />
+          </div>
+
+          {/* Tooltip on Hover */}
+          <span className="absolute right-full mr-3 px-3 py-1.5 rounded-lg bg-slate-900 text-white text-xs font-medium whitespace-nowrap shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none border border-slate-700">
+            Chat with us on WhatsApp
+          </span>
+        </a>
+      )}
     </footer>
   );
 }

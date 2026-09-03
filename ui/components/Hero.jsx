@@ -115,14 +115,14 @@ export default function Hero() {
 
             {/* Feature Badges Row */}
             <div className="hidden md:flex flex-wrap items-center gap-2.5 sm:gap-3.5 pt-1">
-              <div className="inline-flex items-center gap-2.5 px-4 py-4 rounded-full bg-white backdrop-blur-sm shadow-sm text-xs font-medium text-[#021b38]">
+              <div className="inline-flex items-center gap-2.5 px-4 py-3.5 rounded-full bg-white backdrop-blur-sm shadow-sm text-xs font-medium text-[#021b38]">
                 <span className="flex items-center justify-center text-blue-900 text-xs shadow-xs">
                   <FaShieldHalved className="text-lg" />
                 </span>
                 <span>Verified Travel Agency</span>
               </div>
 
-              <div className="inline-flex items-center gap-2.5 px-4 py-4 rounded-full bg-white backdrop-blur-sm shadow-sm text-xs font-medium text-[#021b38]">
+              <div className="inline-flex items-center gap-2.5 px-4 py-3.5 rounded-full bg-white backdrop-blur-sm shadow-sm text-xs font-medium text-[#021b38]">
                 <span className="flex items-center justify-center text-blue-900 text-xs shadow-xs">
                   <FaAward className="text-lg" />
                 </span>
@@ -131,7 +131,7 @@ export default function Hero() {
 
            
 
-              <div className="inline-flex items-center gap-2.5 px-4 py-4 rounded-full bg-white backdrop-blur-sm shadow-sm text-xs font-medium text-[#021b38]">
+              <div className="inline-flex items-center gap-2.5 px-4 py-3.5 rounded-full bg-white backdrop-blur-sm shadow-sm text-xs font-medium text-[#021b38]">
                 <span className="flex items-center justify-center text-blue-900 text-xs shadow-xs">
                   <FaLock className="text-lg" />
                 </span>
@@ -148,7 +148,7 @@ export default function Hero() {
                 Explore Holidays
               </Link>
               <a
-                href="https://wa.me/919995123456"
+                href="https://wa.me/7025144666"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2.5 px-5 py-4 rounded-xl bg-white border border-slate-300 text-slate-900 font-semibold text-xs md:text-sm shadow-xs hover:bg-slate-50 hover:shadow-sm active:scale-95 transition-all duration-200"
