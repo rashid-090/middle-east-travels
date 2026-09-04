@@ -8,6 +8,10 @@ export const tourPackagesData = [
     badgeType: "fire-orange",
     image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80",
     link: "/holidays/thailand",
+    highlights: [
+      "Hotel Accommodation & Daily Breakfast",
+      "Phuket & Krabi Island Speedboat Tours",
+    ],
   },
   {
     id: 2,
@@ -18,6 +22,10 @@ export const tourPackagesData = [
     badgeType: "fire-red",
     image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=600&q=80",
     link: "/holidays/bali",
+    highlights: [
+      "Private Pool Villa Stay & Breakfast",
+      "Tanah Lot Temple & Kintamani Volcano Tour",
+    ],
   },
   {
     id: 3,
@@ -28,6 +36,10 @@ export const tourPackagesData = [
     badgeType: "tag-emerald",
     image: "https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=600&q=80",
     link: "/holidays/malaysia",
+    highlights: [
+      "4-Star Kuala Lumpur Hotel & Breakfast",
+      "Genting Highlands Cable Car & Batu Caves",
+    ],
   },
   {
     id: 4,
@@ -38,6 +50,10 @@ export const tourPackagesData = [
     badgeType: "crown-amber",
     image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=600&q=80",
     link: "/holidays/dubai",
+    highlights: [
+      "4-Star Luxury Hotel with Daily Breakfast",
+      "Desert Safari & BBQ Dinner with Belly Dance",
+    ],
   },
   {
     id: 5,
@@ -48,6 +64,10 @@ export const tourPackagesData = [
     badgeType: "sparkles-purple",
     image: "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=600&q=80",
     link: "/holidays/vietnam",
+    highlights: [
+      "Halong Bay 5-Star Cruise Overnight Stay",
+      "Hanoi & Da Nang Guided Sightseeing",
+    ],
   },
   {
     id: 6,
@@ -58,6 +78,10 @@ export const tourPackagesData = [
     badgeType: "crown-amber",
     image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=600&q=80",
     link: "/holidays/dubai",
+    highlights: [
+      "4-Star Luxury Hotel with Daily Breakfast",
+      "Desert Safari & BBQ Dinner with Belly Dance",
+    ],
   },
   {
     id: 7,
@@ -68,6 +92,103 @@ export const tourPackagesData = [
     badgeType: "sparkles-purple",
     image: "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=600&q=80",
     link: "/holidays/vietnam",
+    highlights: [
+      "Halong Bay 5-Star Cruise Overnight Stay",
+      "Hanoi & Da Nang Guided Sightseeing",
+    ],
+  },
+];
+
+export const visaPackagesData = [
+  {
+    id: 1,
+    title: "UAE Express Tourist Visa",
+    duration: "24 - 48 Hours Processing",
+    price: "From ₹6,999/-",
+    badge: "Express 24H",
+    badgeType: "fire-orange",
+    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=600&q=80",
+    flagUrl: "https://flagcdn.com/w160/ae.png",
+    link: "/visa/uae",
+    highlights: [
+      "Passport Copy & Photo Only Needed",
+      "99.8% High Approval Success Rate",
+    ],
+  },
+  {
+    id: 2,
+    title: "UK Standard Visitor Visa",
+    duration: "10 - 15 Working Days",
+    price: "From ₹14,999/-",
+    badge: "Expert Review",
+    badgeType: "crown-amber",
+    image: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=600&q=80",
+    flagUrl: "https://flagcdn.com/w160/gb.png",
+    link: "/visa/uk",
+    highlights: [
+      "Complete Form Filling & Document Review",
+      "VFS Appointment Slot Booking Included",
+    ],
+  },
+  {
+    id: 3,
+    title: "Schengen Tourist Visa",
+    duration: "12 - 20 Working Days",
+    price: "From ₹12,499/-",
+    badge: "27 Countries",
+    badgeType: "tag-emerald",
+    image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=600&q=80",
+    flagUrl: "https://flagcdn.com/w160/eu.png",
+    link: "/visa/schengen",
+    highlights: [
+      "Valid Across All 27 European Countries",
+      "Travel Insurance & Cover Letter Support",
+    ],
+  },
+  {
+    id: 4,
+    title: "USA B1/B2 Visitor Visa",
+    duration: "Priority Appointment Slots",
+    price: "From ₹16,999/-",
+    badge: "Slot Priority",
+    badgeType: "sparkles-purple",
+    image: "https://images.unsplash.com/photo-1501466044931-62695aada8e9?auto=format&fit=crop&w=600&q=80",
+    flagUrl: "https://flagcdn.com/w160/us.png",
+    link: "/visa/usa",
+    highlights: [
+      "DS-160 Form Assistance & Slot Booking",
+      "Mock Embassy Interview Preparation",
+    ],
+  },
+  {
+    id: 5,
+    title: "Saudi Tourist & Umrah Visa",
+    duration: "24 - 72 Hours Processing",
+    price: "From ₹8,999/-",
+    badge: "1 Year Multiple",
+    badgeType: "fire-red",
+    image: "https://images.unsplash.com/photo-1586724237569-f3d0c1dee8c6?auto=format&fit=crop&w=600&q=80",
+    flagUrl: "https://flagcdn.com/w160/sa.png",
+    link: "/visa/saudi",
+    highlights: [
+      "Multiple Entry eVisa Valid for 1 Year",
+      "Full Medical Insurance Cover Included",
+    ],
+  },
+  {
+    id: 6,
+    title: "Singapore Tourist Visa",
+    duration: "3 - 5 Working Days",
+    price: "From ₹3,999/-",
+    badge: "Easy Process",
+    badgeType: "tag-emerald",
+    image: "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?auto=format&fit=crop&w=600&q=80",
+    flagUrl: "https://flagcdn.com/w160/sg.png",
+    link: "/visa/singapore",
+    highlights: [
+      "Authorized Agent eVisa Direct Processing",
+      "Minimal Documentation & Fast Turnaround",
+    ],
   },
 ];
 
@@ -122,45 +243,51 @@ export const visaCountriesData = visaCountriesByCategory[1];
 export const testimonialsData = [
   {
     id: 1,
-    quote: "Our trip to Thailand was perfectly planned. Everything was smooth and the team was super supportive throughout.",
-    name: "Anjali & Rohit",
-    location: "Kochi",
+    quote: "I had a wonderful experience while planning my recent family trip to Vietnam. Everything was well-organized and smooth from start to finish. I would especially like to appreciate Sreya for her dedication.",
+    name: "DIVYA P K",
+    branch: "Calicut Branch",
+    initials: "DP",
+    initialBg: "bg-pink-600",
+    rating: 5,
+    timeAgo: "3 months ago",
+    location: "Calicut",
     avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
   },
   {
     id: 2,
-    quote: "Got my UK tourist visa without any hassle. Great service and very professional team!",
-    name: "Jithin Thomas",
-    location: "Calicut",
+    quote: "Got my UK tourist visa without any hassle. Great service and very professional team! Special thanks for guiding me step-by-step through the documentation process.",
+    name: "JITHIN THOMAS",
+    branch: "Kochi Branch",
+    initials: "JT",
+    initialBg: "bg-blue-600",
+    rating: 5,
+    timeAgo: "1 month ago",
+    location: "Kochi",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
   },
   {
     id: 3,
-    quote: "Amazing experience with Middle East Travels. Best prices and excellent customer support.",
-    name: "Fathima Nazera",
+    quote: "Amazing experience with Middle East Travels for our Dubai family vacation. Best flight prices, luxury hotel bookings, and excellent 24/7 customer support.",
+    name: "FATHIMA NAZERA",
+    branch: "Malappuram Branch",
+    initials: "FN",
+    initialBg: "bg-emerald-600",
+    rating: 5,
+    timeAgo: "2 weeks ago",
     location: "Malappuram",
     avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80",
   },
   {
     id: 4,
-    quote: "Our trip to Thailand was perfectly planned. Everything was smooth and the team was super supportive throughout.",
-    name: "Anjali & Rohit",
+    quote: "Our Thailand honeymoon package was perfectly planned. From island speedboat transfers to resort arrangements, everything was smooth and memorable.",
+    name: "ANJALI & ROHIT",
+    branch: "Kochi Branch",
+    initials: "AR",
+    initialBg: "bg-purple-600",
+    rating: 5,
+    timeAgo: "2 months ago",
     location: "Kochi",
     avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
-  },
-  {
-    id: 5,
-    quote: "Got my UK tourist visa without any hassle. Great service and very professional team!",
-    name: "Jithin Thomas",
-    location: "Calicut",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
-  },
-  {
-    id: 6,
-    quote: "Amazing experience with Middle East Travels. Best prices and excellent customer support.",
-    name: "Fathima Nazera",
-    location: "Malappuram",
-    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80",
   },
 ];
 
@@ -212,11 +339,11 @@ export const blogsData = [
 export const heroBanners = [
   {
     id: 1,
-    bgImage: "https://images.unsplash.com/photo-1551418843-01c6b62e864d?q=100",
+    bgImage: "https://images.unsplash.com/photo-1540202404-a2f29016b523?q=100",
   },
   {
     id: 2,
-    bgImage: "https://images.unsplash.com/photo-1505228395891-9a51e7e86bf6?q=100",
+    bgImage: "https://images.unsplash.com/photo-1558102822-da570eb113ed?q=100",
   },
 ];
 

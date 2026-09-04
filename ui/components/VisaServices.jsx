@@ -3,186 +3,175 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
 import {
-  FaPassport,
-  FaMagnifyingGlass,
-  FaBriefcase,
-  FaLocationDot,
-  FaWhatsapp,
-  FaEllipsis,
+  FaArrowRight,
+  FaFire,
+  FaCrown,
+  FaStar,
+  FaTag,
 } from "react-icons/fa6";
-import { visaCategoriesData, visaCountriesByCategory } from "@/data/allData.js";
+import { HiSparkles } from "react-icons/hi2";
+import { visaPackagesData } from "@/data/allData.js";
 
-const getCategoryIcon = (iconType) => {
-  switch (iconType) {
-    case "tourist":
-      return <FaPassport className="text-[#021B38] text-sm" />;
-    case "family":
-      return <FaMagnifyingGlass className="text-[#021B38] text-sm" />;
-    case "business":
-      return <FaBriefcase className="text-[#021B38] text-sm" />;
-    case "transit":
-      return <FaLocationDot className="text-[#021B38] text-sm" />;
+import "swiper/css";
+
+const getBadgeIcon = (type) => {
+  switch (type) {
+    case "fire-orange":
+    case "fire-red":
+      return <FaFire className="text-orange-500 text-xs" />;
+    case "tag-emerald":
+      return <FaTag className="text-emerald-500 text-xs" />;
+    case "crown-amber":
+      return <FaCrown className="text-amber-500 text-xs" />;
+    case "sparkles-purple":
+      return <HiSparkles className="text-purple-500 text-xs" />;
     default:
-      return <FaPassport className="text-[#021B38] text-sm" />;
+      return <FaStar className="text-amber-400 text-xs" />;
   }
 };
 
 export default function VisaServices() {
-  const [activeCategory, setActiveCategory] = useState(1);
-
-  const currentCountries = visaCountriesByCategory[activeCategory] || visaCountriesByCategory[1];
+  const [swiperRef, setSwiperRef] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <section className="w-full py-6 sm:py-8 font-sans">
-      <div className="w-11/12 mx-auto">
-        <div className="bg-[#f4f4f4] rounded-3xl p-6 sm:p-8 lg:p-9 border border-blue-100/60 shadow-xs">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
-            
-            {/* LEFT MAIN VISA SECTION (8 or 9 Cols) */}
-            <div className="lg:col-span-9 flex flex-col justify-between space-y-6">
-              
-              {/* Header Title & Subtitle */}
-              <div>
-                <h2 className="text-2xl sm:text-3xl font-semibold text-[#021b38] tracking-tight">
-                  Visa Services
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-500 font-normal mt-1">
-                  Hassle-free visa assistance for all major countries
-                </p>
-              </div>
+    <section className="w-full py-12 lg:py-16 bg-slate-50 font-sans">
+      <div className="w-11/12 mx-auto space-y-6">
+        
+        {/* Section Header Row */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-semibold text-[#021b38] tracking-tight">
+              Visa Services
+            </h2>
+          </div>
 
-              {/* Category Sidebar & Country Cards Row */}
-              <div className="flex flex-col md:flex-row items-center gap-4 lg:gap-6">
-                
-                {/* Left Vertical Category List */}
-                <div className="w-full md:w-48 flex md:flex-col gap-2 overflow-x-auto pb-2 md:pb-0 flex-shrink-0">
-                  {visaCategoriesData.map((cat) => {
-                    const isActive = activeCategory === cat.id;
-                    return (
-                      <button
-                        key={cat.id}
-                        onClick={() => setActiveCategory(cat.id)}
-                        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 text-left whitespace-nowrap cursor-pointer ${
-                          isActive
-                            ? "bg-white text-[#021b38] shadow-xs"
-                            : "text-slate-700 hover:bg-white/60"
-                        }`}
-                      >
-                        <span className="w-7 h-7 rounded-lg bg-blue-50/80 flex items-center justify-center flex-shrink-0">
-                          {getCategoryIcon(cat.iconType)}
-                        </span>
-                        <span>{cat.name}</span>
-                      </button>
-                    );
-                  })}
-                </div>
+          <Link
+            href="/visa"
+            className="group flex items-center gap-2 text-sm hover:text-[#021b38] text-[#7d8083] transition-colors"
+          >
+            <span>View All Visas</span>
+            <FaArrowRight className="text-xs transition-transform duration-200 group-hover:translate-x-1" />
+          </Link>
+        </div>
 
-                {/* Country Cards Horizontal Grid */}
-                <div className="flex-1 w-full grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2.5">
-                  {currentCountries.map((country) => (
-                    <Link
-                      key={country.id}
-                      href={country.link}
-                      className="bg-white rounded-2xl p-2.5 sm:p-3 flex flex-col items-center justify-center text-center shadow-xs border border-slate-200/60 hover:shadow-md transition-all duration-300 group aspect-[4/5]"
-                    >
-                      {country.isMore ? (
-                        <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-slate-100 text-[#021b38] flex items-center justify-center text-base sm:text-lg group-hover:bg-[#021b38] group-hover:text-white transition-colors duration-300">
-                          <FaEllipsis />
-                        </div>
-                      ) : (
-                        <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden shadow-xs border border-slate-100 group-hover:scale-105 transition-transform duration-300">
+        {/* Swiper Carousel Container */}
+        <div className="relative">
+          <Swiper
+            onSwiper={setSwiperRef}
+            onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+            modules={[Autoplay]}
+            spaceBetween={15}
+            slidesPerView={1.08}
+            loop={true}
+            autoplay={{ delay: 4500, disableOnInteraction: false }}
+            breakpoints={{
+              640: {
+                slidesPerView: 1.8,
+                spaceBetween: 15,
+              },
+              768: {
+                slidesPerView: 2.4,
+                spaceBetween: 15,
+              },
+              1024: {
+                slidesPerView: 4.2,
+                spaceBetween: 15,
+              },
+            }}
+            className="w-full !pb-4"
+          >
+            {visaPackagesData.map((item) => (
+              <SwiperSlide key={item.id} className="h-auto">
+                <Link
+                  href={item.link}
+                  className="bg-white rounded-[2.25rem] overflow-hidden border border-slate-200/80 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full group block"
+                >
+                  <div>
+                    {/* Top Smooth Rounded Image Container */}
+                    <div className="relative w-full aspect-[4/3]  overflow-hidden mb-4 bg-slate-100">
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+                        quality={90}
+                        className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                      />
+
+                      {/* Top Left Flag Badge */}
+                      {item.flagUrl && (
+                        <div className="absolute top-3 left-3 z-10 w-9 h-9 rounded-full overflow-hidden border-2 border-white shadow-md">
                           <Image
-                            src={country.flagUrl}
-                            alt={country.name}
+                            src={item.flagUrl}
+                            alt="Country Flag"
                             fill
-                            sizes="48px"
-                            className="object-cover object-center"
+                            sizes="36px"
+                            className="object-cover"
                             unoptimized
                           />
                         </div>
                       )}
 
-                      <span className="text-[11px] sm:text-xs font-semibold text-[#021b38] mt-2 leading-tight group-hover:text-blue-700 transition-colors">
-                        {country.name}
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-
-              </div>
-
-              {/* Bottom Action Buttons Row */}
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
-                <Link
-                  href="/visa/check-requirements"
-                  className="bg-[#021b38] text-white px-6 py-4 rounded-xl text-xs sm:text-sm font-semibold hover:bg-[#073163] shadow-md transition-all active:scale-95 cursor-pointer text-center"
-                >
-                  Check Visa Requirements
-                </Link>
-
-                <a
-                  href="https://wa.me/919995123456"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="bg-white text-[#021b38] border border-slate-200/90 px-6 py-4 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-50 flex items-center gap-2 shadow-xs transition-all active:scale-95 cursor-pointer"
-                >
-                  <FaWhatsapp className="text-emerald-500 text-lg" />
-                  <span>Talk to a Visa Expert</span>
-                </a>
-              </div>
-
-            </div>
-
-            {/* RIGHT SIDE STANDALONE PROMO CARD (3 Cols) */}
-            <div className="lg:col-span-3 flex group">
-              <div className="w-full bg-[#021b38] rounded-2xl p-6 text-white flex flex-col justify-between shadow-lg relative overflow-hidden border border-blue-900/40">
-                
-                {/* Promo Card Header */}
-                <div>
-                  <h3 className="text-xl font-semibold tracking-tight text-white leading-tight">
-                    Need Help With Visa?
-                  </h3>
-                  <p className="text-sm text-slate-300 font-normal mt-2 leading-relaxed">
-                    Our experts will guide you through the entire process, Hassle-free visa assistance for all major countries.
-                  </p>
-                </div>
-
-                {/* Passports Illustration Image */}
-                <div className="relative w-full h-28 my-3 flex items-center justify-center -mb-3 md:-mb-24">
-                  {/* Decorative Stacked Passport Cards */}
-                  <div className="relative w-28 h-24 ">
-                    {/* Red Passport Card */}
-                    <div className="group-hover:translate-y-2 duration-200 transition-all absolute -left-3 bottom-0 w-16 h-20 bg-red-900/90 rounded-lg shadow-lg border border-red-700/50 transform -rotate-12 flex flex-col items-center justify-center text-amber-300 p-1">
-                      <FaPassport className="text-xl" />
-                      <span className="text-[8px] font-bold mt-1 uppercase tracking-widest text-amber-200">
-                        PASSPORT
-                      </span>
                     </div>
 
-                    {/* Green Visa Document Card */}
-                    <div className="group-hover:translate-y-4 duration-200 transition-all absolute right-0 top-5 w-16 h-20 bg-emerald-800/90 rounded-lg shadow-lg border border-emerald-600/50 transform rotate-12 flex flex-col items-center justify-center text-emerald-200 p-1">
-                      <FaPassport className="text-xl" />
-                      <span className="text-[8px] font-bold mt-1 uppercase tracking-widest text-emerald-100">
-                        VISA
-                      </span>
+                    <div className="p-5 pt-0">
+                      {/* Title */}
+                      <h3 className="text-lg font-semibold text-slate-900 leading-snug tracking-tight mb-1">
+                        {item.title}
+                      </h3>
+
+                      {/* Duration / Processing Time */}
+                      <p className="text-xs text-slate-500 font-normal mb-3">
+                        {item.duration}
+                      </p>
+
+                      {/* Bottom Border & Price Section */}
+                      <div className="border-t border-slate-100 pt-4 mt-auto flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <span className="text-[11px] text-slate-400 font-normal block leading-tight">
+                            Starting from
+                          </span>
+                          <span className="text-lg sm:text-xl font-bold text-slate-950 tracking-tight">
+                            {item.price}
+                          </span>
+                        </div>
+
+                        <div className="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-primary text-slate-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs">
+                          <FaArrowRight className="text-xs" />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Get Free Consultation Button */}
-                <Link
-                  href="/contact"
-                  className="w-full z-10 bg-[#ffb703] hover:bg-amber-400 text-[#021b38] font-medium py-3 px-4 rounded-xl text-xs sm:text-sm text-center shadow-md transition-all active:scale-95 block cursor-pointer"
-                >
-                  Get Free Consultation
                 </Link>
+              </SwiperSlide>
+            ))}
+          </Swiper>
 
-              </div>
-            </div>
-
+          {/* Centered Pagination Dots */}
+          <div className="flex items-center justify-center gap-2 pt-5">
+            {visaPackagesData.map((_, dotIndex) => {
+              const isActive = activeIndex === dotIndex;
+              return (
+                <button
+                  key={dotIndex}
+                  onClick={() => swiperRef?.slideToLoop(dotIndex)}
+                  aria-label={`Go to slide ${dotIndex + 1}`}
+                  className={`transition-all duration-300 rounded-full cursor-pointer border ${
+                    isActive
+                      ? "w-4 h-2 bg-[#021b38] border-[#021b38]"
+                      : "w-2 h-2 bg-white border-slate-300 hover:border-[#021b38]"
+                  }`}
+                />
+              );
+            })}
           </div>
         </div>
+
       </div>
     </section>
   );

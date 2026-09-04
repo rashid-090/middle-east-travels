@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import {
@@ -28,10 +29,26 @@ const navItems = [
     href: "/holidays",
     active: true,
     dropdown: [
-      { name: "Dubai Luxury Getaways", href: "/holidays/dubai", desc: "5-Star Resorts & Desert Safaris" },
-      { name: "Saudi Heritage Tours", href: "/holidays/saudi", desc: "Explore AlUla & Historical Riyadh" },
-      { name: "Oman Nature & Fjords", href: "/holidays/oman", desc: "Mountain Treks & Coastline Cruises" },
-      { name: "Qatar Cultural Escapes", href: "/holidays/qatar", desc: "Museums, Souqs & Modern Marvels" },
+      {
+        name: "Dubai Luxury Getaways",
+        href: "/holidays/dubai",
+        desc: "5-Star Resorts & Desert Safaris",
+      },
+      {
+        name: "Saudi Heritage Tours",
+        href: "/holidays/saudi",
+        desc: "Explore AlUla & Historical Riyadh",
+      },
+      {
+        name: "Oman Nature & Fjords",
+        href: "/holidays/oman",
+        desc: "Mountain Treks & Coastline Cruises",
+      },
+      {
+        name: "Qatar Cultural Escapes",
+        href: "/holidays/qatar",
+        desc: "Museums, Souqs & Modern Marvels",
+      },
     ],
   },
   { name: "Ticketing", href: "/flights" },
@@ -39,18 +56,42 @@ const navItems = [
     name: "Visa Services",
     href: "/visa",
     dropdown: [
-      { name: "Tourist Visa", href: "/visa/tourist", desc: "30 & 90 Days Single/Multiple Entry" },
-      { name: "Business Visa", href: "/visa/business", desc: "Fast-track Corporate & Trade Visas" },
-      { name: "Express 24h Processing", href: "/visa/express", desc: "Urgent Travel Assistance" },
+      {
+        name: "Tourist Visa",
+        href: "/visa/tourist",
+        desc: "30 & 90 Days Single/Multiple Entry",
+      },
+      {
+        name: "Business Visa",
+        href: "/visa/business",
+        desc: "Fast-track Corporate & Trade Visas",
+      },
+      {
+        name: "Express 24h Processing",
+        href: "/visa/express",
+        desc: "Urgent Travel Assistance",
+      },
     ],
   },
   {
     name: "Other services",
     href: "/services",
     dropdown: [
-      { name: "VIP Airport Transfer", href: "/services/transfer", desc: "Chauffeur Pickups & Luxury Cars" },
-      { name: "Comprehensive Travel Insurance", href: "/services/insurance", desc: "Worldwide Medical & Trip Cover" },
-      { name: "Custom Group Itineraries", href: "/services/itinerary", desc: "Tailored Packages for Families" },
+      {
+        name: "VIP Airport Transfer",
+        href: "/services/transfer",
+        desc: "Chauffeur Pickups & Luxury Cars",
+      },
+      {
+        name: "Comprehensive Travel Insurance",
+        href: "/services/insurance",
+        desc: "Worldwide Medical & Trip Cover",
+      },
+      {
+        name: "Custom Group Itineraries",
+        href: "/services/itinerary",
+        desc: "Tailored Packages for Families",
+      },
     ],
   },
   { name: "About us", href: "/about" },
@@ -99,7 +140,7 @@ export default function Header() {
         gsap.fromTo(
           topBarRef.current,
           { y: -30, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" }
+          { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
         );
       }
       // Logo bounce subtle entrance
@@ -107,7 +148,13 @@ export default function Header() {
         gsap.fromTo(
           logoRef.current,
           { scale: 0.9, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.7, delay: 0.2, ease: "back.out(1.4)" }
+          {
+            scale: 1,
+            opacity: 1,
+            duration: 0.7,
+            delay: 0.2,
+            ease: "back.out(1.4)",
+          },
         );
       }
       // Pulse glow on Get a Quote button
@@ -115,7 +162,13 @@ export default function Header() {
         gsap.fromTo(
           quoteBtnRef.current,
           { scale: 0.95, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.5, delay: 0.4, ease: "power3.out" }
+          {
+            scale: 1,
+            opacity: 1,
+            duration: 0.5,
+            delay: 0.4,
+            ease: "power3.out",
+          },
         );
       }
     });
@@ -172,36 +225,36 @@ export default function Header() {
       {/* ================= TOP ANNOUNCEMENT / CONTACT BAR ================= */}
       <div
         ref={topBarRef}
-        className="bg-[#021b38] hidden md:block text-white text-xs sm:text-sm py-2 border-b border-white/10"
+        className="bg-secondary hidden md:block text-white text-xs sm:text-sm py-2 border-b border-white/10"
       >
         <div className="w-10/12 mx-auto flex flex-col md:flex-row items-center justify-between gap-2 md:gap-0">
           {/* Left Side: Contact Information */}
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 sm:gap-6">
             <a
-              href="tel:+919995123456"
-              className="flex items-center gap-2 hover:text-amber-400 transition-colors group"
+              href="tel:+918714806661"
+              className="flex items-center gap-2 hover:text-primary transition-colors group"
             >
-              <span className="rounded-full bg-white/10 p-2 group-hover:bg-amber-400 group-hover:text-[#021b38] transition-all">
+              <span className="rounded-full bg-white/10 p-2 group-hover:bg-primary group-hover:text-[#021b38] transition-all">
                 <FaPhone className="text-xs" />
               </span>
-              <span className="tracking-wide">+91 9995 123 456</span>
+              <span className="tracking-wide">+91 8714806661</span>
             </a>
 
             <a
-              href="mailto:info@middleeasttravels.com"
-              className="flex items-center gap-2 hover:text-amber-400 transition-colors group"
+              href="mailto:info@middleeasttravels.in"
+              className="flex items-center gap-2 hover:text-primary transition-colors group"
             >
-              <span className="rounded-full bg-white/10 p-2 group-hover:bg-amber-400 group-hover:text-[#021b38] transition-all">
+              <span className="rounded-full bg-white/10 p-2 group-hover:bg-primary group-hover:text-[#021b38] transition-all">
                 <FaEnvelope className="text-xs" />
               </span>
-              <span className="tracking-wide">info@middleeasttravels.com</span>
+              <span className="tracking-wide">info@middleeasttravels.in</span>
             </a>
           </div>
 
           {/* Right Side: Customer Support & Social Links */}
           <div className="flex items-center gap-4 sm:gap-6">
             <div className="flex items-center gap-2 text-white/90">
-              <FaHeadset className="text-amber-400 text-sm animate-pulse" />
+              <FaHeadset className="text-primary text-sm animate-pulse" />
               <span className="text-xs tracking-tight">
                 24/7 Customer Support
               </span>
@@ -212,38 +265,30 @@ export default function Header() {
             {/* Social Media Icons */}
             <div className="flex items-center gap-2.5">
               <a
-                href="https://facebook.com"
+                href="https://m.facebook.com/middleeasttravelsandtourism?mibextid=LQQJ4d"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Facebook"
-                className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-white hover:scale-110 hover:shadow-md transition-transform"
+                className="w-7 h-7 rounded-full bg-white/10 hover:bg-primary flex items-center justify-center text-white hover:scale-110 hover:shadow-md transition-transform"
               >
                 <FaFacebookF className="text-xs" />
               </a>
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/middleeast_travels/"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Instagram"
-                className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-white hover:scale-110 hover:shadow-md transition-transform"
+                className="w-7 h-7 rounded-full bg-white/10 hover:bg-primary flex items-center justify-center text-white hover:scale-110 hover:shadow-md transition-transform"
               >
                 <FaInstagram className="text-xs" />
               </a>
+
               <a
-                href="https://youtube.com"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="YouTube"
-                className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-white hover:scale-110 hover:shadow-md transition-transform"
-              >
-                <FaYoutube className="text-xs" />
-              </a>
-              <a
-                href="https://wa.me/919995123456"
+                href="https://wa.me/7025144666"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="WhatsApp"
-                className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-white hover:scale-110 hover:shadow-md transition-transform"
+                className="w-7 h-7 rounded-full bg-white/10 hover:bg-primary flex items-center justify-center text-white hover:scale-110 hover:shadow-md transition-transform"
               >
                 <FaWhatsapp className="text-sm" />
               </a>
@@ -260,20 +305,19 @@ export default function Header() {
       >
         <div className="w-10/12 mx-auto flex items-center justify-between">
           {/* Logo Section */}
-          <Link href="/" className="flex items-center gap-3 group focus:outline-none">
-            <div
-              ref={logoRef}
-              className="relative w-9 h-9 rounded-full bg-gradient-to-br from-[#021b38] to-[#0a417a] flex items-center justify-center text-white shadow-md group-hover:shadow-lg group-hover:scale-105 transition-all duration-300"
-            >
-              <FaGlobe className="text-2xl text-blue-200" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-lg tracking-tight text-[#021b38] leading-none group-hover:text-blue-900 transition-colors">
-                MIDDLE EAST
-              </span>
-              <span className="font-medium text-[10px] -tracking-wider  text-blue-600 leading-tight">
-                T R A V E L S
-              </span>
+          <Link
+            href="/"
+            className="flex items-center gap-3 group focus:outline-none"
+          >
+            
+            <div className="relative h-10 w-40">
+              <Image
+                src="/middleeast_black_logo.webp"
+                alt="Logo"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
           </Link>
 
@@ -298,7 +342,9 @@ export default function Header() {
                   {item.dropdown && (
                     <FaCaretDown
                       className={`text-xs text-[#021b38] transition-transform duration-200 ${
-                        activeDropdown === item.name ? "rotate-180 text-[#021b38]" : ""
+                        activeDropdown === item.name
+                          ? "rotate-180 text-[#021b38]"
+                          : ""
                       }`}
                     />
                   )}
@@ -308,7 +354,11 @@ export default function Header() {
                     <motion.div
                       layoutId="activeUnderline"
                       className="absolute bottom-0 left-3 right-3 h-[2px]  bg-[#021B38]"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 380,
+                        damping: 30,
+                      }}
                     />
                   )}
                 </Link>
@@ -355,7 +405,7 @@ export default function Header() {
           <div className="flex items-center gap-3">
             <button
               ref={quoteBtnRef}
-              className="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-[#021b38] text-white font-medium text-sm shadow-md hover:bg-[#073163] hover:shadow-lg active:scale-95 transition-all duration-200 cursor-pointer border border-blue-900/40"
+              className="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-primary text-white font-medium text-sm shadow-md hover:bg-[#073163] hover:shadow-lg active:scale-95 transition-all duration-200 cursor-pointer"
             >
               Get a Quote
             </button>
@@ -404,17 +454,15 @@ export default function Header() {
               <div>
                 <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-full bg-[#021b38] flex items-center justify-center text-white shadow-sm">
-                      <FaGlobe className="text-lg text-blue-200" />
-                    </div>
-                    <div>
-                      <div className="font-extrabold text-sm text-[#021b38] leading-none">
-                        MIDDLE EAST
-                      </div>
-                      <div className="font-bold text-[10px] tracking-widest text-blue-600">
-                        TRAVELS
-                      </div>
-                    </div>
+                    <div className="relative h-10 w-32">
+              <Image
+                src="/middleeast_black_logo.webp"
+                alt="Logo"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
                   </div>
 
                   <button
@@ -443,12 +491,14 @@ export default function Header() {
                             <span className="flex items-center gap-2">
                               {item.name}
                               {item.active && (
-                                <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
                               )}
                             </span>
                             <FaChevronDown
                               className={`text-xs text-slate-500 transition-transform duration-300 ${
-                                expandedMobileItem === item.name ? "rotate-180 text-blue-600" : ""
+                                expandedMobileItem === item.name
+                                  ? "rotate-180 text-blue-600"
+                                  : ""
                               }`}
                             />
                           </button>
@@ -470,7 +520,9 @@ export default function Header() {
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     className="block py-2 px-3 rounded-lg text-sm text-slate-700 hover:text-blue-900 hover:bg-blue-50 transition-colors"
                                   >
-                                    <div className="font-medium">{drop.name}</div>
+                                    <div className="font-medium">
+                                      {drop.name}
+                                    </div>
                                     {drop.desc && (
                                       <div className="text-xs text-slate-400 mt-0.5">
                                         {drop.desc}
@@ -502,39 +554,38 @@ export default function Header() {
 
               {/* Mobile Menu Footer Action & Contacts */}
               <div className="p-4 border-t border-slate-100 bg-slate-50/70 space-y-4">
-                <button className="w-full py-3 rounded-xl bg-[#021b38] text-white font-semibold text-center shadow-md hover:bg-[#073163] active:scale-98 transition-all">
+                <button className="w-full py-3 rounded-xl bg-secondary hover:bg-primary text-white font-semibold text-center shadow-md hover:bg-[#073163] active:scale-98 transition-all">
                   Get a Quote
                 </button>
 
                 <div className="space-y-2 text-xs text-slate-600">
                   <a
                     href="tel:+919995123456"
-                    className="flex items-center gap-2.5 p-2 rounded-lg bg-white border border-slate-200/60"
+                    className="flex items-center gap-2.5 p-2 rounded-lg bg-white border border-slate-200/60 text-secondary hover:text-primary duration-200"
                   >
-                    <FaPhone className="text-[#021b38]" />
+                    <FaPhone className="" />
                     <span>+91 9995 123 456</span>
                   </a>
                   <a
                     href="mailto:info@middleeasttravels.com"
-                    className="flex items-center gap-2.5 p-2 rounded-lg bg-white border border-slate-200/60"
+                    className="flex items-center gap-2.5 p-2 rounded-lg bg-white border border-slate-200/60 text-secondary hover:text-primary duration-200"
                   >
-                    <FaEnvelope className="text-[#021b38]" />
+                    <FaEnvelope className="" />
                     <span>info@middleeasttravels.com</span>
                   </a>
                 </div>
 
-                <div className="flex items-end justify-end pt-2">
-               
+                <div className="flex items-center justify-between pt-2">
                   <div className="flex gap-2">
                     <a
                       href="https://wa.me/919995123456"
-                      className="w-8 h-8 rounded-full bg-[#021b38] text-white flex items-center justify-center"
+                      className="w-8 h-8 rounded-full bg-secondary hover:bg-primary text-white flex items-center justify-center"
                     >
                       <FaWhatsapp className="text-sm" />
                     </a>
                     <a
                       href="https://instagram.com"
-                      className="w-8 h-8 rounded-full bg-[#021b38] text-white flex items-center justify-center"
+                      className="w-8 h-8 rounded-full bg-secondary hover:bg-primary text-white flex items-center justify-center"
                     >
                       <FaInstagram className="text-xs" />
                     </a>

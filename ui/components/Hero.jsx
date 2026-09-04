@@ -84,7 +84,7 @@ export default function Hero() {
               className="object-cover object-center"
             />
             {/* Gradient Overlays for optimal text contrast */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/30 to-black/30" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/20 to-black/10" />
           </motion.div>
         </AnimatePresence>
       </motion.div>
@@ -102,7 +102,7 @@ export default function Hero() {
               </h1>
               {/* fancy heading using Playball font */}
               <div
-                className={`${playball.className} text-4xl sm:text-5xl lg:text-6xl text-[#34a4ff] tracking-wide leading-tight`}
+                className={`${playball.className} text-4xl sm:text-5xl lg:text-6xl text-white tracking-wide leading-tight`}
               >
                 With Confidence
               </div>
@@ -116,14 +116,14 @@ export default function Hero() {
             {/* Feature Badges Row */}
             <div className="hidden md:flex flex-wrap items-center gap-2.5 sm:gap-3.5 pt-1">
               <div className="inline-flex items-center gap-2.5 px-4 py-3.5 rounded-full bg-white backdrop-blur-sm shadow-sm text-xs font-medium text-[#021b38]">
-                <span className="flex items-center justify-center text-blue-900 text-xs shadow-xs">
+                <span className="flex items-center justify-center text-secondary text-xs shadow-xs">
                   <FaShieldHalved className="text-lg" />
                 </span>
                 <span>Verified Travel Agency</span>
               </div>
 
               <div className="inline-flex items-center gap-2.5 px-4 py-3.5 rounded-full bg-white backdrop-blur-sm shadow-sm text-xs font-medium text-[#021b38]">
-                <span className="flex items-center justify-center text-blue-900 text-xs shadow-xs">
+                <span className="flex items-center justify-center text-secondary text-xs shadow-xs">
                   <FaAward className="text-lg" />
                 </span>
                 <span>Best Price Guarantee</span>
@@ -132,7 +132,7 @@ export default function Hero() {
            
 
               <div className="inline-flex items-center gap-2.5 px-4 py-3.5 rounded-full bg-white backdrop-blur-sm shadow-sm text-xs font-medium text-[#021b38]">
-                <span className="flex items-center justify-center text-blue-900 text-xs shadow-xs">
+                <span className="flex items-center justify-center text-secondary text-xs shadow-xs">
                   <FaLock className="text-lg" />
                 </span>
                 <span>Secure Booking</span>
@@ -143,7 +143,7 @@ export default function Hero() {
             <div className="flex flex-wrap items-center gap-4 pt-3">
               <Link
                 href="/holidays"
-                className="px-6 py-4 rounded-xl bg-[#021b38] hover:bg-[#062c5a] text-white font-semibold text-xs md:text-sm shadow-md hover:shadow-lg active:scale-95 transition-all duration-200"
+                className="px-6 py-4 rounded-xl bg-secondary hover:bg-primary text-white font-semibold text-xs md:text-sm shadow-md hover:shadow-lg active:scale-95 transition-all duration-200"
               >
                 Explore Holidays
               </Link>
@@ -168,25 +168,25 @@ export default function Hero() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.4, ease: "easeInOut" }}
-                className="w-full bg-white rounded-2xl p-3 shadow-2xl border border-slate-100/90 flex flex-col justify-between space-y-3"
+                className="w-full bg-white rounded-2xl p-2 shadow-2xl border border-slate-100/90 flex flex-col justify-between"
               >
-                <div className="p-3 space-y-4">
+                <div className="p-3 space-y-2">
                   {/* Title & Duration */}
                   <div>
-                    <h3 className="text-xl font-semibold text-[#021b38] leading-tight">
+                    <h3 className="text-base font-semibold text-[#021b38] leading-tight">
                       {currentCard.title}
                     </h3>
-                    <p className="text-xs text-slate-500 mt-1">
+                    <p className="text-[10px] text-slate-500 mt-1">
                       {currentCard.duration}
                     </p>
                   </div>
 
                   {/* Price Section */}
-                  <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-3">
                     <span className="text-[10px] text-slate-400 font-normal block">
                       Starting from
                     </span>
-                    <span className="text-2xl font-bold font-google-sans text-[#021b38] tracking-tight">
+                    <span className="text-xl font-semibold font-google-sans text-[#021b38] tracking-tight">
                       {currentCard.price}
                     </span>
                   </div>
@@ -269,7 +269,7 @@ export default function Hero() {
                     <div>
                       <Link
                         href={currentCard.link}
-                        className="w-full py-4 rounded-xl bg-[#021b38] hover:bg-[#062c5a] text-[#FFB705] font-medium text-xs shadow-md active:scale-95 transition-all text-center block"
+                        className="w-full py-4 rounded-xl bg-secondary hover:bg-primary text-white font-medium text-xs shadow-md active:scale-95 transition-all text-center block"
                       >
                         View Package
                       </Link>

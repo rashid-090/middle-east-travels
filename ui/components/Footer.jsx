@@ -55,7 +55,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="w-full bg-[#011226] text-white font-sans border-t border-slate-800/80 relative z-10 overflow-hidden">
+    <footer className="w-full bg-secondary text-white font-sans border-t border-slate-800/80 relative z-10 overflow-hidden">
       {/* Background Glow Decorative Accents */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
@@ -75,7 +75,7 @@ export default function Footer() {
               className="object-cover object-[center_35%]"
             />
             {/* Dark Navy Gradient Overlay to ensure text readability */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#021b38] via-[#021b38]/30 to-[#021b38]/5 w-full " />
+            <div className="absolute inset-0 bg-gradient-to-r from-secondary/70 via-[#021b38]/20 to-[#021b38]/5 w-full " />
             <div className="absolute inset-0 bg-black/30 md:hidden" />
           </div>
 
@@ -94,7 +94,7 @@ export default function Footer() {
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-1">
               <Link
                 href="/contact"
-                className="px-6 py-3 rounded-xl bg-[#ffb703] hover:bg-[#e0a200] text-slate-950 font-semibold text-xs sm:text-sm shadow-md active:scale-95 transition-all duration-200 cursor-pointer"
+                className="px-6 py-3 rounded-xl bg-primary hover:bg-white text-white hover:text-black font-semibold text-xs sm:text-sm shadow-md active:scale-95 transition-all duration-200 cursor-pointer"
               >
                 Get a Free Quote
               </Link>
@@ -123,17 +123,15 @@ export default function Footer() {
               href="/"
               className="flex items-center gap-3 group inline-block focus:outline-none"
             >
-              <div className="relative w-9 h-9 rounded-full bg-gradient-to-br from-blue-600 to-[#021b38] flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform duration-300">
-                <FaGlobe className="text-2xl text-blue-200" />
-              </div>
-              <div className="flex flex-col mt-2">
-                <span className="font-bold text-lg tracking-tight text-white leading-none group-hover:text-blue-900 transition-colors">
-                  MIDDLE EAST
-                </span>
-                <span className="font-medium text-[10px] tracking-wider text-blue-400 leading-tight">
-                  T R A V E L S
-                </span>
-              </div>
+              <div className="relative h-10 w-44">
+                            <Image
+                              src="/middleeast_white_logo.webp"
+                              alt="Logo"
+                              fill
+                              className="object-contain"
+                              priority
+                            />
+                          </div>
             </Link>
 
             <p className="text-slate-400 text-sm leading-relaxed font-normal">
@@ -145,32 +143,31 @@ export default function Footer() {
             {/* Direct Contact Info */}
             <div className="space-y-3 text-xs sm:text-sm text-slate-300 pt-1">
               <a
-                href="tel:+919995123456"
-                className="flex items-center gap-3 hover:text-amber-400 transition-colors group"
+                href="tel:+918714806661"
+                className="flex items-center gap-3 hover:text-primary transition-all duration-200 group"
               >
-                <span className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-blue-400 group-hover:bg-amber-400 group-hover:text-slate-950 transition-all">
+                <span className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
                   <FaPhone className="text-xs" />
                 </span>
-                <span className="font-medium">+91 9995 123 456</span>
+                <span className="font-medium">+91 87148 06661</span>
               </a>
 
               <a
-                href="mailto:info@middleeasttravels.com"
-                className="flex items-center gap-3 hover:text-amber-400 transition-colors group"
+                href="mailto:info@middleeasttravels.in"
+                className="flex items-center gap-3 hover:text-primary transition-all duration-200 group"
               >
-                <span className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-blue-400 group-hover:bg-amber-400 group-hover:text-slate-950 transition-all">
+                <span className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
                   <FaEnvelope className="text-xs" />
                 </span>
-                <span className="font-medium">info@middleeasttravels.com</span>
+                <span className="font-medium">info@middleeasttravels.in</span>
               </a>
 
               <div className="flex items-start gap-3 text-slate-400">
-                <span className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-blue-400 shrink-0 mt-0.5">
+                <span className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-primary shrink-0 mt-0.5">
                   <FaLocationDot className="text-xs" />
                 </span>
                 <span className="leading-snug">
-                  Middle East Travels Tower, Business Bay, Dubai, UAE & Kerala,
-                  India
+                 Shobha Tower, 5/3412L, Mavoor Rd, Arayidathupalam, Kozhikode, Kerala 673004
                 </span>
               </div>
             </div>
@@ -178,14 +175,14 @@ export default function Footer() {
 
           {/* Column 2: Top Destinations (2.5 cols) */}
           <div className="lg:col-span-3 space-y-4">
-            <h4 className="text-base font-semibold text-white tracking-wide border-l-2 border-blue-500 pl-3">
+            <h4 className="text-base font-semibold text-white tracking-wide border-l-2 border-primary pl-3">
               Top Destinations
             </h4>
             <ul className="space-y-2.5 text-sm text-slate-400 font-normal">
               <li>
                 <Link
                   href="/holidays/dubai"
-                  className="hover:text-amber-400 hover:translate-x-1 transition-all inline-block"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Dubai & Abu Dhabi Packages
                 </Link>
@@ -193,7 +190,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/holidays/saudi"
-                  className="hover:text-amber-400 hover:translate-x-1 transition-all inline-block"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Saudi Arabia & AlUla Heritage
                 </Link>
@@ -201,7 +198,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/holidays/oman"
-                  className="hover:text-amber-400 hover:translate-x-1 transition-all inline-block"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Oman Fjords & Muscat Tours
                 </Link>
@@ -209,7 +206,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/holidays/qatar"
-                  className="hover:text-amber-400 hover:translate-x-1 transition-all inline-block"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Qatar Cultural & Souq Escapes
                 </Link>
@@ -217,7 +214,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/holidays/thailand"
-                  className="hover:text-amber-400 hover:translate-x-1 transition-all inline-block"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Thailand Beach Getaways
                 </Link>
@@ -225,7 +222,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/holidays/bali"
-                  className="hover:text-amber-400 hover:translate-x-1 transition-all inline-block"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Bali Island Resorts
                 </Link>
@@ -235,14 +232,14 @@ export default function Footer() {
 
           {/* Column 3: Our Services (2.5 cols) */}
           <div className="lg:col-span-3 space-y-4">
-            <h4 className="text-base font-semibold text-white tracking-wide border-l-2 border-blue-500 pl-3">
+            <h4 className="text-base font-semibold text-white tracking-wide border-l-2 border-primary pl-3">
               Our Services
             </h4>
             <ul className="space-y-2.5 text-sm text-slate-400 font-normal">
               <li>
                 <Link
                   href="/services/holidays"
-                  className="hover:text-amber-400 hover:translate-x-1 transition-all inline-block"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Customized Holiday Packages
                 </Link>
@@ -250,7 +247,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/visa"
-                  className="hover:text-amber-400 hover:translate-x-1 transition-all inline-block"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Express Tourist & Business Visa
                 </Link>
@@ -258,7 +255,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/flights"
-                  className="hover:text-amber-400 hover:translate-x-1 transition-all inline-block"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   International Flight Reservations
                 </Link>
@@ -266,7 +263,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/hotels"
-                  className="hover:text-amber-400 hover:translate-x-1 transition-all inline-block"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Luxury Hotel & Resort Bookings
                 </Link>
@@ -274,7 +271,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/services/transfers"
-                  className="hover:text-amber-400 hover:translate-x-1 transition-all inline-block"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   VIP Airport Chauffeur Pickup
                 </Link>
@@ -282,7 +279,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/services/insurance"
-                  className="hover:text-amber-400 hover:translate-x-1 transition-all inline-block"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Worldwide Travel Insurance
                 </Link>
@@ -292,14 +289,14 @@ export default function Footer() {
 
           {/* Column 4: Quick Links (2 cols) */}
           <div className="lg:col-span-2 space-y-4">
-            <h4 className="text-base font-semibold text-white tracking-wide border-l-2 border-blue-500 pl-3">
+            <h4 className="text-base font-semibold text-white tracking-wide border-l-2 border-primary pl-3">
               Quick Links
             </h4>
             <ul className="space-y-2.5 text-sm text-slate-400 font-normal">
               <li>
                 <Link
                   href="/about"
-                  className="hover:text-amber-400 hover:translate-x-1 transition-all inline-block"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   About Our Agency
                 </Link>
@@ -307,7 +304,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/reviews"
-                  className="hover:text-amber-400 hover:translate-x-1 transition-all inline-block"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Customer Reviews
                 </Link>
@@ -315,7 +312,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/blog"
-                  className="hover:text-amber-400 hover:translate-x-1 transition-all inline-block"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Travel Blog & Guides
                 </Link>
@@ -323,7 +320,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/contact"
-                  className="hover:text-amber-400 hover:translate-x-1 transition-all inline-block"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Contact Us
                 </Link>
@@ -331,7 +328,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/privacy"
-                  className="hover:text-amber-400 hover:translate-x-1 transition-all inline-block"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Privacy Policy
                 </Link>
@@ -339,7 +336,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/terms"
-                  className="hover:text-amber-400 hover:translate-x-1 transition-all inline-block"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Terms of Service
                 </Link>
@@ -350,7 +347,7 @@ export default function Footer() {
       </div>
 
       {/* ================= BOTTOM COPYRIGHT BAR ================= */}
-      <div className="border-t border-slate-800/80 bg-[#000d1c] py-6">
+      <div className="border-t border-slate-800/80 bg-secondary py-6">
         <div className="w-11/12 mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
           <p suppressHydrationWarning>
             © {new Date().getFullYear()} Middle East Travels. All rights
@@ -361,7 +358,7 @@ export default function Footer() {
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-3 pt-2">
               <a
-                href="https://facebook.com"
+                href="https://m.facebook.com/middleeasttravelsandtourism?mibextid=LQQJ4d"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Facebook"
@@ -370,7 +367,7 @@ export default function Footer() {
                 <FaFacebookF className="text-xs" />
               </a>
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/middleeast_travels/"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Instagram"
@@ -379,7 +376,7 @@ export default function Footer() {
                 <FaInstagram className="text-sm" />
               </a>
               <a
-                href="https://wa.me/919995123456"
+                href="https://wa.me/7025144666"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="WhatsApp"
@@ -391,7 +388,7 @@ export default function Footer() {
             <button
               onClick={scrollToTop}
               aria-label="Back to Top"
-              className="w-8 h-8 rounded-lg bg-blue-600/20 hover:bg-blue-600 border border-blue-500/30 text-blue-300 hover:text-white flex items-center justify-center transition-all cursor-pointer"
+              className="w-8 h-8 rounded-lg bg-primary/20 hover:bg-primary border border-blue-500/30 text-blue-300 hover:text-white flex items-center justify-center transition-all cursor-pointer"
             >
               <FaArrowUp className="text-xs" />
             </button>

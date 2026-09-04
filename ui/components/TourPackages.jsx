@@ -5,13 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
-import {
-  FaArrowRight,
-  FaFire,
-  FaCrown,
-  FaStar,
-  FaTag,
-} from "react-icons/fa6";
+import { FaArrowRight, FaFire, FaCrown, FaStar, FaTag } from "react-icons/fa6";
 import { HiSparkles } from "react-icons/hi2";
 import { tourPackagesData } from "@/data/allData.js";
 
@@ -40,8 +34,7 @@ export default function TourPackages() {
 
   return (
     <section className="w-full py-12 lg:py-16 bg-slate-50 font-sans">
-      <div className="w-11/12 mx-auto space-y-4">
-        
+      <div className="w-11/12 mx-auto space-y-6">
         {/* Section Header Row */}
         <div className="flex items-center justify-between">
           <h2 className="text-2xl sm:text-3xl font-semibold text-[#021b38] tracking-tight">
@@ -63,80 +56,108 @@ export default function TourPackages() {
             onSwiper={setSwiperRef}
             onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
             modules={[Autoplay]}
-            spaceBetween={10}
-            slidesPerView={1.10}
+            spaceBetween={15}
+            slidesPerView={1.08}
             loop={true}
-            autoplay={{ delay: 4000, disableOnInteraction: false }}
+            autoplay={{ delay: 4500, disableOnInteraction: false }}
             breakpoints={{
               640: {
-                slidesPerView: 2.2,
-                spaceBetween: 10,
+                slidesPerView: 1.8,
+                spaceBetween: 15,
               },
               768: {
-                slidesPerView: 3.2,
-                spaceBetween: 10,
+                slidesPerView: 2.4,
+                spaceBetween: 15,
               },
               1024: {
-                slidesPerView: 5,
-                spaceBetween: 10,
+                slidesPerView: 4.2,
+                spaceBetween: 15,
               },
             }}
-            className="w-full"
+            className="w-full !pb-4"
           >
             {tourPackagesData.map((item) => (
-              <SwiperSlide key={item.id}>
+              <SwiperSlide key={item.id} className="h-auto">
                 <Link
                   href={item.link}
-                  className="group relative w-full aspect-[3/4] rounded-2xl overflow-hidden shadow-lg border border-slate-200/60 block"
+                  className="bg-white rounded-[2.25rem] border border-slate-200/80 shadow-xs hover:shadow-xl transition-all duration-300 p-3 flex flex-col justify-between h-full group block"
                 >
-                  {/* Card Image */}
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 250px"
-                    quality={90}
-                    className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                  />
+                  <div>
+                    {/* Top Smooth Rounded Image Container */}
+                    <div className="relative w-full aspect-[4/3] rounded-[1.75rem] overflow-hidden mb-4 bg-slate-100">
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+                        quality={90}
+                        className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                      />
 
-                  {/* Gradient Overlay for Readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent" />
+                      {/* Top Right Badge */}
+                      {item.badge && (
+                        <div className="absolute top-3 right-3 z-10">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/85 backdrop-blur-md text-xs font-semibold text-slate-800 shadow-md">
+                            {getBadgeIcon(item.badgeType)}
+                            <span>{item.badge}</span>
+                          </span>
+                        </div>
+                      )}
+                    </div>
 
-                  {/* Top Right Badge */}
-                  <div className="absolute top-3 right-3 z-10">
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/70 backdrop-blur-md text-[10px] font-medium text-slate-800 shadow-md">
-                      {getBadgeIcon(item.badgeType)}
-                      <span>{item.badge}</span>
-                    </span>
-                  </div>
+                    <div className="p-2">
+                      {/* Title */}
+                      <h3 className="text-xl font-bold text-slate-900 leading-snug tracking-tight mb-1">
+                        {item.title} Tour Package
+                      </h3>
 
-                  {/* Bottom Card Content */}
-                  <div className="absolute bottom-0 left-0 right-0 p-4 z-10 flex flex-col justify-end space-y-1 text-white">
-                    <h3 className="text-xl font-semibold leading-tight drop-shadow-sm">
-                      {item.title}
-                    </h3>
-                    <p className="text-xs text-slate-200">
-                      {item.duration}
-                    </p>
+                      {/* Duration */}
+                      <p className="text-xs sm:text-sm text-slate-500 font-normal mb-3">
+                        {item.duration}
+                      </p>
 
-                    {/* Price & Arrow Button Row */}
-                    <div className="flex items-center justify-between pt-1">
-                      <span className="text-xs sm:text-sm font-bold text-white tracking-tight">
+                      {/* Bullet Points Highlights */}
+                      <ul className="space-y-1.5 text-xs sm:text-sm text-slate-600 font-normal mb-2">
+                        {item.highlights && item.highlights.length > 0 ? (
+                          item.highlights.map((point, pointIdx) => (
+                            <li key={pointIdx} className="flex items-start gap-2">
+                              <span className="text-slate-400 font-bold text-[sm] leading-none">
+                                •
+                              </span>
+                              <span className="leading-snug text-xs">{point}</span>
+                            </li>
+                          ))
+                        ) : (
+                          <>
+                            <p>No highlights available</p>
+                          </>
+                        )}
+                      </ul>
+                  {/* Bottom Border & Price Section */}
+                  <div className="border-t border-slate-100 pt-4 mt-auto flex items-center justify-between">
+                    <div className="space-y-2">
+                      <span className="text-[11px] text-slate-400 font-normal block leading-tight">
+                        Starting from
+                      </span>
+                      <span className="text-lg sm:text-xl font-bold text-slate-950 tracking-tight">
                         {item.price}
                       </span>
+                    </div>
 
-                      <div className="w-9 h-9 rounded-full group-hover:bg-white group-hover:text-[#021b38] bg-[#f9f9f95c] text-white flex items-center justify-center shadow-md transition-all duration-300">
-                        <FaArrowRight className="text-xs" />
-                      </div>
+                    <div className="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-primary text-slate-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs">
+                      <FaArrowRight className="text-xs" />
                     </div>
                   </div>
+                    </div>
+                  </div>
+
                 </Link>
               </SwiperSlide>
             ))}
           </Swiper>
 
-          {/* Centered Pagination Section */}
-          <div className="flex items-center justify-center gap-2 pt-5">
+          {/* Centered Pagination Dots */}
+          <div className="flex items-center justify-center gap-2 pt-6">
             {tourPackagesData.map((_, dotIndex) => {
               const isActive = activeIndex === dotIndex;
               return (
@@ -154,7 +175,6 @@ export default function TourPackages() {
             })}
           </div>
         </div>
-
       </div>
     </section>
   );

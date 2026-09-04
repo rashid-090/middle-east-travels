@@ -40,7 +40,7 @@ export default function Testimonials() {
               spaceBetween={16}
               slidesPerView={1.1}
               loop={true}
-              autoplay={{ delay: 4000, disableOnInteraction: false }}
+              autoplay={{ delay: 4500, disableOnInteraction: false }}
               breakpoints={{
                 640: {
                   slidesPerView: 2,
@@ -51,77 +51,104 @@ export default function Testimonials() {
                   spaceBetween: 16,
                 },
               }}
-              className="w-full h-full"
+              className="w-full h-full !pb-4"
             >
               {testimonialsData.map((item) => (
-                <SwiperSlide key={item.id} className="h-auto pb-5">
-                  <div className="bg-white rounded-2xl p-6 border border-slate-100/90 flex flex-col justify-between space-y-6  transition-all duration-300 h-full">
-                    <div className="space-y-3">
-                      {/* Top Quote Icon */}
-                      <FaQuoteLeft className="text-[#021b3835] text-2xl" />
-                      
-                      {/* Testimonial Text */}
-                      <p className="text-xs sm:text-sm text-slate-700 font-normal leading-relaxed">
+                <SwiperSlide key={item.id} className="h-auto">
+                  <div className="bg-white rounded-[2rem] border border-slate-200/70 p-6 shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between h-full group">
+                    
+                    <div>
+                      {/* Top Header Row: Cyan Quote Left & Google Pill */}
+                      <div className="flex items-center justify-between">
+                        <FaQuoteLeft className="text-3xl text-primary" />
+                        
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100/90 border border-slate-200/60 text-[10px] font-medium text-slate-700">
+                          <FcGoogle className="text-base" />
+                          <span>Google</span>
+                        </div>
+                      </div>
+
+                      {/* Branch Badge Pill */}
+                      <div className="mt-4 mb-3">
+                        <span className="inline-block px-3.5 py-1 rounded-full bg-primary/10 text-secondary font-medium text-xs border border-sky-100/80">
+                          {item.branch || "Calicut Branch"}
+                        </span>
+                      </div>
+
+                      {/* Testimonial Quote Text */}
+                      <p className="text-slate-600 text-sm leading-relaxed font-normal mb-2 line-clamp-4">
                         {item.quote}
                       </p>
+
+                      {/* Read More Link */}
+                      <button className="text-xs font-semibold text-gray-500 hover:text-primary transition-colors inline-block mb-4 cursor-pointer">
+                        Read more
+                      </button>
                     </div>
 
-                    {/* Traveller Profile Info */}
-                    <div className="flex items-center gap-3 pt-2">
-                      <div className="relative w-10 h-10 rounded-full overflow-hidden flex-shrink-0 shadow-xs border border-slate-100">
-                        <Image
-                          src={item.avatar}
-                          alt={item.name}
-                          fill
-                          sizes="40px"
-                          className="object-cover object-center"
-                        />
+                    {/* Bottom Author Row */}
+                    <div className="border-t border-slate-100 pt-4 mt-auto flex items-center gap-3.5">
+                      {/* Colored Initial Badge */}
+                      <div className={`w-12 h-12 rounded-full ${item.initialBg || "bg-pink-600"} text-white flex items-center justify-center font-bold text-sm tracking-wider shrink-0 shadow-xs`}>
+                        {item.initials || "DP"}
                       </div>
-                      <div>
-                        <h4 className="font-medium text-xs sm:text-sm text-[#021b38]">
+
+                      <div className="space-y-1">
+                        <h4 className="font-medium text-xs text-slate-900 uppercase tracking-wide leading-tight">
                           {item.name}
                         </h4>
-                        <p className="text-[11px] text-slate-400 font-normal">
-                          {item.location}
+
+                        {/* 5 Yellow Stars */}
+                        <div className="flex items-center gap-0.5 text-amber-400 text-xs py-0.5">
+                          <FaStar />
+                          <FaStar />
+                          <FaStar />
+                          <FaStar />
+                          <FaStar />
+                        </div>
+
+                        <p className="text-[10px] text-slate-400 font-normal leading-none">
+                          {item.timeAgo || "3 months ago"}
                         </p>
                       </div>
                     </div>
+
                   </div>
                 </SwiperSlide>
               ))}
             </Swiper>
 
-             {/* Bottom Centered Pagination Dots */}
-        <div className="flex items-center justify-center gap-2 ">
-          {testimonialsData.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => swiperRef?.slideToLoop(index)}
-              className={`transition-all duration-300 rounded-full cursor-pointer border ${
-                activeSlide === index
-                  ? "w-4 h-2 bg-[#021b38] border-[#021b38]"
-                  : "w-2 h-2 bg-white border-slate-300 hover:border-[#021b38]"
-              }`}
-              aria-label={`Slide ${index + 1}`}
-            />
-          ))}
-        </div>
+            {/* Bottom Centered Pagination Dots */}
+            <div className="flex items-center justify-center gap-2 pt-4">
+              {testimonialsData.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => swiperRef?.slideToLoop(index)}
+                  className={`transition-all duration-300 rounded-full cursor-pointer border ${
+                    activeSlide === index
+                      ? "w-4 h-2 bg-[#021b38] border-[#021b38]"
+                      : "w-2 h-2 bg-white border-slate-300 hover:border-[#021b38]"
+                  }`}
+                  aria-label={`Slide ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
 
           {/* Right Google Summary Rating Card (3 Cols) */}
-          <div className="lg:col-span-3 flex mt-10 md:mt-0">
-            <div className="w-full bg-white rounded-2xl p-6 shadow-xs border border-slate-100/90 flex flex-col items-center justify-center text-center space-y-2 hover:shadow-md transition-all duration-300">
+          <div className="lg:col-span-3 flex mt-6 md:mt-0">
+            <div className="w-full bg-white rounded-[2rem] p-6 shadow-xs border border-slate-200/70 flex flex-col items-center justify-center text-center space-y-2.5 hover:shadow-md transition-all duration-300">
               
               {/* Google G Logo */}
               <FcGoogle className="text-4xl sm:text-5xl" />
 
               {/* Score */}
-              <div className="text-3xl sm:text-4xl font-semibold text-[#021b38] tracking-tight pt-1">
+              <div className="text-3xl sm:text-4xl font-bold text-[#021b38] tracking-tight pt-1">
                 4.9/5
               </div>
 
               {/* 5 Golden Stars */}
-              <div className="flex items-center gap-1 text-amber-400 text-sm sm:text-base">
+              <div className="flex items-center gap-1 text-amber-400 text-base">
                 <FaStar />
                 <FaStar />
                 <FaStar />
@@ -138,8 +165,6 @@ export default function Testimonials() {
           </div>
 
         </div>
-
-       
 
       </div>
     </section>

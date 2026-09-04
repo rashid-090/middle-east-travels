@@ -14,15 +14,15 @@ import { countsData, whyChooseFeaturesData } from "@/data/allData.js";
 const getFeatureIcon = (iconType) => {
   switch (iconType) {
     case "package":
-      return <FaSuitcaseRolling className="text-amber-400 text-base flex-shrink-0" />;
+      return <FaSuitcaseRolling className="text-white text-base flex-shrink-0" />;
     case "consultant":
-      return <FaUserCheck className="text-amber-400 text-base flex-shrink-0" />;
+      return <FaUserCheck className="text-white text-base flex-shrink-0" />;
     case "pricing":
-      return <FaTags className="text-amber-400 text-base flex-shrink-0" />;
+      return <FaTags className="text-white text-base flex-shrink-0" />;
     case "support":
-      return <FaHeadset className="text-amber-400 text-base flex-shrink-0" />;
+      return <FaHeadset className="text-white text-base flex-shrink-0" />;
     default:
-      return <FaSuitcaseRolling className="text-amber-400 text-base flex-shrink-0" />;
+      return <FaSuitcaseRolling className="text-white text-base flex-shrink-0" />;
   }
 };
 
@@ -63,7 +63,7 @@ export default function Counts() {
       <div className="w-11/12 mx-auto">
         
         {/* Dark Navy Main Banner Box */}
-        <div className="relative rounded-3xl bg-[#021b38] p-6 md:p-8 text-white shadow-2xl border border-blue-900/40 overflow-hidden">
+        <div className="relative rounded-3xl bg-secondary p-6 md:p-8 text-white shadow-2xl border border-blue-900/40 overflow-hidden">
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center relative z-10">
             
@@ -95,7 +95,7 @@ export default function Counts() {
                   key={item.id}
                   className="bg-white/10 backdrop-blur-md rounded-2xl aspect-square p-2 flex flex-col items-center justify-center text-center space-y-1.5 border border-white/10 hover:bg-white/15 transition-all duration-300"
                 >
-                  <span className="text-3xl sm:text-4xl font-semibold text-amber-400 tracking-tight">
+                  <span className="text-3xl sm:text-4xl font-semibold text-primary tracking-tight">
                     <Counter stat={item.stat} />
                   </span>
                   <span className="text-xs text-slate-200 leading-snug">
