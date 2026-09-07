@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import {
@@ -24,34 +25,30 @@ import {
 } from "react-icons/fa6";
 
 const navItems = [
+  { name: "Home", href: "/" },
   {
     name: "Tour packages",
     href: "/holidays",
-    active: true,
     dropdown: [
       {
         name: "Dubai Luxury Getaways",
         href: "/holidays/dubai",
-        desc: "5-Star Resorts & Desert Safaris",
       },
       {
         name: "Saudi Heritage Tours",
         href: "/holidays/saudi",
-        desc: "Explore AlUla & Historical Riyadh",
       },
       {
         name: "Oman Nature & Fjords",
         href: "/holidays/oman",
-        desc: "Mountain Treks & Coastline Cruises",
       },
       {
         name: "Qatar Cultural Escapes",
         href: "/holidays/qatar",
-        desc: "Museums, Souqs & Modern Marvels",
       },
     ],
   },
-  { name: "Ticketing", href: "/flights" },
+
   {
     name: "Visa Services",
     href: "/visa",
@@ -59,17 +56,14 @@ const navItems = [
       {
         name: "Tourist Visa",
         href: "/visa/tourist",
-        desc: "30 & 90 Days Single/Multiple Entry",
       },
       {
         name: "Business Visa",
         href: "/visa/business",
-        desc: "Fast-track Corporate & Trade Visas",
       },
       {
         name: "Express 24h Processing",
         href: "/visa/express",
-        desc: "Urgent Travel Assistance",
       },
     ],
   },
@@ -78,26 +72,18 @@ const navItems = [
     href: "/services",
     dropdown: [
       {
-        name: "VIP Airport Transfer",
-        href: "/services/transfer",
-        desc: "Chauffeur Pickups & Luxury Cars",
+        name: "Ticketing",
+        href: "/services/ticketing",
       },
-      {
-        name: "Comprehensive Travel Insurance",
-        href: "/services/insurance",
-        desc: "Worldwide Medical & Trip Cover",
-      },
-      {
-        name: "Custom Group Itineraries",
-        href: "/services/itinerary",
-        desc: "Tailored Packages for Families",
-      },
+
     ],
   },
   { name: "About us", href: "/about" },
+  { name: "Contact us", href: "/contact" },
 ];
 
 export default function Header() {
+  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [expandedMobileItem, setExpandedMobileItem] = useState(null);
@@ -106,6 +92,14 @@ export default function Header() {
   const topBarRef = useRef(null);
   const logoRef = useRef(null);
   const quoteBtnRef = useRef(null);
+
+  const isItemActive = (item) => {
+    if (!pathname) return false;
+    if (item.href === "/") {
+      return pathname === "/";
+    }
+    return pathname.startsWith(item.href);
+  };
 
   // Handle scroll effect for sticky header
   useEffect(() => {
@@ -309,12 +303,12 @@ export default function Header() {
             href="/"
             className="flex items-center gap-3 group focus:outline-none"
           >
-            
-            <div className="relative h-10 w-40">
+            <div className="relative h-10 w-32 md:w-40">
               <Image
                 src="/middleeast_black_logo.webp"
                 alt="Logo"
                 fill
+                sizes="160px"
                 className="object-contain"
                 priority
               />
@@ -323,82 +317,80 @@ export default function Header() {
 
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
-            {navItems.map((item) => (
-              <div
-                key={item.name}
-                className="relative"
-                onMouseEnter={() => setActiveDropdown(item.name)}
-                onMouseLeave={() => setActiveDropdown(null)}
-              >
-                <Link
-                  href={item.href}
-                  className={`px-3 py-2 text-sm font-medium flex items-center gap-1 transition-colors relative ${
-                    item.active
-                      ? "text-[#021b38]"
-                      : "text-slate-700 hover:text-[#021b38]"
-                  }`}
+            {navItems.map((item) => {
+              const active = isItemActive(item);
+              return (
+                <div
+                  key={item.name}
+                  className="relative"
+                  onMouseEnter={() => setActiveDropdown(item.name)}
+                  onMouseLeave={() => setActiveDropdown(null)}
                 >
-                  {item.name}
-                  {item.dropdown && (
-                    <FaCaretDown
-                      className={`text-xs text-[#021b38] transition-transform duration-200 ${
-                        activeDropdown === item.name
-                          ? "rotate-180 text-[#021b38]"
-                          : ""
-                      }`}
-                    />
-                  )}
-
-                  {/* Active Indicator Underline */}
-                  {item.active && (
-                    <motion.div
-                      layoutId="activeUnderline"
-                      className="absolute bottom-0 left-3 right-3 h-[2px]  bg-[#021B38]"
-                      transition={{
-                        type: "spring",
-                        stiffness: 380,
-                        damping: 30,
-                      }}
-                    />
-                  )}
-                </Link>
-
-                {/* Dropdown Menu */}
-                {item.dropdown && (
-                  <AnimatePresence>
-                    {activeDropdown === item.name && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 12, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 8, scale: 0.95 }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="absolute top-full left-0 w-64 pt-2 z-50"
-                      >
-                        <div className="bg-white rounded-xl shadow-xl border border-slate-100 p-2 overflow-hidden ring-1 ring-black/5">
-                          {item.dropdown.map((dropItem) => (
-                            <Link
-                              key={dropItem.name}
-                              href={dropItem.href}
-                              className="block p-2.5 rounded-lg hover:bg-blue-50/80 transition-colors group"
-                            >
-                              <div className="text-sm font-semibold text-slate-800 group-hover:text-[#021b38] flex items-center justify-between">
-                                {dropItem.name}
-                                <FaArrowRight className="text-xs text-blue-600 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
-                              </div>
-                              {dropItem.desc && (
-                                <div className="text-xs text-slate-500 mt-0.5 font-normal">
-                                  {dropItem.desc}
-                                </div>
-                              )}
-                            </Link>
-                          ))}
-                        </div>
-                      </motion.div>
+                  <Link
+                    href={item.href}
+                    className={`px-3 py-2 text-sm font-medium flex items-center gap-1 transition-colors relative ${
+                      active
+                        ? "text-[#021b38]"
+                        : "text-slate-700 hover:text-[#021b38]"
+                    }`}
+                  >
+                    {item.name}
+                    {item.dropdown && (
+                      <FaCaretDown
+                        className={`text-xs text-[#021b38] transition-transform duration-200 ${
+                          activeDropdown === item.name
+                            ? "rotate-180 text-[#021b38]"
+                            : ""
+                        }`}
+                      />
                     )}
-                  </AnimatePresence>
-                )}
-              </div>
-            ))}
+
+                    {/* Active Indicator Underline */}
+                    {active && (
+                      <motion.div
+                        layoutId="activeUnderline"
+                        className="absolute bottom-0 left-3 right-3 h-[2px] bg-[#021B38]"
+                        transition={{
+                          type: "spring",
+                          stiffness: 380,
+                          damping: 30,
+                        }}
+                      />
+                    )}
+                  </Link>
+
+                  {/* Dropdown Menu */}
+                  {item.dropdown && (
+                    <AnimatePresence>
+                      {activeDropdown === item.name && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 12, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                          transition={{ duration: 0.2, ease: "easeOut" }}
+                          className="absolute top-full left-0 w-64 pt-2 z-50"
+                        >
+                          <div className="bg-white rounded-xl shadow-xl border border-slate-100 p-2 overflow-hidden ring-1 ring-black/5">
+                            {item.dropdown.map((dropItem) => (
+                              <Link
+                                key={dropItem.name}
+                                href={dropItem.href}
+                                className="block p-2.5 rounded-lg hover:bg-blue-50/80 transition-colors group"
+                              >
+                                <div className="text-sm text-slate-800 group-hover:text-[#021b38] flex items-center justify-between">
+                                  {dropItem.name}
+                                  <FaArrowRight className="text-xs text-primary opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
+                                </div>
+                              </Link>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  )}
+                </div>
+              );
+            })}
           </nav>
 
           {/* Desktop "Get a Quote" Button & Mobile Toggle */}
@@ -413,14 +405,10 @@ export default function Header() {
             {/* Mobile Hamburger Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#021b38] focus:outline-none transition-colors"
+              className="lg:hidden p-2.5 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary focus:outline-none transition-colors"
               aria-label="Toggle Mobile Menu"
             >
-              {isMobileMenuOpen ? (
-                <FaXmark className="text-xl" />
-              ) : (
-                <FaBars className="text-xl" />
-              )}
+              <FaBars className="text-lg" />
             </button>
           </div>
         </div>
@@ -438,7 +426,7 @@ export default function Header() {
               animate="open"
               exit="closed"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 lg:hidden"
+              className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 lg:hidden"
             />
 
             {/* Slide-out Drawer */}
@@ -448,26 +436,27 @@ export default function Header() {
               initial="closed"
               animate="open"
               exit="closed"
-              className="fixed top-0 right-0 bottom-0 w-[85%] max-w-md bg-white z-50 shadow-2xl flex flex-col justify-between overflow-y-auto lg:hidden"
+              className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-white z-50 shadow-2xl flex flex-col justify-between overflow-y-auto lg:hidden"
             >
               {/* Mobile Header Top */}
               <div>
-                <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-                  <div className="flex items-center gap-2.5">
-                    <div className="relative h-10 w-32">
-              <Image
-                src="/middleeast_black_logo.webp"
-                alt="Logo"
-                fill
-                className="object-contain"
-                priority
-              />
-            </div>
+                <div className="p-5 flex items-center justify-between border-b border-slate-100 bg-slate-50/50">
+                  <div className="flex items-center gap-2">
+                    <div className="relative h-10 w-28">
+                      <Image
+                        src="/middleeast_black_logo.webp"
+                        alt="Logo"
+                        fill
+                        sizes="160px"
+                        className="object-contain"
+                        priority
+                      />
+                    </div>
                   </div>
 
                   <button
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2 rounded-lg bg-slate-200/70 hover:bg-slate-200 text-slate-700 transition-colors"
+                    className="p-2 rounded-lg bg-slate-200/70 hover:bg-slate-200 text-primary transition-colors"
                   >
                     <FaXmark className="text-lg" />
                   </button>
@@ -480,81 +469,79 @@ export default function Header() {
                   animate="open"
                   className="p-4 space-y-1"
                 >
-                  {navItems.map((item) => (
-                    <motion.div key={item.name} variants={menuItemVariants}>
-                      {item.dropdown ? (
-                        <div className="rounded-xl overflow-hidden border border-slate-100">
-                          <button
-                            onClick={() => toggleMobileDropdown(item.name)}
-                            className="w-full px-4 py-3 text-left font-semibold text-slate-800 flex items-center justify-between bg-slate-50/60 hover:bg-slate-100/80 transition-colors"
-                          >
-                            <span className="flex items-center gap-2">
-                              {item.name}
-                              {item.active && (
-                                <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                              )}
-                            </span>
-                            <FaChevronDown
-                              className={`text-xs text-slate-500 transition-transform duration-300 ${
-                                expandedMobileItem === item.name
-                                  ? "rotate-180 text-blue-600"
-                                  : ""
-                              }`}
-                            />
-                          </button>
+                  {navItems.map((item) => {
+                    const active = isItemActive(item);
+                    return (
+                      <motion.div key={item.name} variants={menuItemVariants}>
+                        {item.dropdown ? (
+                          <div className="rounded-xl overflow-hidden border border-slate-100">
+                            <button
+                              onClick={() => toggleMobileDropdown(item.name)}
+                              className="w-full px-4 py-3 text-left font-semibold text-slate-800 flex items-center justify-between bg-slate-50/60 hover:bg-slate-100/80 transition-colors"
+                            >
+                              <span className="flex items-center gap-2">
+                                {item.name}
+                                {active && (
+                                  <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                )}
+                              </span>
+                              <FaChevronDown
+                                className={`text-xs text-slate-500 transition-transform duration-300 ${
+                                  expandedMobileItem === item.name
+                                    ? "rotate-180 text-primary"
+                                    : ""
+                                }`}
+                              />
+                            </button>
 
-                          {/* Accordion Content */}
-                          <AnimatePresence>
-                            {expandedMobileItem === item.name && (
-                              <motion.div
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: "auto", opacity: 1 }}
-                                exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.25 }}
-                                className="bg-white px-3 py-2 space-y-1 divide-y divide-slate-50"
-                              >
-                                {item.dropdown.map((drop) => (
-                                  <Link
-                                    key={drop.name}
-                                    href={drop.href}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className="block py-2 px-3 rounded-lg text-sm text-slate-700 hover:text-blue-900 hover:bg-blue-50 transition-colors"
-                                  >
-                                    <div className="font-medium">
-                                      {drop.name}
-                                    </div>
-                                    {drop.desc && (
-                                      <div className="text-xs text-slate-400 mt-0.5">
-                                        {drop.desc}
+                            {/* Accordion Content */}
+                            <AnimatePresence>
+                              {expandedMobileItem === item.name && (
+                                <motion.div
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: "auto", opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  transition={{ duration: 0.25 }}
+                                  className="bg-white px-3 py-2 space-y-1 divide-y divide-slate-50"
+                                >
+                                  {item.dropdown.map((drop) => (
+                                    <Link
+                                      key={drop.name}
+                                      href={drop.href}
+                                      onClick={() => setIsMobileMenuOpen(false)}
+                                      className="block py-2 px-3 rounded-lg text-sm text-slate-700 hover:text-primary hover:bg-blue-50 transition-colors"
+                                    >
+                                      <div className="font-medium">
+                                        {drop.name}
                                       </div>
-                                    )}
-                                  </Link>
-                                ))}
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                        </div>
-                      ) : (
-                        <Link
-                          href={item.href}
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          className={`block px-4 py-3 rounded-xl font-semibold transition-all ${
-                            item.active
-                              ? "bg-blue-50 text-blue-900 border border-blue-100"
-                              : "text-slate-700 hover:bg-slate-50"
-                          }`}
-                        >
-                          {item.name}
-                        </Link>
-                      )}
-                    </motion.div>
-                  ))}
+                                    </Link>
+                                  ))}
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        ) : (
+                          <Link
+                            href={item.href}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className={`block px-4 py-3 rounded-xl font-semibold transition-all ${
+                              active
+                                ? "bg-blue-50 text-primary border border-blue-100"
+                                : "text-slate-700 hover:bg-slate-50"
+                            }`}
+                          >
+                            {item.name}
+                          </Link>
+                        )}
+                      </motion.div>
+                    );
+                  })}
                 </motion.nav>
               </div>
 
               {/* Mobile Menu Footer Action & Contacts */}
               <div className="p-4 border-t border-slate-100 bg-slate-50/70 space-y-4">
-                <button className="w-full py-3 rounded-xl bg-secondary hover:bg-primary text-white font-semibold text-center shadow-md hover:bg-[#073163] active:scale-98 transition-all">
+                <button className="w-full py-3 rounded-xl bg-secondary hover:bg-primary text-white font-medium text-center shadow-md hover:bg-[#073163] active:scale-98 transition-all">
                   Get a Quote
                 </button>
 

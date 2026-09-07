@@ -124,14 +124,15 @@ export default function Footer() {
               className="flex items-center gap-3 group inline-block focus:outline-none"
             >
               <div className="relative h-10 w-44">
-                            <Image
-                              src="/middleeast_white_logo.webp"
-                              alt="Logo"
-                              fill
-                              className="object-contain"
-                              priority
-                            />
-                          </div>
+                <Image
+                  src="/middleeast_white_logo.webp"
+                  alt="Logo"
+                  fill
+                  sizes="176px"
+                  className="object-contain"
+                  priority
+                />
+              </div>
             </Link>
 
             <p className="text-slate-400 text-sm leading-relaxed font-normal">

@@ -5,6 +5,7 @@ import VisaServices from "@/components/VisaServices";
 import Counts from "@/components/Counts";
 import Blogs from "@/components/Blogs";
 import Testimonials from "@/components/Testimonials";
+import Contact from "@/components/contact";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -21,6 +22,7 @@ export default function Home() {
         <Counts />
         <Testimonials />
         <Blogs />
+        <Contact />
       </main>
 
       {/* Modern Big Footer Component */}
