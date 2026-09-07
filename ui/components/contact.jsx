@@ -63,11 +63,9 @@ export default function Contact() {
             
             {/* Headings */}
             <div className="space-y-2">
-              <span className="text-xs uppercase tracking-wider text-[#19A64B] block">
-                Contact Us
-              </span>
+      
               <h2 className="text-2xl sm:text-3xl font-semibold text-[#021b38] tracking-tight">
-                Get In Touch With Us
+                Get In Touch <span className="text-primary">With Us</span>
               </h2>
               <p className="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-lg">
                 Have questions about our travel packages or visa services? Drop us a message and we'll get back to you.

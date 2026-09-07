@@ -162,7 +162,7 @@ export const visaPackagesData = [
   },
   {
     id: 5,
-    title: "Saudi Tourist & Umrah Visa",
+    title: "Saudi Tourist Visa",
     duration: "24 - 72 Hours Processing",
     price: "From ₹8,999/-",
     badge: "1 Year Multiple",

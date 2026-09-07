@@ -84,7 +84,7 @@ export default function Hero() {
               className="object-cover object-center"
             />
             {/* Gradient Overlays for optimal text contrast */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/20 to-black/10" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/5 via-black/20 to-black/10" />
           </motion.div>
         </AnimatePresence>
       </motion.div>
@@ -102,50 +102,26 @@ export default function Hero() {
               </h1>
               {/* fancy heading using Playball font */}
               <div
-                className={`${playball.className} text-4xl sm:text-5xl lg:text-6xl text-white tracking-wide leading-tight`}
+                className={`${playball.className} text-4xl sm:text-5xl lg:text-6xl text-primary tracking-wide leading-tight`}
               >
                 With Confidence
               </div>
             </div>
 
             {/* Paragraph Subtitle */}
-            <p className="text-slate-200 text-xs sm:text-sm md:text-base font-normal max-w-xl leading-relaxed">
+            <p className="text-white text-xs sm:text-sm md:text-base font-normal max-w-md leading-relaxed">
               Explore handpicked holiday packages, instant visa assistance, and 24/7 dedicated support. Your dream journey starts right here with Middle East Travels.
             </p>
 
-            {/* Feature Badges Row */}
-            <div className="hidden md:flex flex-wrap items-center gap-2.5 sm:gap-3.5 pt-1">
-              <div className="inline-flex items-center gap-2.5 px-4 py-3.5 rounded-full bg-white backdrop-blur-sm shadow-sm text-xs font-medium text-[#021b38]">
-                <span className="flex items-center justify-center text-secondary text-xs shadow-xs">
-                  <FaShieldHalved className="text-lg" />
-                </span>
-                <span>Verified Travel Agency</span>
-              </div>
-
-              <div className="inline-flex items-center gap-2.5 px-4 py-3.5 rounded-full bg-white backdrop-blur-sm shadow-sm text-xs font-medium text-[#021b38]">
-                <span className="flex items-center justify-center text-secondary text-xs shadow-xs">
-                  <FaAward className="text-lg" />
-                </span>
-                <span>Best Price Guarantee</span>
-              </div>
-
-           
-
-              <div className="inline-flex items-center gap-2.5 px-4 py-3.5 rounded-full bg-white backdrop-blur-sm shadow-sm text-xs font-medium text-[#021b38]">
-                <span className="flex items-center justify-center text-secondary text-xs shadow-xs">
-                  <FaLock className="text-lg" />
-                </span>
-                <span>Secure Booking</span>
-              </div>
-            </div>
+          
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap items-center gap-4 pt-3">
               <Link
-                href="/holidays"
-                className="px-6 py-4 rounded-xl bg-secondary hover:bg-primary text-white font-semibold text-xs md:text-sm shadow-md hover:shadow-lg active:scale-95 transition-all duration-200"
+                href="/contact"
+                className="px-10 py-4 rounded-xl bg-primary hover:bg-secondary text-white font-semibold text-xs md:text-sm shadow-md hover:shadow-lg active:scale-95 transition-all duration-200"
               >
-                Explore Holidays
+             Apply for Visa
               </Link>
               <a
                 href="https://wa.me/7025144666"
@@ -156,6 +132,7 @@ export default function Hero() {
                 <FaWhatsapp className="text-emerald-500 text-lg" />
                 <span>Speak to an Expert</span>
               </a>
+             
             </div>
           </div>
           
@@ -248,7 +225,7 @@ export default function Hero() {
                   <div className="p-3 space-y-4">
                     {/* Title & Duration */}
                     <div>
-                      <h3 className="text-xl md:text-2xl font-semibold text-[#021b38] leading-tight">
+                      <h3 className="text-xl md:text-2xl font-semibold text-primary leading-tight">
                         {currentCard.title}
                       </h3>
                       <p className="text-xs text-slate-500 mt-1">
@@ -269,7 +246,7 @@ export default function Hero() {
                     <div>
                       <Link
                         href={currentCard.link}
-                        className="w-full py-4 rounded-xl bg-secondary hover:bg-primary text-white font-medium text-xs shadow-md active:scale-95 transition-all text-center block"
+                        className="w-full py-4 rounded-xl bg-primary hover:bg-secondary text-white font-medium text-xs shadow-md active:scale-95 transition-all text-center block"
                       >
                         View Package
                       </Link>
@@ -299,7 +276,7 @@ export default function Hero() {
                     aria-label={`Package card slide ${idx + 1}`}
                     className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                       activeCardIndex === idx
-                        ? "w-4 bg-[#FFB705]"
+                        ? "w-4 bg-secondary"
                         : "w-2 bg-white hover:bg-white/90 border border-slate-300/80 shadow-xs"
                     }`}
                   />

@@ -1,15 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
+import TouchMarquee from "./TouchMarquee";
 import { FaArrowRight, FaFire, FaCrown, FaStar, FaTag } from "react-icons/fa6";
 import { HiSparkles } from "react-icons/hi2";
 import { tourPackagesData } from "@/data/allData.js";
-
-import "swiper/css";
 
 const getBadgeIcon = (type) => {
   switch (type) {
@@ -29,16 +26,13 @@ const getBadgeIcon = (type) => {
 };
 
 export default function TourPackages() {
-  const [swiperRef, setSwiperRef] = useState(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-
   return (
-    <section className="w-full py-12 lg:py-16 bg-slate-50 font-sans">
+    <section className="w-full py-12 lg:py-16 bg-slate-50 font-sans overflow-hidden">
       <div className="w-11/12 mx-auto space-y-6">
         {/* Section Header Row */}
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-[#021b38] tracking-tight">
-            Tour packages
+          <h2 className="text-2xl sm:text-3xl font-semibold capitalize text-[#021b38] tracking-tight">
+            Tour <span className="text-primary">packages</span>
           </h2>
 
           <Link
@@ -50,37 +44,14 @@ export default function TourPackages() {
           </Link>
         </div>
 
-        {/* Swiper Carousel Container */}
-        <div className="relative">
-          <Swiper
-            onSwiper={setSwiperRef}
-            onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-            modules={[Autoplay]}
-            spaceBetween={15}
-            slidesPerView={1.08}
-            loop={true}
-            autoplay={{ delay: 4500, disableOnInteraction: false }}
-            breakpoints={{
-              640: {
-                slidesPerView: 1.8,
-                spaceBetween: 15,
-              },
-              768: {
-                slidesPerView: 2.4,
-                spaceBetween: 15,
-              },
-              1024: {
-                slidesPerView: 4.2,
-                spaceBetween: 15,
-              },
-            }}
-            className="w-full !pb-4"
-          >
+        {/* Touch & Auto-Scroll Marquee Container */}
+        <div className="w-full py-2">
+          <TouchMarquee speed={1.2}>
             {tourPackagesData.map((item) => (
-              <SwiperSlide key={item.id} className="h-auto">
+              <div key={item.id} className="w-[320px] lg:w-[340px] px-2.5 py-2 shrink-0">
                 <Link
                   href={item.link}
-                  className="bg-white rounded-[2.25rem] border border-slate-200/80 shadow-xs hover:shadow-xl transition-all duration-300 p-3 flex flex-col justify-between h-full group block"
+                  className="bg-white rounded-[2.25rem] border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-300 p-3 flex flex-col justify-between h-full group block"
                 >
                   <div>
                     {/* Top Smooth Rounded Image Container */}
@@ -133,49 +104,33 @@ export default function TourPackages() {
                           </>
                         )}
                       </ul>
-                  {/* Bottom Border & Price Section */}
-                  <div className="border-t border-slate-100 pt-4 mt-auto flex items-center justify-between">
-                    <div className="space-y-2">
-                      <span className="text-[11px] text-slate-400 font-normal block leading-tight">
-                        Starting from
-                      </span>
-                      <span className="text-lg sm:text-xl font-bold text-slate-950 tracking-tight">
-                        {item.price}
-                      </span>
-                    </div>
 
-                    <div className="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-primary text-slate-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs">
-                      <FaArrowRight className="text-xs" />
+                      {/* Bottom Border & Price Section */}
+                      <div className="border-t border-slate-100 pt-4 mt-auto flex items-center justify-between">
+                        <div className="space-y-2">
+                          <span className="text-[11px] text-slate-400 font-normal block leading-tight">
+                            Starting from
+                          </span>
+                          <span className="text-lg sm:text-xl font-bold text-slate-950 tracking-tight">
+                            {item.price}
+                          </span>
+                        </div>
+
+                        <div className="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-primary text-slate-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs">
+                          <FaArrowRight className="text-xs" />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                    </div>
-                  </div>
-
                 </Link>
-              </SwiperSlide>
+              </div>
             ))}
-          </Swiper>
-
-          {/* Centered Pagination Dots */}
-          <div className="flex items-center justify-center gap-2 pt-6">
-            {tourPackagesData.map((_, dotIndex) => {
-              const isActive = activeIndex === dotIndex;
-              return (
-                <button
-                  key={dotIndex}
-                  onClick={() => swiperRef?.slideToLoop(dotIndex)}
-                  aria-label={`Go to slide ${dotIndex + 1}`}
-                  className={`transition-all duration-300 rounded-full cursor-pointer border ${
-                    isActive
-                      ? "w-4 h-2 bg-[#021b38] border-[#021b38]"
-                      : "w-2 h-2 bg-white border-slate-300 hover:border-[#021b38]"
-                  }`}
-                />
-              );
-            })}
-          </div>
+          </TouchMarquee>
         </div>
+
       </div>
     </section>
   );
 }
+
+

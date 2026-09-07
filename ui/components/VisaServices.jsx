@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
+import TouchMarquee from "./TouchMarquee";
 import {
   FaArrowRight,
   FaFire,
@@ -14,8 +13,6 @@ import {
 } from "react-icons/fa6";
 import { HiSparkles } from "react-icons/hi2";
 import { visaPackagesData } from "@/data/allData.js";
-
-import "swiper/css";
 
 const getBadgeIcon = (type) => {
   switch (type) {
@@ -34,18 +31,15 @@ const getBadgeIcon = (type) => {
 };
 
 export default function VisaServices() {
-  const [swiperRef, setSwiperRef] = useState(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-
   return (
-    <section className="w-full py-12 lg:py-16 bg-slate-50 font-sans">
+    <section className="w-full py-12 lg:py-16 bg-slate-50 font-sans overflow-hidden">
       <div className="w-11/12 mx-auto space-y-6">
         
         {/* Section Header Row */}
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl sm:text-3xl font-semibold text-[#021b38] tracking-tight">
-              Visa Services
+              Visa <span className="text-primary">Services</span>
             </h2>
           </div>
 
@@ -58,41 +52,18 @@ export default function VisaServices() {
           </Link>
         </div>
 
-        {/* Swiper Carousel Container */}
-        <div className="relative">
-          <Swiper
-            onSwiper={setSwiperRef}
-            onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-            modules={[Autoplay]}
-            spaceBetween={15}
-            slidesPerView={1.08}
-            loop={true}
-            autoplay={{ delay: 4500, disableOnInteraction: false }}
-            breakpoints={{
-              640: {
-                slidesPerView: 1.8,
-                spaceBetween: 15,
-              },
-              768: {
-                slidesPerView: 2.4,
-                spaceBetween: 15,
-              },
-              1024: {
-                slidesPerView: 4.2,
-                spaceBetween: 15,
-              },
-            }}
-            className="w-full !pb-4"
-          >
+        {/* Touch & Auto-Scroll Marquee Container */}
+        <div className="w-full py-2">
+          <TouchMarquee speed={1.2}>
             {visaPackagesData.map((item) => (
-              <SwiperSlide key={item.id} className="h-auto">
+              <div key={item.id} className="w-[320px] lg:w-[340px] px-2.5 py-2 shrink-0">
                 <Link
                   href={item.link}
-                  className="bg-white rounded-[2.25rem] overflow-hidden border border-slate-200/80 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full group block"
+                  className="bg-white rounded-[2.25rem] overflow-hidden border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full group block"
                 >
                   <div>
                     {/* Top Smooth Rounded Image Container */}
-                    <div className="relative w-full aspect-[4/3]  overflow-hidden mb-4 bg-slate-100">
+                    <div className="relative w-full aspect-[4/3] overflow-hidden mb-4 bg-slate-100">
                       <Image
                         src={item.image}
                         alt={item.title}
@@ -115,7 +86,6 @@ export default function VisaServices() {
                           />
                         </div>
                       )}
-
                     </div>
 
                     <div className="p-5 pt-0">
@@ -146,30 +116,10 @@ export default function VisaServices() {
                       </div>
                     </div>
                   </div>
-
                 </Link>
-              </SwiperSlide>
+              </div>
             ))}
-          </Swiper>
-
-          {/* Centered Pagination Dots */}
-          <div className="flex items-center justify-center gap-2 pt-5">
-            {visaPackagesData.map((_, dotIndex) => {
-              const isActive = activeIndex === dotIndex;
-              return (
-                <button
-                  key={dotIndex}
-                  onClick={() => swiperRef?.slideToLoop(dotIndex)}
-                  aria-label={`Go to slide ${dotIndex + 1}`}
-                  className={`transition-all duration-300 rounded-full cursor-pointer border ${
-                    isActive
-                      ? "w-4 h-2 bg-[#021b38] border-[#021b38]"
-                      : "w-2 h-2 bg-white border-slate-300 hover:border-[#021b38]"
-                  }`}
-                />
-              );
-            })}
-          </div>
+          </TouchMarquee>
         </div>
 
       </div>

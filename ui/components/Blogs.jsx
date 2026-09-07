@@ -21,7 +21,7 @@ export default function Blogs() {
           <div className=" flex flex-col justify-start h-full space-y-4 md:space-y-6">
             <div>
               <h2 className="text-2xl sm:text-3xl font-semibold capitalize text-[#021b38] tracking-tight">
-                Our latest <span className="text-[#021b38]">blogs</span>
+                Our latest <span className="text-primary">blogs</span>
               </h2>
 
               <p className="text-slate-500 text-xs sm:text-sm font-normal leading-relaxed mt-4 max-w-sm">

@@ -1,61 +1,36 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
+import TouchMarquee from "./TouchMarquee";
 import { FaStar, FaQuoteLeft } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { testimonialsData } from "@/data/allData.js";
 
-import "swiper/css";
-
 export default function Testimonials() {
-  const [swiperRef, setSwiperRef] = useState(null);
-  const [activeSlide, setActiveSlide] = useState(0);
-
   return (
-    <section className="w-full py-10 sm:py-14 bg-slate-50/60 font-sans">
+    <section className="w-full py-10 sm:py-14 bg-slate-50/60 font-sans overflow-hidden">
       <div className="w-11/12 mx-auto space-y-4">
         
         {/* Section Header Row */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h2 className="text-2xl sm:text-3xl font-semibold text-[#021b38] tracking-tight">
-              What Our Travellers Say
+              What Our <span className="text-primary">Travellers</span> Say
             </h2>
           </div>
         </div>
 
-        {/* Testimonials Swiper Carousel & Google Rating Card */}
+        {/* Testimonials Marquee & Google Rating Card */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5 items-stretch">
           
-          {/* Left Swiper Testimonial Carousel (9 Cols) */}
-          <div className="lg:col-span-9 w-full min-w-0">
-            <Swiper
-              onSwiper={setSwiperRef}
-              onSlideChange={(swiper) => setActiveSlide(swiper.realIndex)}
-              modules={[Autoplay]}
-              spaceBetween={16}
-              slidesPerView={1.1}
-              loop={true}
-              autoplay={{ delay: 4500, disableOnInteraction: false }}
-              breakpoints={{
-                640: {
-                  slidesPerView: 2,
-                  spaceBetween: 16,
-                },
-                1024: {
-                  slidesPerView: 3,
-                  spaceBetween: 16,
-                },
-              }}
-              className="w-full h-full !pb-4"
-            >
+          {/* Left Testimonial Carousel (9 Cols) */}
+          <div className="lg:col-span-9 w-full min-w-0 py-2">
+            <TouchMarquee speed={1.2}>
               {testimonialsData.map((item) => (
-                <SwiperSlide key={item.id} className="h-auto">
-                  <div className="bg-white rounded-[2rem] border border-slate-200/70 p-6 shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between h-full group">
+                <div key={item.id} className="w-[320px] lg:w-[340px] px-2.5 py-2 shrink-0">
+                  <div className="bg-white rounded-[2rem] border border-slate-200/70 p-6 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full group">
                     
                     <div>
                       {/* Top Header Row: Cyan Quote Left & Google Pill */}
@@ -114,29 +89,14 @@ export default function Testimonials() {
                     </div>
 
                   </div>
-                </SwiperSlide>
+                </div>
               ))}
-            </Swiper>
-
-            {/* Bottom Centered Pagination Dots */}
-            <div className="flex items-center justify-center gap-2 pt-4">
-              {testimonialsData.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => swiperRef?.slideToLoop(index)}
-                  className={`transition-all duration-300 rounded-full cursor-pointer border ${
-                    activeSlide === index
-                      ? "w-4 h-2 bg-[#021b38] border-[#021b38]"
-                      : "w-2 h-2 bg-white border-slate-300 hover:border-[#021b38]"
-                  }`}
-                  aria-label={`Slide ${index + 1}`}
-                />
-              ))}
-            </div>
+            </TouchMarquee>
           </div>
 
+
           {/* Right Google Summary Rating Card (3 Cols) */}
-          <div className="lg:col-span-3 flex mt-6 md:mt-0">
+          <div className="lg:col-span-3 flex">
             <div className="w-full bg-white rounded-[2rem] p-6 shadow-xs border border-slate-200/70 flex flex-col items-center justify-center text-center space-y-2.5 hover:shadow-md transition-all duration-300">
               
               {/* Google G Logo */}
