@@ -475,35 +475,69 @@ export default function Header() {
                       <motion.div key={item.name} variants={menuItemVariants}>
                         {item.dropdown ? (
                           <div className="rounded-xl overflow-hidden border border-slate-100">
-                            <button
-                              onClick={() => toggleMobileDropdown(item.name)}
-                              className="w-full px-4 py-3 text-left font-semibold text-slate-800 flex items-center justify-between bg-slate-50/60 hover:bg-slate-100/80 transition-colors"
-                            >
-                              <span className="flex items-center gap-2">
-                                {item.name}
-                                {active && (
-                                  <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                                )}
-                              </span>
-                              <FaChevronDown
-                                className={`text-xs text-slate-500 transition-transform duration-300 ${
-                                  expandedMobileItem === item.name
-                                    ? "rotate-180 text-primary"
-                                    : ""
-                                }`}
-                              />
-                            </button>
+                            <div className="w-full px-4 py-3 font-semibold text-slate-800 flex items-center justify-between bg-slate-50/60 hover:bg-slate-100/80 transition-colors">
+                              {item.href && item.href !== "#" ? (
+                                <Link
+                                  href={item.href}
+                                  onClick={() => setIsMobileMenuOpen(false)}
+                                  className="flex items-center gap-2 flex-1 text-left hover:text-primary transition-colors"
+                                >
+                                  <span>{item.name}</span>
+                                  {active && (
+                                    <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                  )}
+                                </Link>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={() => toggleMobileDropdown(item.name)}
+                                  className="flex items-center gap-2 flex-1 text-left hover:text-primary transition-colors cursor-pointer"
+                                >
+                                  <span>{item.name}</span>
+                                  {active && (
+                                    <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                  )}
+                                </button>
+                              )}
+
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleMobileDropdown(item.name);
+                                }}
+                                className="p-1 pl-3 text-slate-500 hover:text-primary transition-colors cursor-pointer"
+                                aria-label={`Toggle ${item.name} menu`}
+                              >
+                                <FaChevronDown
+                                  className={`text-xs transition-transform duration-300 ${
+                                    expandedMobileItem === item.name
+                                      ? "rotate-180 text-primary"
+                                      : ""
+                                  }`}
+                                />
+                              </button>
+                            </div>
 
                             {/* Accordion Content */}
-                            <AnimatePresence>
+                            <AnimatePresence initial={false}>
                               {expandedMobileItem === item.name && (
                                 <motion.div
                                   initial={{ height: 0, opacity: 0 }}
                                   animate={{ height: "auto", opacity: 1 }}
                                   exit={{ height: 0, opacity: 0 }}
-                                  transition={{ duration: 0.25 }}
-                                  className="bg-white px-3 py-2 space-y-1 divide-y divide-slate-50"
+                                  transition={{ duration: 0.25, ease: "easeInOut" }}
+                                  className="bg-white px-3 py-2 space-y-1 overflow-hidden border-t border-slate-100"
                                 >
+                                  {item.href && item.href !== "#" && (
+                                    <Link
+                                      href={item.href}
+                                      onClick={() => setIsMobileMenuOpen(false)}
+                                      className="block py-2 px-3 rounded-lg text-xs font-bold text-primary bg-primary/5 hover:bg-primary/10 transition-colors"
+                                    >
+                                      All {item.name} →
+                                    </Link>
+                                  )}
                                   {item.dropdown.map((drop) => (
                                     <Link
                                       key={drop.name}

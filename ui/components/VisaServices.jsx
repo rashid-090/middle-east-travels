@@ -56,7 +56,7 @@ export default function VisaServices() {
         <div className="w-full py-2">
           <TouchMarquee speed={1.2}>
             {visaPackagesData.map((item) => (
-              <div key={item.id} className="w-[320px] lg:w-[340px] px-2.5 py-2 shrink-0">
+              <div key={item.id} className="w-[300px] lg:w-[320px] px-2.5 py-2 shrink-0">
                 <Link
                   href={item.link}
                   className="bg-white rounded-[2.25rem] overflow-hidden border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full group block"
