@@ -45,7 +45,7 @@ export default function Contact() {
           {/* LEFT COLUMN: IMAGE WITH STAT BADGE (5 COLS) */}
           <div className="lg:col-span-5 relative w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-lg border border-slate-200">
             <Image
-              src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1000&q=90"
+              src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?q=100"
               alt="Travel Explorer looking at mountain landscape"
               fill
               sizes="(max-width: 1024px) 100vw, 40vw"
@@ -149,7 +149,7 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-fit py-4 px-10 rounded-xl bg-[#021b38] hover:bg-[#19A64B] text-white text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75"
+                  className="w-fit py-4 px-10 rounded-xl bg-primary hover:bg-secondary text-white text-xs sm:text-sm font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75"
                 >
                   {isSubmitting ? (
                     <>

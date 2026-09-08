@@ -62,12 +62,12 @@ export default function Footer() {
 
       {/* ================= PROMO CTA BANNER (MATCHING EXACT REFERENCE) ================= */}
       <div className="w-11/12 mx-auto py-10  border-b border-slate-800/80">
-        <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-[#021b38] border border-blue-900/40 p-6 sm:p-8 lg:p-10 min-h-[220px] flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-[#021b38] border border-primary/40 p-6 sm:p-8 lg:p-10 min-h-[220px] flex flex-col md:flex-row items-center justify-between gap-6">
           
           {/* Background Mountain/Hiker Image Overlay */}
           <div className="absolute inset-0 z-0 pointer-events-none">
             <Image
-              src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1600&q=85"
+              src="https://images.unsplash.com/photo-1484821582734-6c6c9f99a672?q=100"
               alt="Hiker overlooking scenic mountain landscape"
               fill
               sizes="100vw"

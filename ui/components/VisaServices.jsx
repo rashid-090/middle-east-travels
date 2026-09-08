@@ -90,7 +90,7 @@ export default function VisaServices() {
 
                     <div className="p-5 pt-0">
                       {/* Title */}
-                      <h3 className="text-lg font-semibold text-slate-900 leading-snug tracking-tight mb-1">
+                      <h3 className="text-lg font-semibold text-primary leading-snug tracking-tight mb-1">
                         {item.title}
                       </h3>
 

@@ -71,7 +71,7 @@ export default function Counts() {
             <div className="lg:col-span-5 space-y-4">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-medium tracking-tight text-white leading-tight">
-                  <span>Why 2M+ Travellers<br/> Choose Middle East Travels?</span>
+                  <span>Why 2M+ Travellers<br/> Choose <span className="text-primary">Middle East</span> Travels?</span>
                 </h2>
               </div>
 

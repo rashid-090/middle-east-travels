@@ -78,7 +78,7 @@ export default function TourPackages() {
 
                     <div className="p-2">
                       {/* Title */}
-                      <h3 className="text-xl font-bold text-slate-900 leading-snug tracking-tight mb-1">
+                      <h3 className="text-xl font-semibold text-primary leading-snug tracking-tight mb-1">
                         {item.title} Tour Package
                       </h3>
 

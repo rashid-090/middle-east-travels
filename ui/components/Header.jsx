@@ -28,58 +28,58 @@ const navItems = [
   { name: "Home", href: "/" },
   {
     name: "Tour packages",
-    href: "/holidays",
+    href: "/tour-packages",
     dropdown: [
       {
         name: "Dubai Luxury Getaways",
-        href: "/holidays/dubai",
+        href: "#",
       },
       {
         name: "Saudi Heritage Tours",
-        href: "/holidays/saudi",
+        href: "#",
       },
       {
         name: "Oman Nature & Fjords",
-        href: "/holidays/oman",
+        href: "#",
       },
       {
         name: "Qatar Cultural Escapes",
-        href: "/holidays/qatar",
+        href: "#",
       },
     ],
   },
 
   {
     name: "Visa Services",
-    href: "/visa",
+    href: "#",
     dropdown: [
       {
         name: "Tourist Visa",
-        href: "/visa/tourist",
+        href: "#",
       },
       {
         name: "Business Visa",
-        href: "/visa/business",
+        href: "#",
       },
       {
         name: "Express 24h Processing",
-        href: "/visa/express",
+        href: "#",
       },
     ],
   },
   {
     name: "Other services",
-    href: "/services",
+    href: "#",
     dropdown: [
       {
         name: "Ticketing",
-        href: "/services/ticketing",
+        href: "#",
       },
 
     ],
   },
-  { name: "About us", href: "/about" },
-  { name: "Contact us", href: "/contact" },
+  { name: "About us", href: "#" },
+  { name: "Contact us", href: "#" },
 ];
 
 export default function Header() {

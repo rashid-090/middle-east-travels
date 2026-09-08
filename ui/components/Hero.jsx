@@ -238,7 +238,7 @@ export default function Hero() {
                       <span className="text-xs text-slate-400 font-normal block">
                         Starting from
                       </span>
-                      <span className="text-3xl font-bold font-google-sans text-[#021b38] tracking-tight">
+                      <span className="text-2xl font-bold font-google-sans text-[#021b38] tracking-tight">
                         {currentCard.price}
                       </span>
                     </div>
