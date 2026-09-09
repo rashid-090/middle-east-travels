@@ -24,6 +24,8 @@ import {
   FaFire,
   FaCrown,
   FaTag,
+  FaMugHot,
+  FaBinoculars,
 } from "react-icons/fa6";
 import { HiSparkles } from "react-icons/hi2";
 
@@ -41,6 +43,21 @@ const getBadgeIcon = (type) => {
       return <HiSparkles className="text-purple-500 text-xs" />;
     default:
       return <FaStar className="text-amber-400 text-xs" />;
+  }
+};
+
+const getInclusionIcon = (type) => {
+  switch (type) {
+    case "hotel":
+      return <FaHotel className="text-slate-600 text-sm" />;
+    case "breakfast":
+      return <FaMugHot className="text-slate-600 text-sm" />;
+    case "transfer":
+      return <FaCar className="text-slate-600 text-sm" />;
+    case "sightseeing":
+      return <FaBinoculars className="text-slate-600 text-sm" />;
+    default:
+      return <FaHotel className="text-slate-600 text-sm" />;
   }
 };
 
@@ -512,60 +529,109 @@ export default function TourPackageDetailPage() {
                         )}
                       </div>
 
-                      <div className="p-2">
-                        {/* Title */}
-                        <h3 className="text-xl font-semibold text-primary leading-snug tracking-tight mb-1">
-                          {item.title} Tour Package
-                        </h3>
-
-                        {/* Category & Duration Row */}
-                        <div className="flex items-center gap-2 mb-3">
-                          {item.category && (
-                            <span
-                              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-medium ${
-                                item.category === "International"
-                                  ? "bg-emerald-50 text-secondary border border-gray-200"
-                                  : "bg-emerald-50 text-secondary border border-gray-200"
-                              }`}
-                            >
-                              {item.category}
-                            </span>
+                      <div className="px-1 pt-1">
+                        {/* Title & Rating Row */}
+                        <div className="flex items-start justify-between gap-2 mb-0.5">
+                          <h3 className="text-lg sm:text-xl font-bold text-[#021b38] leading-snug tracking-tight">
+                            {item.title} Tour Packages
+                          </h3>
+                          {item.rating && (
+                            <div className="flex items-center gap-1 font-bold text-slate-900 text-sm shrink-0 pt-0.5">
+                              <span>{item.rating}</span>
+                              <FaStar className="text-amber-400 text-sm fill-amber-400" />
+                            </div>
                           )}
-                          <span className="text-xs sm:text-sm text-slate-500 font-normal">
-                            {item.duration}
-                          </span>
                         </div>
 
-                        {/* Bullet Highlights */}
-                        <ul className="space-y-1.5 text-xs sm:text-sm text-slate-600 font-normal mb-2">
+                        {/* Duration */}
+                        <p className="text-xs sm:text-sm text-slate-500 font-normal mb-3">
+                          {item.duration || "5 Days 4 Nights"}
+                        </p>
+
+                        {/* 4 Inclusion Icons Row */}
+                        <div className="grid grid-cols-4 gap-1.5 mb-3 bg-slate-50/80 p-2 rounded-2xl border border-slate-100">
+                          {(
+                            item.inclusionIcons || [
+                              { icon: "hotel", label: "04 Nights stay" },
+                              { icon: "breakfast", label: "Daily breakfast" },
+                              { icon: "transfer", label: "All transfers" },
+                              { icon: "sightseeing", label: "Sight seeing" },
+                            ]
+                          ).map((inc, i) => (
+                            <div
+                              key={i}
+                              className="flex flex-col items-center text-center relative group/tooltip"
+                              title={inc.label}
+                            >
+                              <div className="w-9 h-9 rounded-xl bg-white border border-slate-200/70 shadow-xs flex items-center justify-center mb-1">
+                                {getInclusionIcon(inc.icon)}
+                              </div>
+                              <span className="text-[10px] text-slate-700 font-semibold leading-tight line-clamp-1 w-full text-center">
+                                {inc.label}
+                              </span>
+
+                              {/* Full Label Tooltip on Hover */}
+                              <div className="absolute bottom-full mb-1.5 hidden group-hover/tooltip:flex flex-col items-center z-30 pointer-events-none whitespace-nowrap">
+                                <span className="bg-slate-900 text-white text-[10px] font-medium px-2 py-1 rounded-md shadow-lg">
+                                  {inc.label}
+                                </span>
+                                <span className="w-1.5 h-1.5 bg-slate-900 rotate-45 -mt-1" />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Bullet Points Highlights */}
+                        <ul className="space-y-1 text-xs text-slate-600 font-normal mb-1">
                           {item.highlights && item.highlights.length > 0 ? (
-                            item.highlights.slice(0, 3).map((point, pointIdx) => (
-                              <li key={pointIdx} className="flex items-start gap-2">
-                                <span className="text-slate-400 font-bold text-sm leading-none">
-                                  •
-                                </span>
-                                <span className="leading-snug text-xs line-clamp-1">
-                                  {point}
-                                </span>
-                              </li>
-                            ))
+                            item.highlights
+                              .slice(0, 2)
+                              .map((point, pointIdx) => (
+                                <li
+                                  key={pointIdx}
+                                  className="flex items-start gap-1.5"
+                                >
+                                  <span className="text-slate-400 font-bold text-xs leading-none pt-0.5">
+                                    •
+                                  </span>
+                                  <span className="leading-snug text-xs line-clamp-1">
+                                    {point}
+                                  </span>
+                                </li>
+                              ))
                           ) : (
-                            <p>No highlights available</p>
+                            <li className="flex items-start gap-1.5">
+                              <span className="text-slate-400 font-bold text-xs">
+                                •
+                              </span>
+                              <span className="leading-snug text-xs">
+                                Hotel Stay & Daily Breakfast
+                              </span>
+                            </li>
                           )}
                         </ul>
 
-                        {/* Price & Action Row */}
-                        <div className="border-t border-slate-100 pt-4 mt-auto flex items-center justify-between">
-                          <div className="space-y-1">
-                            <span className="text-[11px] text-slate-400 font-normal block leading-tight">
-                              Starting from
-                            </span>
-                            <span className="text-lg sm:text-xl font-bold text-slate-950 tracking-tight">
+                        {/* See X More Items Link */}
+                        {item.highlights && item.highlights.length > 2 && (
+                          <span className="text-xs font-semibold text-teal-700 hover:text-teal-800 hover:underline cursor-pointer block mb-3 pt-0.5">
+                            See {item.highlights.length - 2} more items
+                          </span>
+                        )}
+
+                        {/* Bottom Border & Price Section */}
+                        <div className="border-t border-slate-100 pt-3 mt-3 flex items-center justify-between">
+                          <div className="flex items-baseline gap-1.5 flex-wrap">
+                            {item.oldPrice && (
+                              <span className="text-xs text-slate-400 line-through font-normal">
+                                {item.oldPrice}
+                              </span>
+                            )}
+                            <span className="text-lg sm:text-xl font-extrabold text-slate-950 tracking-tight">
                               {item.price}
                             </span>
                           </div>
 
-                          <div className="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-primary text-slate-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs">
+                          <div className="w-9 h-9 rounded-full bg-slate-100 group-hover:bg-primary text-slate-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs shrink-0">
                             <FaArrowRight className="text-xs" />
                           </div>
                         </div>

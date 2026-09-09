@@ -115,7 +115,12 @@ export default function TouchMarquee({
     >
       <div className="flex shrink-0 items-stretch">{children}</div>
       <div className="flex shrink-0 items-stretch" aria-hidden="true">
-        {children}
+        {React.Children.map(children, (child, index) => {
+          if (!React.isValidElement(child)) return child;
+          return React.cloneElement(child, {
+            key: child.key ? `${child.key}-dup-${index}` : `dup-${index}`,
+          });
+        })}
       </div>
     </div>
   );
