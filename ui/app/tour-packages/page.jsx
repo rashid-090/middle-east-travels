@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { tourPackagesData } from "@/data/allData";
 import {
   FaArrowRight,
@@ -25,6 +26,7 @@ import {
   FaMugHot,
   FaCar,
   FaBinoculars,
+  FaSliders,
 } from "react-icons/fa6";
 import { HiSparkles } from "react-icons/hi2";
 
@@ -67,6 +69,17 @@ export default function TourPackagesPage() {
   const [activeBannerCategory, setActiveBannerCategory] =
     useState("All Packages");
   const [sortBy, setSortBy] = useState("default");
+
+  const bannerRef = useRef(null);
+
+  // Parallax Scroll Effect Setup for Maldives Sunset Banner
+  const { scrollYProgress } = useScroll({
+    target: bannerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const bgY = useTransform(scrollYProgress, [0, 1], ["-12%", "30%"]);
+  const bgScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.15]);
 
   const categories = ["All", "International", "Domestic"];
   const regions = [
@@ -167,18 +180,26 @@ export default function TourPackagesPage() {
     <div className="min-h-screen bg-white text-slate-900 font-sans flex flex-col">
       <main className="flex-1">
         {/* ================= MALDIVES SUNSET HERO BANNER ================= */}
-        <section className="w-11/12  mx-auto my-6 lg:my-8 rounded-3xl overflow-hidden relative shadow-2xl flex flex-col justify-between p-6 sm:p-10 lg:p-12 lg:py-16 text-white">
-          {/* Background Image: Maldives Ocean Sunset */}
-          <div className="absolute inset-0 z-0">
-            <Image
-              src="https://images.unsplash.com/photo-1537162998323-3d3675e0e87c?q=100"
-              alt="Maldives Tropical Sunset Vacation"
-              fill
-              priority
-              sizes="100vw"
-              quality={95}
-              className="object-cover object-center scale-105"
-            />
+        <section
+          ref={bannerRef}
+          className="w-11/12 mx-auto my-6 lg:my-8 rounded-3xl md:rounded-[2rem] overflow-hidden relative shadow-2xl flex flex-col justify-between p-4 py-6 sm:p-10 lg:p-12 lg:py-16 text-white"
+        >
+          {/* Background Image: Maldives Ocean Sunset with Parallax Scroll Effect */}
+          <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+            <motion.div
+              style={{ y: bgY, scale: bgScale }}
+              className="absolute -inset-y-12 inset-x-0 w-full h-[130%]"
+            >
+              <Image
+                src="https://images.unsplash.com/photo-1617653202545-931490e8d7e7?q=100"
+                alt="Maldives Tropical Sunset Vacation"
+                fill
+                priority
+                sizes="100vw"
+                quality={95}
+                className="object-cover object-center"
+              />
+            </motion.div>
             {/* Soft dark gradient overlay for crystal clear contrast */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/30 z-10 pointer-events-none" />
           </div>
@@ -190,7 +211,7 @@ export default function TourPackagesPage() {
                 Find Your Perfect Vacation
               </h1>
 
-              <p className="text-slate-200 text-xs sm:text-sm font-normal leading-relaxed pt-1">
+              <p className="text-slate-200 text-xs sm:text-sm font-normal w-[80%] md:w-full leading-relaxed pt-1">
                 Explore our curated selection of holiday packages for every
                 traveler.
               </p>
@@ -199,12 +220,12 @@ export default function TourPackagesPage() {
 
           {/* Middle Banner: Glassmorphism Filters Container */}
           <div className="relative z-20">
-            {/* Glass Filter Control Bar (Main Tabs, Search, Sort & Region Pills) */}
-            <div className="bg-white/15 backdrop-blur-none border border-white/25 rounded-[2rem] p-3.5 sm:p-5 shadow-2xl space-y-3.5">
+            {/* Glass Filter Control Bar */}
+            <div className="bg-white/4 backdrop-blur-xs border border-white/25 rounded-2xl sm:rounded-[2rem] p-3 sm:p-5 shadow-2xl space-y-3 sm:space-y-4">
               {/* Top Controls Row */}
-              <div className="flex flex-col lg:flex-row items-center justify-between gap-3">
+              <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
                 {/* Category Toggle Tabs (All Packages, International, Domestic) */}
-                <div className="flex items-center gap-1.5 bg-black/30 backdrop-blur-md p-1 rounded-2xl w-full lg:w-auto border border-white/15">
+                <div className="flex items-center gap-1 sm:gap-1.5 bg-black/40 backdrop-blur-md p-1 rounded-xl sm:rounded-2xl w-full lg:w-auto border border-white/15">
                   {categories.map((cat) => (
                     <button
                       key={cat}
@@ -213,27 +234,27 @@ export default function TourPackagesPage() {
                         setSelectedRegion("All");
                         setActiveBannerCategory("All Packages");
                       }}
-                      className={`flex-1 sm:flex-none px-5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 ${
+                      className={`flex-1 sm:flex-initial px-2.5 sm:px-4 py-2 rounded-lg sm:rounded-xl text-[9px] xs:text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
                         selectedCategory === cat
                           ? "bg-[#19a64b] text-white shadow-md"
                           : "text-white/80 hover:text-white hover:bg-white/10"
                       }`}
                     >
                       {cat === "International" && (
-                        <FaGlobe className="text-xs" />
+                        <FaGlobe className="text-[9px] sm:text-xs shrink-0" />
                       )}
                       {cat === "Domestic" && (
-                        <FaLocationDot className="text-xs" />
+                        <FaLocationDot className="text-[9px] sm:text-xs shrink-0" />
                       )}
                       <span>{cat === "All" ? "All Packages" : cat}</span>
                     </button>
                   ))}
                 </div>
 
-                {/* Search & Sort Controls */}
-                <div className="flex items-center gap-2.5 w-full lg:w-auto justify-between lg:justify-end">
+                {/* Search & Sort Controls Bar */}
+                <div className="flex items-center gap-2 w-full lg:w-auto">
                   {/* Search Bar */}
-                  <div className="relative flex items-center bg-white/20 backdrop-blur-md rounded-xl px-3 py-2 border border-white/30 focus-within:border-white transition-colors flex-1 lg:flex-none lg:w-64">
+                  <div className="relative flex items-center bg-black/30 sm:bg-white/20 backdrop-blur-md rounded-xl px-3 py-2 border border-white/25 focus-within:border-white transition-colors flex-1 lg:w-64">
                     <FaMagnifyingGlass className="text-white/70 text-xs shrink-0 mr-2" />
                     <input
                       type="text"
@@ -251,22 +272,45 @@ export default function TourPackagesPage() {
                       </button>
                     )}
                   </div>
+
+                  {/* Sort Dropdown */}
+                  <div className="relative shrink-0">
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="bg-black/40 sm:bg-white/20 backdrop-blur-md text-white text-[11px] sm:text-xs font-semibold rounded-xl pl-3 pr-7 py-2 border border-white/25 focus:outline-none focus:border-white cursor-pointer appearance-none font-sans h-full"
+                    >
+                      <option value="default" className="bg-slate-900 text-white">
+                        Sort: Default
+                      </option>
+                      <option value="price-low" className="bg-slate-900 text-white">
+                        Price: Low → High
+                      </option>
+                      <option value="price-high" className="bg-slate-900 text-white">
+                        Price: High → Low
+                      </option>
+                      <option value="rating" className="bg-slate-900 text-white">
+                        Rating: Top Rated
+                      </option>
+                    </select>
+                    <FaSliders className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/70 text-[10px] pointer-events-none" />
+                  </div>
                 </div>
               </div>
 
-              {/* Region Sub-Filters Row */}
-              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-2 border-t border-white/15">
-                <span className="text-[11px] font-bold text-white/70 uppercase tracking-wider shrink-0 mr-1">
+              {/* Region Sub-Filters Scrollable Pills Row */}
+              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-2.5 border-t border-white/15 scroll-smooth pb-0.5">
+                <span className="text-[8px] md:text-[11px] font-bold text-white/90 uppercase tracking-wider shrink-0 mr-1 bg-white/10 backdrop-blur-md px-2 py-1 rounded-md border border-white/15">
                   REGION:
                 </span>
                 {regions.map((region) => (
                   <button
                     key={region}
                     onClick={() => setSelectedRegion(region)}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 whitespace-nowrap cursor-pointer ${
+                    className={`px-3 py-1.5 rounded-full text-[8px] md:text-[11px] font-medium transition-all duration-200 whitespace-nowrap cursor-pointer shrink-0 ${
                       selectedRegion === region
-                        ? "bg-slate-950 text-white font-bold shadow-md"
-                        : "bg-white/15 backdrop-blur-md text-white border border-white/25 hover:bg-white/25"
+                        ? "bg-[#19a64b] text-white font-bold shadow-md"
+                        : "bg-black/30 sm:bg-white/15 backdrop-blur-md text-white/90 border border-white/20 hover:bg-white/25"
                     }`}
                   >
                     {region === "All" ? "All Regions" : region}
