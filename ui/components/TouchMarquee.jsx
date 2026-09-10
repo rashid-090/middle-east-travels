@@ -111,7 +111,7 @@ export default function TouchMarquee({
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
-      className={`flex overflow-x-auto no-scrollbar touch-pan-x select-none cursor-grab active:cursor-grabbing ${className}`}
+      className={`flex overflow-x-auto no-scrollbar touch-auto select-none cursor-grab active:cursor-grabbing ${className}`}
     >
       <div className="flex shrink-0 items-stretch">{children}</div>
       <div className="flex shrink-0 items-stretch" aria-hidden="true">

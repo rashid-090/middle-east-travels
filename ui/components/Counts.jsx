@@ -63,7 +63,7 @@ export default function Counts() {
       <div className="w-11/12 mx-auto">
         
         {/* Dark Navy Main Banner Box */}
-        <div className="relative rounded-3xl bg-secondary p-6 md:p-8 text-white shadow-2xl border border-blue-900/40 overflow-hidden">
+        <div className="relative rounded-3xl !bg-black p-6 md:p-8 text-white shadow-2xl border border-blue-900/40 overflow-hidden">
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center relative z-10">
             

@@ -195,12 +195,12 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full min-h-[90vh] flex items-center bg-slate-950 overflow-hidden font-sans"
+      className="relative w-full h-auto lg:h-screen md:min-h-screen flex items-center justify-center bg-slate-950 overflow-hidden font-sans"
     >
       {/* Background Beach Image Slideshow with Smooth Scroll Parallax */}
       <motion.div
         style={{ y: bgY, scale: bgScale }}
-        className="absolute inset-0 z-0 h-[115%] -top-[5%] w-full pointer-events-none"
+        className="absolute -inset-y-16 inset-x-0 z-0 h-[125%] w-full pointer-events-none"
       >
         <AnimatePresence mode="popLayout">
           <motion.div
@@ -221,13 +221,13 @@ export default function Hero() {
               className="object-cover object-center"
             />
             {/* Gradient Overlays for optimal text contrast */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/5 via-black/20 to-black/10" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/35 to-black/20 z-10 pointer-events-none" />
           </motion.div>
         </AnimatePresence>
       </motion.div>
 
       {/* Main Content Container */}
-      <div className="relative z-10 w-11/12 md:w-10/12 mx-auto py-12 lg:py-16">
+      <div className="relative z-10 w-11/12 md:w-10/12 mx-auto pt-24 pb-12 lg:py-0">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* LEFT CONTENT COLUMN */}
           <div className="lg:col-span-7 space-y-3 md:space-y-7">
