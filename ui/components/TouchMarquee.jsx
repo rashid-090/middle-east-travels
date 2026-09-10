@@ -6,7 +6,7 @@ export default function TouchMarquee({
   children,
   speed = 1,
   className = "",
-  resumeDelay = 2500,
+  resumeDelay = 1000,
 }) {
   const containerRef = useRef(null);
   const [isPaused, setIsPaused] = useState(false);
