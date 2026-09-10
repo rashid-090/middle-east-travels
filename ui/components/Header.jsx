@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -28,6 +29,15 @@ export default function Header() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
 
   const logoRef = useRef(null);
   const quoteBtnRef = useRef(null);
@@ -238,139 +248,143 @@ export default function Header() {
       </div>
 
       {/* ================= MOBILE NAVIGATION DRAWER ================= */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <>
-            {/* Backdrop Blur Overlay */}
-            <motion.div
-              key="backdrop"
-              variants={backdropVariants}
-              initial="closed"
-              animate="open"
-              exit="closed"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 lg:hidden"
-            />
-
-            {/* Slide-out Drawer */}
-            <motion.div
-              key="drawer"
-              variants={drawerVariants}
-              initial="closed"
-              animate="open"
-              exit="closed"
-              className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-white z-50 shadow-2xl flex flex-col justify-between overflow-y-auto lg:hidden text-slate-900"
-            >
-              {/* Mobile Header Top */}
-              <div>
-                <div className="p-5 flex items-center justify-between border-b border-slate-100 bg-slate-50/50">
-                  <div className="flex items-center gap-2">
-                    <div className="relative h-10 w-32">
-                      <Image
-                        src="/middleeast_black_logo.webp"
-                        alt="Middle East Travels Logo"
-                        fill
-                        sizes="160px"
-                        className="object-contain"
-                        priority
-                      />
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2 rounded-lg bg-slate-200/70 hover:bg-slate-200 text-slate-700 transition-colors"
-                  >
-                    <FaXmark className="text-lg" />
-                  </button>
-                </div>
-
-                {/* Direct Navigation List (No Submenus) */}
-                <motion.nav
-                  variants={menuListVariants}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {isMobileMenuOpen && (
+              <>
+                {/* Backdrop Blur Overlay */}
+                <motion.div
+                  key="backdrop"
+                  variants={backdropVariants}
                   initial="closed"
                   animate="open"
-                  className="p-4 space-y-1"
+                  exit="closed"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="fixed inset-0 bg-black/60 backdrop-blur-xs z-[999] lg:hidden"
+                />
+
+                {/* Slide-out Drawer */}
+                <motion.div
+                  key="drawer"
+                  variants={drawerVariants}
+                  initial="closed"
+                  animate="open"
+                  exit="closed"
+                  className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-white z-[1000] shadow-2xl flex flex-col justify-between overflow-y-auto lg:hidden text-slate-900"
                 >
-                  {navItems.map((item) => {
-                    const active = isItemActive(item);
-                    return (
-                      <motion.div key={item.name} variants={menuItemVariants}>
-                        <Link
-                          href={item.href}
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          className={`flex items-center justify-between px-4 py-3 rounded-xl font-semibold transition-all ${
-                            active
-                              ? "bg-emerald-50 text-[#19a64b] border border-emerald-100"
-                              : "text-slate-700 hover:bg-slate-50"
-                          }`}
-                        >
-                          <span>{item.name}</span>
+                  {/* Mobile Header Top */}
+                  <div>
+                    <div className="p-5 flex items-center justify-between border-b border-slate-100 bg-slate-50/50">
+                      <div className="flex items-center gap-2">
+                        <div className="relative h-10 w-32">
+                          <Image
+                            src="/middleeast_black_logo.webp"
+                            alt="Middle East Travels Logo"
+                            fill
+                            sizes="160px"
+                            className="object-contain"
+                            priority
+                          />
+                        </div>
+                      </div>
 
-                          {/* Pulse Dot Indicator on Right Side of Active Mobile Item */}
-                          {active && (
-                            <span className="relative flex h-2.5 w-2.5 shrink-0 ml-2">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#19a64b] opacity-75" />
-                              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#19a64b]" />
-                            </span>
-                          )}
-                        </Link>
-                      </motion.div>
-                    );
-                  })}
-                </motion.nav>
-              </div>
+                      <button
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="p-2 rounded-lg bg-slate-200/70 hover:bg-slate-200 text-slate-700 transition-colors"
+                      >
+                        <FaXmark className="text-lg" />
+                      </button>
+                    </div>
 
-              {/* Mobile Menu Footer Action & Contacts */}
-              <div className="p-4 border-t border-slate-100 bg-slate-50/70 space-y-3">
-                <button className="w-full py-3 rounded-xl bg-[#19a64b] hover:bg-emerald-700 text-white font-bold text-center shadow-md cursor-pointer transition-all">
-                  Get a Quote
-                </button>
-
-                <div className="space-y-2 text-xs text-slate-600">
-                  <a
-                    href="tel:+918714806661"
-                    className="flex items-center gap-2.5 p-2 rounded-lg bg-white border border-slate-200/60 text-slate-800 hover:text-[#19a64b] duration-200"
-                  >
-                    <FaPhone className="text-[#19a64b]" />
-                    <span>+91 8714806661</span>
-                  </a>
-                  <a
-                    href="mailto:info@middleeasttravels.in"
-                    className="flex items-center gap-2.5 p-2 rounded-lg bg-white border border-slate-200/60 text-slate-800 hover:text-[#19a64b] duration-200"
-                  >
-                    <FaEnvelope className="text-[#19a64b]" />
-                    <span>info@middleeasttravels.in</span>
-                  </a>
-                </div>
-
-                <div className="flex items-center justify-between pt-2">
-                  <div className="flex gap-2">
-                    <a
-                      href="https://wa.me/7025144666"
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label="WhatsApp"
-                      className="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center hover:bg-emerald-600 transition-colors"
+                    {/* Direct Navigation List (No Submenus) */}
+                    <motion.nav
+                      variants={menuListVariants}
+                      initial="closed"
+                      animate="open"
+                      className="p-4 space-y-1"
                     >
-                      <FaWhatsapp className="text-sm" />
-                    </a>
-                    <a
-                      href="https://www.instagram.com/middleeast_travels/"
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label="Instagram"
-                      className="w-8 h-8 rounded-full bg-pink-600 text-white flex items-center justify-center hover:bg-pink-700 transition-colors"
-                    >
-                      <FaInstagram className="text-xs" />
-                    </a>
+                      {navItems.map((item) => {
+                        const active = isItemActive(item);
+                        return (
+                          <motion.div key={item.name} variants={menuItemVariants}>
+                            <Link
+                              href={item.href}
+                              onClick={() => setIsMobileMenuOpen(false)}
+                              className={`flex items-center justify-between px-4 py-3 rounded-xl font-medium transition-all ${
+                                active
+                                  ? "bg-emerald-50 text-[#19a64b] border border-emerald-100"
+                                  : "text-slate-700 hover:bg-slate-50"
+                              }`}
+                            >
+                              <span>{item.name}</span>
+
+                              {/* Pulse Dot Indicator on Right Side of Active Mobile Item */}
+                              {active && (
+                                <span className="relative flex h-2.5 w-2.5 shrink-0 ml-2">
+                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#19a64b] opacity-75" />
+                                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#19a64b]" />
+                                </span>
+                              )}
+                            </Link>
+                          </motion.div>
+                        );
+                      })}
+                    </motion.nav>
                   </div>
-                </div>
-              </div>
-            </motion.div>
-          </>
+
+                  {/* Mobile Menu Footer Action & Contacts */}
+                  <div className="p-4 border-t border-slate-100 bg-slate-50/70 space-y-3">
+                    <button className="w-full py-3 rounded-xl bg-[#19a64b] hover:bg-emerald-700 text-white font-semibold text-center shadow-md cursor-pointer transition-all">
+                      Get a Quote
+                    </button>
+
+                    <div className="space-y-2 text-xs text-slate-600">
+                      <a
+                        href="tel:+918714806661"
+                        className="flex items-center gap-2.5 p-2 rounded-lg bg-white border border-slate-200/60 text-slate-800 hover:text-[#19a64b] duration-200"
+                      >
+                        <FaPhone className="text-[#19a64b]" />
+                        <span>+91 8714806661</span>
+                      </a>
+                      <a
+                        href="mailto:info@middleeasttravels.in"
+                        className="flex items-center gap-2.5 p-2 rounded-lg bg-white border border-slate-200/60 text-slate-800 hover:text-[#19a64b] duration-200"
+                      >
+                        <FaEnvelope className="text-[#19a64b]" />
+                        <span>info@middleeasttravels.in</span>
+                      </a>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2">
+                      <div className="flex gap-2">
+                        <a
+                          href="https://wa.me/7025144666"
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label="WhatsApp"
+                          className="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center hover:bg-emerald-600 transition-colors"
+                        >
+                          <FaWhatsapp className="text-sm" />
+                        </a>
+                        <a
+                          href="https://www.instagram.com/middleeast_travels/"
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label="Instagram"
+                          className="w-8 h-8 rounded-full bg-pink-600 text-white flex items-center justify-center hover:bg-pink-700 transition-colors"
+                        >
+                          <FaInstagram className="text-xs" />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </header>
   );
 }
