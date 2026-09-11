@@ -21,8 +21,8 @@ const navItems = [
   { name: "Tour packages", href: "/tour-packages" },
   { name: "Visa Services", href: "#" },
   { name: "Other services", href: "#" },
-  { name: "About us", href: "#" },
-  { name: "Contact us", href: "#" },
+  { name: "About us", href: "/about-us" },
+  { name: "Contact us", href: "/contact-us" },
 ];
 
 export default function Header() {
@@ -227,7 +227,7 @@ export default function Header() {
         <div className="flex items-center gap-3">
           <button
             ref={quoteBtnRef}
-            className="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-[#19a64b] text-white font-semibold text-sm shadow-md hover:bg-emerald-700 hover:shadow-lg active:scale-95 transition-all duration-200 cursor-pointer"
+            className="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-[#19a64b] text-white font-medium text-sm shadow-md hover:bg-emerald-700 hover:shadow-lg active:scale-95 transition-all duration-200 cursor-pointer"
           >
             Get a Quote
           </button>

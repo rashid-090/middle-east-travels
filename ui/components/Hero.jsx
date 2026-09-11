@@ -254,7 +254,7 @@ export default function Hero() {
             {/* CTA Buttons */}
             <div className="flex flex-wrap items-center gap-4 pt-3">
               <Link
-                href="/contact"
+                href="/contact-us"
                 className="px-10 py-4 rounded-xl bg-primary hover:bg-secondary text-white font-semibold text-xs md:text-sm shadow-md hover:shadow-lg active:scale-95 transition-all duration-200"
               >
                 Apply for Visa

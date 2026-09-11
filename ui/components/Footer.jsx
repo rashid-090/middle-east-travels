@@ -21,6 +21,8 @@ import {
   FaCreditCard,
   FaAward,
 } from "react-icons/fa6";
+import { IoIosAirplane } from "react-icons/io";
+
 
 export default function Footer() {
   const [showWhatsApp, setShowWhatsApp] = React.useState(false);
@@ -93,7 +95,7 @@ export default function Footer() {
             {/* 2 CTA Action Buttons */}
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-1">
               <Link
-                href="/contact"
+                href="/contact-us"
                 className="px-6 py-3 rounded-xl bg-primary hover:bg-white text-white hover:text-black font-semibold text-xs sm:text-sm shadow-md active:scale-95 transition-all duration-200 cursor-pointer"
               >
                 Get a Free Quote
@@ -296,7 +298,7 @@ export default function Footer() {
             <ul className="space-y-2.5 text-sm text-slate-400 font-normal">
               <li>
                 <Link
-                  href="/about"
+                  href="/about-us"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   About Our Agency
@@ -320,7 +322,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/contact"
+                  href="/contact-us"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Contact Us
@@ -356,8 +358,8 @@ export default function Footer() {
           </p>
 
           {/* Trust Badges & Back to Top */}
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-3 pt-2">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3">
               <a
                 href="https://m.facebook.com/middleeasttravelsandtourism?mibextid=LQQJ4d"
                 target="_blank"
@@ -391,7 +393,7 @@ export default function Footer() {
               aria-label="Back to Top"
               className="w-8 h-8 rounded-lg bg-primary/20 hover:bg-primary border border-blue-500/30 text-blue-300 hover:text-white flex items-center justify-center transition-all cursor-pointer"
             >
-              <FaArrowUp className="text-xs" />
+              <FaArrowUp className="" />
             </button>
           </div>
         </div>

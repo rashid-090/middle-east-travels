@@ -10,7 +10,7 @@ import { testimonialsData } from "@/data/allData.js";
 
 export default function Testimonials() {
   return (
-    <section className="w-full py-10 sm:py-14 bg-slate-50/60 font-sans overflow-hidden">
+    <section className="w-full py-10 sm:py-14 bg-white font-sans overflow-hidden">
       <div className="w-11/12 mx-auto space-y-4">
         
         {/* Section Header Row */}
