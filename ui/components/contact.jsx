@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import {
   FaPaperPlane,
   FaSpinner,
@@ -105,15 +107,12 @@ export default function Contact() {
                   </div>
                   <div>
                     <label className="text-xs font-medium text-slate-700 block mb-1">Phone Number *</label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      required
-                      suppressHydrationWarning
+                    <PhoneInput
+                      international
+                      defaultCountry="IN"
                       value={formData.phone}
-                      onChange={handleChange}
-                      placeholder="+91 98765 43210"
-                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-[#19A64B] focus:outline-none transition-all"
+                      onChange={(val) => setFormData({ ...formData, phone: val || "" })}
+                      placeholder="Enter phone number"
                     />
                   </div>
                 </div>

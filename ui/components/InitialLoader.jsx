@@ -64,6 +64,7 @@ export default function InitialLoader() {
                 alt="Middle East Travels Logo"
                 fill
                 priority
+                loading="eager"
                 sizes="256px"
                 className="object-contain"
               />

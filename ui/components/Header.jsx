@@ -22,7 +22,6 @@ const navItems = [
   { name: "Visa Services", href: "#" },
   { name: "Other services", href: "#" },
   { name: "About us", href: "/about-us" },
-  { name: "Contact us", href: "/contact-us" },
 ];
 
 export default function Header() {
@@ -179,6 +178,7 @@ export default function Header() {
               sizes="180px"
               className="object-contain"
               priority
+              loading="eager"
             />
           </div>
         </Link>
@@ -225,12 +225,13 @@ export default function Header() {
 
         {/* Desktop "Get a Quote" Button & Mobile Toggle */}
         <div className="flex items-center gap-3">
-          <button
+          <Link
+            href="/contact-us"
             ref={quoteBtnRef}
             className="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-[#19a64b] text-white font-medium text-sm shadow-md hover:bg-emerald-700 hover:shadow-lg active:scale-95 transition-all duration-200 cursor-pointer"
           >
-            Get a Quote
-          </button>
+            Contact Us
+          </Link>
 
           {/* Mobile Hamburger Button */}
           <button
@@ -285,6 +286,7 @@ export default function Header() {
                             sizes="160px"
                             className="object-contain"
                             priority
+                            loading="eager"
                           />
                         </div>
                       </div>
@@ -335,9 +337,13 @@ export default function Header() {
 
                   {/* Mobile Menu Footer Action & Contacts */}
                   <div className="p-4 border-t border-slate-100 bg-slate-50/70 space-y-3">
-                    <button className="w-full py-3 rounded-xl bg-[#19a64b] hover:bg-emerald-700 text-white font-semibold text-center shadow-md cursor-pointer transition-all">
-                      Get a Quote
-                    </button>
+                    <Link
+                      href="/contact-us"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="w-full py-3 rounded-xl bg-[#19a64b] hover:bg-emerald-700 text-white font-semibold text-center shadow-md cursor-pointer transition-all block"
+                    >
+                      Contact Us
+                    </Link>
 
                     <div className="space-y-2 text-xs text-slate-600">
                       <a

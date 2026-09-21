@@ -195,6 +195,7 @@ export default function TourPackagesPage() {
                 alt="Maldives Tropical Sunset Vacation"
                 fill
                 priority
+                loading="eager"
                 sizes="100vw"
                 quality={95}
                 className="object-cover object-center"

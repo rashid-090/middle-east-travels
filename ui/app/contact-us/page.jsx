@@ -3,6 +3,8 @@
 import React, { useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
   FaPhone,
@@ -75,6 +77,7 @@ export default function ContactUsPage() {
                 alt="Middle East Travel Destination Parallax Background"
                 fill
                 priority
+                loading="eager"
                 sizes="100vw"
                 quality={95}
                 className="object-cover object-center"
@@ -281,14 +284,12 @@ export default function ContactUsPage() {
                       <label className="text-xs font-medium text-slate-700 block mb-1.5">
                         Phone Number *
                       </label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        required
+                      <PhoneInput
+                        international
+                        defaultCountry="IN"
                         value={formData.phone}
-                        onChange={handleChange}
-                        placeholder="+91 98765 43210"
-                        className="w-full px-4 py-3 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50/60 focus:bg-white focus:border-[#19a64b] focus:outline-none transition-all "
+                        onChange={(val) => setFormData({ ...formData, phone: val || "" })}
+                        placeholder="Enter phone number"
                       />
                     </div>
                   </div>

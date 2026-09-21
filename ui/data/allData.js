@@ -1387,3 +1387,113 @@ export const heroCardsData = [
     ],
   },
 ];
+
+export const teamMembersData = [
+  {
+    id: 1,
+    name: "Muhammed Rashid",
+    designation: "Founder & Managing Director",
+    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=85",
+    email: "md@middleeasttravels.in",
+    phone: "+91 98450 12345",
+    linkedin: "https://linkedin.com",
+  },
+  {
+    id: 2,
+    name: "Fathima Naser",
+    designation: "Head of International Operations",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=85",
+    email: "fathima@middleeasttravels.in",
+    phone: "+91 98450 12346",
+    linkedin: "https://linkedin.com",
+  },
+  {
+    id: 3,
+    name: "Rahul Menon",
+    designation: "Senior Visa & Immigration Lead",
+    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=85",
+    email: "visa@middleeasttravels.in",
+    phone: "+91 98450 12347",
+    linkedin: "https://linkedin.com",
+  },
+  {
+    id: 4,
+    name: "Aisha Al-Hassan",
+    designation: "Middle East Destination Manager",
+    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&q=85",
+    email: "aisha@middleeasttravels.in",
+    phone: "+91 98450 12348",
+    linkedin: "https://linkedin.com",
+  },
+];
+
+export const happyCustomersData = [
+  {
+    id: 1,
+    name: "Dr. Anish & Sneha",
+    location: "Maldives",
+    destinationTag: "Maldives Overwater Resort",
+    rating: 5,
+    description: "Our honeymoon in Maldives was an absolute dream! Middle East Travels arranged flawless speedboat transfers and an incredible overwater villa. Unforgettable memories!",
+    image: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=600&q=85",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+    date: "1 week ago"
+  },
+  {
+    id: 2,
+    name: "Faizal & Family",
+    location: "Dubai, UAE",
+    destinationTag: "Dubai Desert & Skyline",
+    rating: 5,
+    description: "The 5-day Dubai family package was exceptional. From Burj Khalifa tickets to the desert safari and luxury transfers, everything was executed with perfection.",
+    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=600&q=85",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+    date: "2 weeks ago"
+  },
+  {
+    id: 3,
+    name: "Pooja Sharma",
+    location: "Bali, Indonesia",
+    destinationTag: "Bali Villa & Swings",
+    rating: 5,
+    description: "Exploring Ubud rice terraces and staying in a private pool villa was magical. Thanks to Middle East Travels for their 24/7 assistance and great itinerary design!",
+    image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=600&q=85",
+    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80",
+    date: "3 weeks ago"
+  },
+  {
+    id: 4,
+    name: "Rohan & Friends",
+    location: "Baku, Azerbaijan",
+    destinationTag: "Baku & Shahdag Cable Car",
+    rating: 5,
+    description: "Azerbaijan was unbelievable! Snow activities in Shahdag, Flame Towers, and authentic Azerbaijani food. Extremely reliable agency with top-notch service.",
+    image: "https://images.unsplash.com/photo-1598971861713-54ad16a7e72e?auto=format&fit=crop&w=600&q=85",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+    date: "1 month ago"
+  },
+  {
+    id: 5,
+    name: "Kavya S. Nair",
+    location: "Phuket & Krabi, Thailand",
+    destinationTag: "Thailand Island Escape",
+    rating: 5,
+    description: "The island hopping in Phi Phi and longtail boat tours in Krabi were organized seamlessly. Best price, hassle-free visa guidance, and wonderful hotels!",
+    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=85",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
+    date: "1 month ago"
+  },
+  {
+    id: 6,
+    name: "Mohammed Al-Zahrani",
+    location: "Kandy & Bentota, Sri Lanka",
+    destinationTag: "Sri Lanka Heritage",
+    rating: 5,
+    description: "Superb experience visiting tea gardens, Sigiriya Rock, and Bentota beaches. Our dedicated driver was polite and punctual. Highly recommend Middle East Travels!",
+    image: "https://images.unsplash.com/photo-1546708973-b339540b5162?auto=format&fit=crop&w=600&q=85",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80",
+    date: "2 months ago"
+  }
+];
+
+

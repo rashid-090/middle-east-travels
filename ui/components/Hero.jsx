@@ -80,6 +80,8 @@ function renderPackageCardContent(item) {
             src={item.image}
             alt={item.title}
             fill
+            priority
+            loading="eager"
             sizes="(max-width: 640px) 100vw, 340px"
             quality={90}
             className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
@@ -216,6 +218,7 @@ export default function Hero() {
               alt="Tropical Beach Hero Background"
               fill
               priority
+              loading="eager"
               sizes="100vw"
               quality={90}
               className="object-cover object-center"

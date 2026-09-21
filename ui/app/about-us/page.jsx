@@ -12,6 +12,7 @@ import {
 import Counts from "@/components/Counts";
 import Blogs from "@/components/Blogs";
 import Testimonials from "@/components/Testimonials";
+import Team from "@/components/Team";
 
 export default function AboutUsPage() {
   return (
@@ -28,6 +29,8 @@ export default function AboutUsPage() {
                   src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?q=100"
                   alt="Explorer looking over scenic travel landscape"
                   fill
+                  priority
+                  loading="eager"
                   sizes="(max-width: 1024px) 100vw, 40vw"
                   quality={90}
                   className="object-cover object-center hover:scale-105 transition-transform duration-700"
@@ -36,7 +39,7 @@ export default function AboutUsPage() {
               </div>
 
               {/* Floating Award Badge Box */}
-              <div className="absolute -bottom-5 -right-3 md:right-5 bg-white rounded-2xl p-4 shadow-xl border border-slate-100 flex items-center gap-3.5 max-w-xs">
+              <div className="absolute -bottom-5 right-5 bg-white rounded-2xl p-4 shadow-xl border border-slate-100 flex items-center gap-3.5 max-w-xs">
                 <div className="w-12 h-12 animate-pulse rounded-xl bg-emerald-50 text-[#19a64b] flex items-center justify-center text-2xl shrink-0">
                   <FaAward />
                 </div>
@@ -65,7 +68,7 @@ export default function AboutUsPage() {
                   WHO WE ARE
                 </span>
                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#021b38] tracking-tight leading-tight">
-                  Your Gateway to Seamless <span className="text-[#19a64b]">Global Travel</span>
+                  Your Gateway to <br/>Seamless <span className="text-[#19a64b]">Global Travel</span>
                 </h2>
               </div>
 
@@ -129,6 +132,7 @@ export default function AboutUsPage() {
 
     <Counts/>
     <Testimonials/>
+    <Team/>
     </>
   );
 }

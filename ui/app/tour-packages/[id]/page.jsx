@@ -173,6 +173,7 @@ export default function TourPackageDetailPage() {
                 sizes="(max-width: 1024px) 100vw, 66vw"
                 quality={95}
                 priority
+                loading="eager"
                 className="object-cover object-center transition-all duration-500 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-60" />

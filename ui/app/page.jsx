@@ -6,6 +6,7 @@ import Blogs from "@/components/Blogs";
 import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/contact";
 import Flight from "@/components/Flight";
+import HappyCustomers from "@/components/HappyCustomers";
 
 
 export default function Home() {
@@ -21,7 +22,7 @@ export default function Home() {
         <Counts />
         <Testimonials />
         <Flight />
-        <Blogs />
+        <HappyCustomers/>
         <Contact />
       </main>
 
