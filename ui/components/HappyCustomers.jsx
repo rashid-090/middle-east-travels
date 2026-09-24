@@ -29,7 +29,7 @@ export default function HappyCustomers() {
                 <div className="bg-white rounded-[2rem] border border-slate-200/70 p-3 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full group">
                   
                   {/* Top Image + Location Badge */}
-                  <div className="relative w-full h-52 rounded-[1.5rem] overflow-hidden mb-4 bg-slate-100 shrink-0">
+                  <div className="relative w-full aspect-[4/5] rounded-[1.5rem] overflow-hidden mb-4 bg-slate-100 shrink-0">
                     <Image
                       src={customer.image}
                       alt={customer.name}
@@ -37,7 +37,7 @@ export default function HappyCustomers() {
                       sizes="(max-width: 768px) 320px, 340px"
                       className="object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20" />
+                    {/* <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20" /> */}
                     
                 
                   </div>
@@ -45,7 +45,7 @@ export default function HappyCustomers() {
                   {/* Customer Description / Review Quote */}
                   <div className="flex-1 flex flex-col justify-between mb-4">
                     <div className="relative">
-                      <p className="text-slate-600 text-xs sm:text-sm leading-relaxed font-normal line-clamp-3">
+                      <p className="text-slate-600 text-xs leading-relaxed font-normal line-clamp-3">
                         "{customer.description}"
                       </p>
                     </div>

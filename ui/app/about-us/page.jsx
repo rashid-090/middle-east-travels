@@ -26,7 +26,7 @@ export default function AboutUsPage() {
             <div className="lg:col-span-5 relative">
               <div className="relative w-full aspect-[4/5] rounded-[2.25rem] overflow-hidden shadow-lg border border-slate-200/80 bg-slate-100">
                 <Image
-                  src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?q=100"
+                  src="/ctabg.webp"
                   alt="Explorer looking over scenic travel landscape"
                   fill
                   priority

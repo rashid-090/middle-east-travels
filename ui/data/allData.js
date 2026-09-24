@@ -1284,11 +1284,11 @@ export const blogsData = [
 export const heroBanners = [
   {
     id: 1,
-    bgImage: "https://images.unsplash.com/photo-1540202404-a2f29016b523?q=100",
+    bgImage: "/hero/banner1.webp",
   },
   {
     id: 2,
-    bgImage: "https://images.unsplash.com/photo-1558102822-da570eb113ed?q=100",
+    bgImage: "/hero/banner2.webp",
   },
 ];
 
@@ -1431,69 +1431,75 @@ export const happyCustomersData = [
   {
     id: 1,
     name: "Dr. Anish & Sneha",
-    location: "Maldives",
-    destinationTag: "Maldives Overwater Resort",
-    rating: 5,
-    description: "Our honeymoon in Maldives was an absolute dream! Middle East Travels arranged flawless speedboat transfers and an incredible overwater villa. Unforgettable memories!",
-    image: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=600&q=85",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
-    date: "1 week ago"
+    location: "Malaysia",
+    description: "Our honeymoon in Malaysia was an absolute dream! Middle East Travels arranged flawless speedboat transfers and an incredible overwater villa. Unforgettable memories!",
+    image: "/hpc/hc1.webp",
+    avatar: "/hpc/user.avif",
   },
   {
     id: 2,
     name: "Faizal & Family",
-    location: "Dubai, UAE",
-    destinationTag: "Dubai Desert & Skyline",
-    rating: 5,
+    location: "Batucave",
     description: "The 5-day Dubai family package was exceptional. From Burj Khalifa tickets to the desert safari and luxury transfers, everything was executed with perfection.",
-    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=600&q=85",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
-    date: "2 weeks ago"
+   image: "/hpc/hc2.webp",
+    avatar: "/hpc/user.avif",
   },
   {
     id: 3,
     name: "Pooja Sharma",
-    location: "Bali, Indonesia",
-    destinationTag: "Bali Villa & Swings",
-    rating: 5,
+    location: "Thailand",
     description: "Exploring Ubud rice terraces and staying in a private pool villa was magical. Thanks to Middle East Travels for their 24/7 assistance and great itinerary design!",
-    image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=600&q=85",
-    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80",
-    date: "3 weeks ago"
+    image: "/hpc/hc3.webp",
+    avatar: "/hpc/user.avif",
   },
   {
     id: 4,
     name: "Rohan & Friends",
-    location: "Baku, Azerbaijan",
-    destinationTag: "Baku & Shahdag Cable Car",
-    rating: 5,
+    location: "Bali",
     description: "Azerbaijan was unbelievable! Snow activities in Shahdag, Flame Towers, and authentic Azerbaijani food. Extremely reliable agency with top-notch service.",
-    image: "https://images.unsplash.com/photo-1598971861713-54ad16a7e72e?auto=format&fit=crop&w=600&q=85",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
-    date: "1 month ago"
+    image: "/hpc/hc4.webp",
+    avatar: "/hpc/user.avif",
   },
   {
     id: 5,
     name: "Kavya S. Nair",
-    location: "Phuket & Krabi, Thailand",
-    destinationTag: "Thailand Island Escape",
-    rating: 5,
+    location: "Malaysia",
     description: "The island hopping in Phi Phi and longtail boat tours in Krabi were organized seamlessly. Best price, hassle-free visa guidance, and wonderful hotels!",
-    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=85",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
-    date: "1 month ago"
+    image: "/hpc/hc5.webp",
+    avatar: "/hpc/user.avif",
   },
   {
     id: 6,
     name: "Mohammed Al-Zahrani",
-    location: "Kandy & Bentota, Sri Lanka",
-    destinationTag: "Sri Lanka Heritage",
-    rating: 5,
+    location: "Phuquoc",
     description: "Superb experience visiting tea gardens, Sigiriya Rock, and Bentota beaches. Our dedicated driver was polite and punctual. Highly recommend Middle East Travels!",
-    image: "https://images.unsplash.com/photo-1546708973-b339540b5162?auto=format&fit=crop&w=600&q=85",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80",
-    date: "2 months ago"
-  }
+   image: "/hpc/hc6.webp",
+    avatar: "/hpc/user.avif",
+  },
+   {
+    id: 7,
+    name: "Dr. Anish & Sneha",
+    location: "Bali",
+    description: "Our honeymoon in Maldives was an absolute dream! Middle East Travels arranged flawless speedboat transfers and an incredible overwater villa. Unforgettable memories!",
+    image: "/hpc/hc7.webp",
+    avatar: "/hpc/user.avif",
+  },
+  {
+    id: 8,
+    name: "Faizal & Family",
+    location: "Batucave",
+    description: "The 5-day Dubai family package was exceptional. From Burj Khalifa tickets to the desert safari and luxury transfers, everything was executed with perfection.",
+   image: "/hpc/hc8.webp",
+    avatar: "/hpc/user.avif",
+  },
+  {
+    id: 9,
+    name: "Pooja Sharma",
+    location: "Phuquoc",
+    description: "Exploring Ubud rice terraces and staying in a private pool villa was magical. Thanks to Middle East Travels for their 24/7 assistance and great itinerary design!",
+    image: "/hpc/hc9.webp",
+    avatar: "/hpc/user.avif",
+  },
 ];
 
 

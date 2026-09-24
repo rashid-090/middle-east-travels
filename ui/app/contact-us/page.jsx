@@ -73,7 +73,7 @@ export default function ContactUsPage() {
               className="absolute -inset-y-16 inset-x-0 w-full h-[140%]"
             >
               <Image
-                src="https://images.unsplash.com/photo-1649856092355-eee498b1d0f2?q=100"
+                src="/cntheader.webp"
                 alt="Middle East Travel Destination Parallax Background"
                 fill
                 priority

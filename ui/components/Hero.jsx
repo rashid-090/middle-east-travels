@@ -159,6 +159,18 @@ function renderPackageCardContent(item) {
 
 export default function Hero() {
   const containerRef = useRef(null);
+  const [hasAnimated, setHasAnimated] = useState(() => {
+    if (typeof window !== "undefined") {
+      return Boolean(sessionStorage.getItem("hero_heading_animated"));
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !hasAnimated) {
+      sessionStorage.setItem("hero_heading_animated", "true");
+    }
+  }, [hasAnimated]);
 
   // Scroll Parallax Effect Setup
   const { scrollYProgress } = useScroll({
@@ -235,7 +247,20 @@ export default function Hero() {
           {/* LEFT CONTENT COLUMN */}
           <div className="lg:col-span-7 space-y-3 md:space-y-7">
             {/* Headlines */}
-            <div className="space-y-1 sm:space-y-2">
+            <motion.div
+              initial={hasAnimated ? false : { opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={
+                hasAnimated
+                  ? { duration: 0 }
+                  : {
+                      duration: 0.8,
+                      delay: 2.5,
+                      ease: "easeOut",
+                    }
+              }
+              className="space-y-1 sm:space-y-2"
+            >
               <h1 className="text-4xl sm:text-5xl lg:text-7xl font-medium text-white tracking-tight leading-[1.15]">
                 Explore The World
               </h1>
@@ -245,17 +270,43 @@ export default function Hero() {
               >
                 With Confidence
               </div>
-            </div>
+            </motion.div>
 
             {/* Paragraph Subtitle */}
-            <p className="text-white text-xs sm:text-sm md:text-base font-normal max-w-md leading-relaxed">
+            <motion.p
+              initial={hasAnimated ? false : { opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={
+                hasAnimated
+                  ? { duration: 0 }
+                  : {
+                      duration: 0.8,
+                      delay: 2.2,
+                      ease: "easeOut",
+                    }
+              }
+              className="text-white text-xs sm:text-sm md:text-base font-normal max-w-md leading-relaxed"
+            >
               Explore handpicked holiday packages, instant visa assistance, and
               24/7 dedicated support. Your dream journey starts right here with
               Middle East Travels.
-            </p>
+            </motion.p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-wrap items-center gap-4 pt-3">
+            <motion.div
+              initial={hasAnimated ? false : { opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={
+                hasAnimated
+                  ? { duration: 0 }
+                  : {
+                      duration: 0.8,
+                      delay: 2.4,
+                      ease: "easeOut",
+                    }
+              }
+              className="flex flex-wrap items-center gap-4 pt-3"
+            >
               <Link
                 href="/contact-us"
                 className="px-10 py-4 rounded-xl bg-primary hover:bg-secondary text-white font-semibold text-xs md:text-sm shadow-md hover:shadow-lg active:scale-95 transition-all duration-200"
@@ -271,7 +322,7 @@ export default function Hero() {
                 <FaWhatsapp className="text-emerald-500 text-lg" />
                 <span>Speak to an Expert</span>
               </a>
-            </div>
+            </motion.div>
           </div>
 
           {/* MOBILE PACKAGE CARD DISPLAY */}

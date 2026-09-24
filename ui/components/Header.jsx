@@ -14,19 +14,27 @@ import {
   FaWhatsapp,
   FaBars,
   FaXmark,
+  FaChevronDown,
 } from "react-icons/fa6";
 
 const navItems = [
   { name: "Home", href: "/" },
   { name: "Tour packages", href: "/tour-packages" },
   { name: "Visa Services", href: "#" },
-  { name: "Other services", href: "#" },
+  {
+    name: "Other services",
+    href: "#",
+    subMenu: [
+      { name: "Attestation Service", href: "/attestation-service" },
+    ],
+  },
   { name: "About us", href: "/about-us" },
 ];
 
 export default function Header() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [expandedMobileSubmenu, setExpandedMobileSubmenu] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -36,7 +44,12 @@ export default function Header() {
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
+    setExpandedMobileSubmenu(null);
   }, [pathname]);
+
+  const toggleMobileSubmenu = (itemName) => {
+    setExpandedMobileSubmenu((prev) => (prev === itemName ? null : itemName));
+  };
 
   const logoRef = useRef(null);
   const quoteBtnRef = useRef(null);
@@ -46,10 +59,23 @@ export default function Header() {
 
   const isItemActive = (item) => {
     if (!pathname) return false;
-    if (item.href === "/") {
-      return pathname === "/";
+    if (item.href && item.href !== "#") {
+      if (item.href === "/") {
+        return pathname === "/";
+      }
+      if (pathname.startsWith(item.href)) {
+        return true;
+      }
     }
-    return pathname.startsWith(item.href);
+    if (
+      item.subMenu &&
+      item.subMenu.some(
+        (sub) => sub.href !== "#" && pathname.startsWith(sub.href)
+      )
+    ) {
+      return true;
+    }
+    return false;
   };
 
   // Handle scroll effect for header transition
@@ -187,6 +213,81 @@ export default function Header() {
         <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
           {navItems.map((item) => {
             const active = isItemActive(item);
+            const hasSubMenu = item.subMenu && item.subMenu.length > 0;
+
+            if (hasSubMenu) {
+              return (
+                <div key={item.name} className="relative group py-2">
+                  <button
+                    type="button"
+                    className={`px-3.5 py-2 text-sm font-medium flex items-center gap-1.5 transition-colors relative cursor-pointer focus:outline-none ${
+                      isTransparent
+                        ? active
+                          ? "text-white font-bold"
+                          : "text-white/90 hover:text-white"
+                        : active
+                        ? "text-[#021b38] font-bold"
+                        : "text-slate-700 hover:text-[#021b38]"
+                    }`}
+                  >
+                    <span>{item.name}</span>
+                    <FaChevronDown className="text-[10px] transition-transform duration-200 group-hover:rotate-180 opacity-75" />
+
+                    {/* Pulse Dot Indicator on Right Side of Active Menu Item */}
+                    {active && (
+                      <span className="relative flex h-2 w-2 shrink-0 ml-1">
+                        <span
+                          className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                            isTransparent ? "bg-white" : "bg-[#19a64b]"
+                          }`}
+                        />
+                        <span
+                          className={`relative inline-flex rounded-full h-2 w-2 ${
+                            isTransparent ? "bg-white" : "bg-[#19a64b]"
+                          }`}
+                        />
+                      </span>
+                    )}
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 translate-y-2 transition-all duration-200 ease-out z-50 pointer-events-none group-hover:pointer-events-auto min-w-[200px]">
+                    <div
+                      className={`p-1.5 rounded-2xl shadow-xl border backdrop-blur-md ${
+                        isTransparent
+                          ? "bg-[#021b38]/95 border-white/10 text-white"
+                          : "bg-white border-slate-100 text-slate-800"
+                      }`}
+                    >
+                      {item.subMenu.map((subItem) => {
+                        const isSubActive = pathname === subItem.href;
+                        return (
+                          <Link
+                            key={subItem.name}
+                            href={subItem.href}
+                            className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                              isTransparent
+                                ? isSubActive
+                                  ? "bg-white/15 text-white font-bold"
+                                  : "text-white/80 hover:bg-white/10 hover:text-white"
+                                : isSubActive
+                                ? "bg-emerald-50 text-[#19a64b] font-bold"
+                                : "text-slate-700 hover:bg-emerald-50/60 hover:text-[#19a64b]"
+                            }`}
+                          >
+                            <span>{subItem.name}</span>
+                            {isSubActive && (
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#19a64b]" />
+                            )}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+
             return (
               <Link
                 key={item.name}
@@ -299,7 +400,7 @@ export default function Header() {
                       </button>
                     </div>
 
-                    {/* Direct Navigation List (No Submenus) */}
+                    {/* Navigation List */}
                     <motion.nav
                       variants={menuListVariants}
                       initial="closed"
@@ -308,27 +409,104 @@ export default function Header() {
                     >
                       {navItems.map((item) => {
                         const active = isItemActive(item);
-                        return (
-                          <motion.div key={item.name} variants={menuItemVariants}>
-                            <Link
-                              href={item.href}
-                              onClick={() => setIsMobileMenuOpen(false)}
-                              className={`flex items-center justify-between px-4 py-3 rounded-xl font-medium transition-all ${
-                                active
-                                  ? "bg-emerald-50 text-[#19a64b] border border-emerald-100"
-                                  : "text-slate-700 hover:bg-slate-50"
-                              }`}
-                            >
-                              <span>{item.name}</span>
+                        const hasSubMenu =
+                          item.subMenu && item.subMenu.length > 0;
+                        const isSubOpen = expandedMobileSubmenu === item.name;
 
-                              {/* Pulse Dot Indicator on Right Side of Active Mobile Item */}
-                              {active && (
-                                <span className="relative flex h-2.5 w-2.5 shrink-0 ml-2">
-                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#19a64b] opacity-75" />
-                                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#19a64b]" />
-                                </span>
-                              )}
-                            </Link>
+                        return (
+                          <motion.div
+                            key={item.name}
+                            variants={menuItemVariants}
+                          >
+                            {hasSubMenu ? (
+                              <div className="space-y-1">
+                                <button
+                                  type="button"
+                                  onClick={() => toggleMobileSubmenu(item.name)}
+                                  className={`w-full flex items-center justify-between px-4 py-3 rounded-xl font-medium transition-all text-left cursor-pointer ${
+                                    active || isSubOpen
+                                      ? "bg-emerald-50/70 text-[#19a64b] border border-emerald-100/80"
+                                      : "text-slate-700 hover:bg-slate-50"
+                                  }`}
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <span>{item.name}</span>
+                                    {active && (
+                                      <span className="relative flex h-2.5 w-2.5 shrink-0 ml-1">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#19a64b] opacity-75" />
+                                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#19a64b]" />
+                                      </span>
+                                    )}
+                                  </div>
+                                  <FaChevronDown
+                                    className={`text-xs text-slate-500 transition-transform duration-200 ${
+                                      isSubOpen
+                                        ? "rotate-180 text-[#19a64b]"
+                                        : ""
+                                    }`}
+                                  />
+                                </button>
+
+                                <AnimatePresence>
+                                  {isSubOpen && (
+                                    <motion.div
+                                      initial={{ height: 0, opacity: 0 }}
+                                      animate={{ height: "auto", opacity: 1 }}
+                                      exit={{ height: 0, opacity: 0 }}
+                                      transition={{
+                                        duration: 0.25,
+                                        ease: "easeInOut",
+                                      }}
+                                      className="overflow-hidden pl-4 space-y-1 border-l-2 border-emerald-100 ml-3"
+                                    >
+                                      {item.subMenu.map((subItem) => {
+                                        const isSubActive =
+                                          pathname === subItem.href;
+                                        return (
+                                          <Link
+                                            key={subItem.name}
+                                            href={subItem.href}
+                                            onClick={() =>
+                                              setIsMobileMenuOpen(false)
+                                            }
+                                            className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                                              isSubActive
+                                                ? "bg-emerald-100/60 text-[#19a64b] font-semibold"
+                                                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                                            }`}
+                                          >
+                                            <span>{subItem.name}</span>
+                                            {isSubActive && (
+                                              <span className="w-2 h-2 rounded-full bg-[#19a64b]" />
+                                            )}
+                                          </Link>
+                                        );
+                                      })}
+                                    </motion.div>
+                                  )}
+                                </AnimatePresence>
+                              </div>
+                            ) : (
+                              <Link
+                                href={item.href}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className={`flex items-center justify-between px-4 py-3 rounded-xl font-medium transition-all ${
+                                  active
+                                    ? "bg-emerald-50 text-[#19a64b] border border-emerald-100"
+                                    : "text-slate-700 hover:bg-slate-50"
+                                }`}
+                              >
+                                <span>{item.name}</span>
+
+                                {/* Pulse Dot Indicator on Right Side of Active Mobile Item */}
+                                {active && (
+                                  <span className="relative flex h-2.5 w-2.5 shrink-0 ml-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#19a64b] opacity-75" />
+                                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#19a64b]" />
+                                  </span>
+                                )}
+                              </Link>
+                            )}
                           </motion.div>
                         );
                       })}

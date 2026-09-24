@@ -47,7 +47,7 @@ export default function Contact() {
           {/* LEFT COLUMN: IMAGE WITH STAT BADGE (5 COLS) */}
           <div className="lg:col-span-5 relative w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-lg border border-slate-200">
             <Image
-              src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?q=100"
+              src="/ctabg.webp"
               alt="Travel Explorer looking at mountain landscape"
               fill
               sizes="(max-width: 1024px) 100vw, 40vw"
