@@ -33,7 +33,7 @@ export default function Team() {
           />
 
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
+          {/* <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" /> */}
 
           {/* Social Action Overlay Buttons */}
           <div className="absolute bottom-3.5 left-3.5 right-3.5 z-20 flex items-center justify-center gap-2.5 opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 transform sm:translate-y-2 sm:group-hover:translate-y-0">
@@ -71,12 +71,12 @@ export default function Team() {
 
         {/* Member Details */}
         <div className="px-1 space-y-2">
-          <div className="flex items-center justify-center text-center gap-2">
+          <div className="flex items-center justify-center text-center gap-5">
             <div>
               <h3 className="text-lg font-medium text-[#021b38] group-hover:text-[#19a64b] transition-colors leading-snug tracking-tight">
                 {member.name}
               </h3>
-              <p className="text-xs text-[#19a64b] mt-0.5">
+              <p className="text-sm text-[#19a64b] mt-0.5">
                 {member.designation}
               </p>
             </div>

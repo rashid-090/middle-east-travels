@@ -57,7 +57,7 @@ export default function AttestationServicePage() {
           <div className="absolute inset-0 bg-gradient-to-t from-[#edf8f3]/80 via-transparent to-[#edf8f3]/40 lg:hidden" />
         </div>
 
-        <div className="w-11/12 max-w-7xl mx-auto py-8 lg:py-16 relative z-10">
+        <div className="w-11/12 max-w-7xl mx-auto py-14 lg:py-16 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
             {/* Left Column: Banner Content */}
@@ -69,7 +69,7 @@ export default function AttestationServicePage() {
               </div>
 
               {/* Main Heading */}
-              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-medium tracking-tight leading-[1.15] text-[#021b38]">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight leading-[1.15] text-[#021b38]">
                 Attestation Service <br />
                 <span className="text-primary">in Calicut</span>
               </h1>
@@ -507,7 +507,7 @@ export default function AttestationServicePage() {
                     <span className="w-6 h-6 rounded-full border border-primary text-primary text-[11px] font-semibold flex items-center justify-center shrink-0">
                       01
                     </span>
-                    <IoDocumentsOutline className="text-primary text-5xl shrink-0" />
+                    <IoDocumentsOutline className="text-primary text-3xl shrink-0" />
                   </div>
                   <div>
                     <h3 className="text-sm sm:text-base font-semibold text-[#021b38]">
@@ -532,7 +532,7 @@ export default function AttestationServicePage() {
                     <span className="w-6 h-6 rounded-full border border-primary text-primary text-[11px] font-semibold flex items-center justify-center shrink-0">
                       02
                     </span>
-                    <IoIosSearch className="text-primary text-5xl shrink-0" />
+                    <IoIosSearch className="text-primary text-3xl shrink-0" />
                   </div>
                   <div>
                     <h3 className="text-sm sm:text-base font-semibold text-[#021b38]">
@@ -557,7 +557,7 @@ export default function AttestationServicePage() {
                     <span className="w-6 h-6 rounded-full border border-primary text-primary text-[11px] font-semibold flex items-center justify-center shrink-0">
                       03
                     </span>
-                    <HiOutlineCheckBadge className="text-primary text-5xl shrink-0" />
+                    <HiOutlineCheckBadge className="text-primary text-3xl shrink-0" />
                   </div>
                   <div>
                     <h3 className="text-sm sm:text-base font-semibold text-[#021b38]">

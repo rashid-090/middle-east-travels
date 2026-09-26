@@ -177,61 +177,63 @@ export default function Footer() {
           </div>
 
           {/* Column 2: Top Destinations (2.5 cols) */}
-          <div className="lg:col-span-3 space-y-4">
+          <div className="lg:col-span-2 space-y-4">
             <h4 className="text-base font-semibold text-white tracking-wide border-l-2 border-primary pl-3">
-              Top Destinations
+              Quick Links
             </h4>
             <ul className="space-y-2.5 text-sm text-slate-400 font-normal">
               <li>
                 <Link
-                  href="/holidays/dubai"
+                  href="/about-us"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  Dubai & Abu Dhabi Packages
+                  About Our Agency
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/holidays/saudi"
+                  href="/reviews"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  Saudi Arabia & AlUla Heritage
+                  Customer Reviews
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/holidays/oman"
+                  href="/blog"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  Oman Fjords & Muscat Tours
+                  Travel Blog & Guides
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/holidays/qatar"
+                  href="/contact-us"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  Qatar Cultural & Souq Escapes
+                  Contact Us
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/holidays/thailand"
+                  href="/privacy"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  Thailand Beach Getaways
+                  Privacy Policy
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/holidays/bali"
+                  href="/terms"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  Bali Island Resorts
+                  Terms of Service
                 </Link>
               </li>
             </ul>
           </div>
+
+          
 
           {/* Column 3: Our Services (2.5 cols) */}
           <div className="lg:col-span-3 space-y-4">
@@ -291,57 +293,57 @@ export default function Footer() {
           </div>
 
           {/* Column 4: Quick Links (2 cols) */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-3 space-y-4">
             <h4 className="text-base font-semibold text-white tracking-wide border-l-2 border-primary pl-3">
-              Quick Links
+              Top Destinations
             </h4>
             <ul className="space-y-2.5 text-sm text-slate-400 font-normal">
               <li>
                 <Link
-                  href="/about-us"
+                  href="/holidays/dubai"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  About Our Agency
+                  Dubai & Abu Dhabi Packages
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/reviews"
+                  href="/holidays/saudi"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  Customer Reviews
+                  Saudi Arabia & AlUla Heritage
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/blog"
+                  href="/holidays/oman"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  Travel Blog & Guides
+                  Oman Fjords & Muscat Tours
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/contact-us"
+                  href="/holidays/qatar"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  Contact Us
+                  Qatar Cultural & Souq Escapes
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/privacy"
+                  href="/holidays/thailand"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  Privacy Policy
+                  Thailand Beach Getaways
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/terms"
+                  href="/holidays/bali"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  Terms of Service
+                  Bali Island Resorts
                 </Link>
               </li>
             </ul>

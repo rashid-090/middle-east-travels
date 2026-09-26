@@ -62,6 +62,34 @@ body {
   border-radius: 9999px !important;
 }
 
+/* Immigration Services Custom Pagination */
+.immigration-services-pagination {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px;
+  margin-top: 1.25rem;
+}
+
+.immigration-services-pagination .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background: #cbd5e1;
+  opacity: 1;
+  margin: 0 3px !important;
+  border-radius: 9999px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.immigration-services-pagination .swiper-pagination-bullet-active {
+  width: 24px !important;
+  height: 8px !important;
+  background: #0f8a3c !important;
+  border-radius: 9999px !important;
+}
+
 /* Hide scrollbar for Chrome, Safari, Edge and Firefox */
 .no-scrollbar::-webkit-scrollbar {
   display: none;

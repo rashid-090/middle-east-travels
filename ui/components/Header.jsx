@@ -26,6 +26,9 @@ const navItems = [
     href: "#",
     subMenu: [
       { name: "Attestation Service", href: "/attestation-service" },
+      { name: "Book Flights", href: "/book-flights" },
+      { name: "Travel Insurance", href: "/travel-insurance" },
+      { name: "Immigration Service", href: "/immigration-service" },
     ],
   },
   { name: "About us", href: "/about-us" },
@@ -186,7 +189,7 @@ export default function Header() {
           : "bg-white/95 backdrop-blur-md shadow-md py-3 border-b border-slate-100"
       }`}
     >
-      <div className="w-10/12 mx-auto flex items-center justify-between">
+      <div className="w-11/12 mx-auto flex items-center justify-between">
         {/* Logo Section */}
         <Link
           href="/"

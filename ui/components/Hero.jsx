@@ -86,8 +86,6 @@ function renderPackageCardContent(item) {
             quality={90}
             className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
           />
-
-      
         </div>
 
         <div className="px-1 pt-1">
@@ -108,7 +106,6 @@ function renderPackageCardContent(item) {
           <p className="text-[10px] md:text-xs text-slate-500 font-medium mb-3">
             {item.duration || "5 Days 4 Nights"}
           </p>
-
 
           {/* Bullet Points Highlights */}
           <ul className="space-y-1 text-[10px] md:text-xs text-slate-600 font-normal my-1">
@@ -133,8 +130,6 @@ function renderPackageCardContent(item) {
             )}
           </ul>
 
-         
-
           {/* Bottom Border & Price Section */}
           <div className="border-t border-slate-100 pt-3 mt-3 flex items-center justify-between">
             <div className="flex items-baseline gap-1.5 flex-wrap">
@@ -147,10 +142,10 @@ function renderPackageCardContent(item) {
                 {item.price}
               </span>
             </div>
-
-          
           </div>
-          <button className="bg-primary w-full py-3 px-4 rounded-xl text-white mt-2 text-sm">View Package</button>
+          <button className="bg-primary w-full py-3 px-4 rounded-xl text-white mt-2 text-sm">
+            View Package
+          </button>
         </div>
       </div>
     </Link>
@@ -209,7 +204,7 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-auto lg:h-screen md:min-h-screen flex items-center justify-center bg-slate-950 overflow-hidden font-sans"
+      className="relative w-full h-auto lg:h-screen md:min-h-screen flex items-center justify-center bg-slate-950 overflow-hidden"
     >
       {/* Background Beach Image Slideshow with Smooth Scroll Parallax */}
       <motion.div
@@ -242,8 +237,8 @@ export default function Hero() {
       </motion.div>
 
       {/* Main Content Container */}
-      <div className="relative z-10 w-11/12 md:w-10/12 mx-auto pt-24 pb-12 lg:py-0">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      <div className="relative z-10 w-11/12 mx-auto pt-24 pb-12 lg:py-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
           {/* LEFT CONTENT COLUMN */}
           <div className="lg:col-span-7 space-y-3 md:space-y-7">
             {/* Headlines */}
@@ -265,11 +260,10 @@ export default function Hero() {
                 Explore The World
               </h1>
               {/* fancy heading using Playball font */}
-              <div
-                className={`${playball.className} text-4xl sm:text-5xl lg:text-6xl text-primary tracking-wide leading-tight`}
-              >
+
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-white tracking-tight leading-[1.15]">
                 With Confidence
-              </div>
+              </h1>
             </motion.div>
 
             {/* Paragraph Subtitle */}
