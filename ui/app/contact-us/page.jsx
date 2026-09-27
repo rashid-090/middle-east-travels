@@ -22,6 +22,61 @@ import {
 } from "react-icons/fa6";
 import { HiSparkles } from "react-icons/hi2";
 
+const branchesData = [
+  {
+    id: 1,
+    city: "Calicut",
+    title: "Kozhikode Head Office",
+    badge: "Headquarters",
+    badgeBg: "bg-emerald-50 text-[#19a64b] border-emerald-200",
+    address:
+      "Shobha Tower, 5/3412L, Mavoor Rd, Arayidathupalam, Kozhikode, Kerala 673004",
+    phone: "+91 70251 44666",
+    email: "calicut@middleeasttravels.in",
+    hours: "Mon - Sat: 9:00 AM - 7:00 PM",
+    mapUrl: "https://maps.google.com/?q=Middle+East+Travels+Calicut",
+  },
+  {
+    id: 2,
+    city: "Kochi",
+    title: "Kochi Regional Office",
+    badge: "Branch Office",
+    badgeBg: "bg-blue-50 text-blue-700 border-blue-200",
+    address:
+      "Imperial Trade Centre, MG Road, Maharajas Metro Station, Kochi, Kerala 682035",
+    phone: "+91 70251 44777",
+    email: "kochi@middleeasttravels.in",
+    hours: "Mon - Sat: 9:00 AM - 7:00 PM",
+    mapUrl: "https://maps.google.com/?q=Kochi",
+  },
+  {
+    id: 3,
+    city: "Malappuram",
+    title: "Malappuram Branch",
+    badge: "Branch Office",
+    badgeBg: "bg-purple-50 text-purple-700 border-purple-200",
+    address:
+      "Opp. KSRTC Bus Stand, Down Hill, Calicut Road, Malappuram, Kerala 676505",
+    phone: "+91 70251 44888",
+    email: "malappuram@middleeasttravels.in",
+    hours: "Mon - Sat: 9:00 AM - 7:00 PM",
+    mapUrl: "https://maps.google.com/?q=Malappuram",
+  },
+  {
+    id: 4,
+    city: "Dubai",
+    title: "Dubai International Branch",
+    badge: "Overseas Office",
+    badgeBg: "bg-amber-50 text-amber-700 border-amber-200",
+    address:
+      "Office 304, Al Qusais Plaza, Damascus Street, Al Qusais 2, Dubai, UAE",
+    phone: "+971 4 258 4666",
+    email: "dubai@middleeasttravels.in",
+    hours: "Mon - Sat: 9:00 AM - 6:00 PM",
+    mapUrl: "https://maps.google.com/?q=Dubai",
+  },
+];
+
 export default function ContactUsPage() {
   const [formData, setFormData] = useState({
     name: "",
@@ -418,6 +473,112 @@ export default function ContactUsPage() {
 
               
             </div>
+          </div>
+        </section>
+
+        {/* ================= 4 BRANCHES ADDRESS & DETAILS ================= */}
+        <section className="w-11/12 mx-auto pt-14 sm:pt-16">
+          {/* Section Header */}
+          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12 space-y-3">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 text-[#19a64b] border border-emerald-100 text-xs font-semibold shadow-xs">
+              <HiSparkles className="text-sm text-[#19a64b]" />
+              <span>Our Branch Network</span>
+            </span>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#021b38] tracking-tight">
+              Visit Our <span className="text-[#19a64b]">Branch Offices</span>
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 font-normal leading-relaxed">
+              Explore our offices across India & UAE. Drop by for a face-to-face consultation with our travel and visa specialists.
+            </p>
+          </div>
+
+          {/* 4 Branch Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {branchesData.map((branch) => (
+              <div
+                key={branch.id}
+                className="bg-white rounded-[2rem] border border-slate-200/80 p-6 shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
+              >
+                <div className="space-y-4">
+                  {/* Top Badge & City Header */}
+                  <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-3.5">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-emerald-50 text-[#19a64b] flex items-center justify-center text-sm shrink-0">
+                        <FaLocationDot />
+                      </div>
+                      <h3 className="text-base font-semibold text-[#021b38]">
+                        {branch.city}
+                      </h3>
+                    </div>
+                    <span
+                      className={`text-[10px] font-semibold px-2.5 py-1 rounded-full border ${branch.badgeBg}`}
+                    >
+                      {branch.badge}
+                    </span>
+                  </div>
+
+                  {/* Branch Title & Address */}
+                  <div className="space-y-1.5">
+                    <h4 className="text-xs font-bold text-slate-800">
+                      {branch.title}
+                    </h4>
+                    <p className="text-xs text-slate-500 leading-relaxed min-h-[50px]">
+                      {branch.address}
+                    </p>
+                  </div>
+
+                  {/* Contact Info List */}
+                  <div className="space-y-2.5 text-xs text-slate-600 pt-1">
+                    <a
+                      href={`tel:${branch.phone.replace(/\s+/g, "")}`}
+                      className="flex items-center gap-2.5 hover:text-[#19a64b] transition-colors group/phone"
+                    >
+                      <FaPhone className="text-[#19a64b] text-xs shrink-0" />
+                      <span className="font-medium text-slate-700 group-hover/phone:text-[#19a64b]">
+                        {branch.phone}
+                      </span>
+                    </a>
+
+                    <a
+                      href={`mailto:${branch.email}`}
+                      className="flex items-center gap-2.5 hover:text-[#19a64b] transition-colors group/mail"
+                    >
+                      <FaEnvelope className="text-[#19a64b] text-xs shrink-0" />
+                      <span className="truncate text-slate-500 group-hover/mail:text-[#19a64b]">
+                        {branch.email}
+                      </span>
+                    </a>
+
+                    <div className="flex items-center gap-2.5 text-slate-500">
+                      <FaClock className="text-[#19a64b] text-xs shrink-0" />
+                      <span>{branch.hours}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Action Bar */}
+                <div className="pt-5 mt-5 border-t border-slate-100 flex items-center justify-between">
+                  <a
+                    href={`https://wa.me/${branch.phone.replace(/[^0-9]/g, "")}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#19a64b] hover:text-emerald-700 transition-colors"
+                  >
+                    <FaWhatsapp className="text-sm" />
+                    <span>WhatsApp</span>
+                  </a>
+                  <a
+                    href={branch.mapUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-500 hover:text-slate-900 transition-colors"
+                  >
+                    <span>Directions</span>
+                    <FaArrowRight className="text-[10px]" />
+                  </a>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
       </main>

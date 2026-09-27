@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Playball } from "next/font/google";
+import gsap from "gsap";
 import {
   motion,
   AnimatePresence,
@@ -154,18 +155,64 @@ function renderPackageCardContent(item) {
 
 export default function Hero() {
   const containerRef = useRef(null);
-  const [hasAnimated, setHasAnimated] = useState(() => {
-    if (typeof window !== "undefined") {
-      return Boolean(sessionStorage.getItem("hero_heading_animated"));
-    }
-    return false;
-  });
+  const contentRef = useRef(null);
+  const heroAnimatedRef = useRef(false);
 
+  // GSAP Fade-In animation synchronized with loading screen & viewport
   useEffect(() => {
-    if (typeof window !== "undefined" && !hasAnimated) {
-      sessionStorage.setItem("hero_heading_animated", "true");
-    }
-  }, [hasAnimated]);
+    if (!contentRef.current) return;
+    const el = contentRef.current;
+    const targets = el.querySelectorAll(".text");
+    if (!targets.length) return;
+
+    // Immediately set initial hidden state on client mount
+    gsap.set(targets, { opacity: 0, y: 25 });
+
+    const playFadeIn = () => {
+      if (heroAnimatedRef.current) return;
+      heroAnimatedRef.current = true;
+
+      gsap.to(targets, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power2.out",
+        stagger: 0.15,
+      });
+    };
+
+    // Listen for custom event dispatched by InitialLoader when fade-out finishes
+    const handleLoaderFinished = () => {
+      playFadeIn();
+    };
+
+    window.addEventListener("initialLoaderFinished", handleLoaderFinished);
+
+    // Observer for viewport entry
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // If body overflow is not hidden (loader not active), run after short delay
+            if (document.body.style.overflow !== "hidden") {
+              setTimeout(playFadeIn, 150);
+            } else {
+              // Fallback timer (2100ms) in case event was missed
+              setTimeout(playFadeIn, 2100);
+            }
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(el);
+
+    return () => {
+      window.removeEventListener("initialLoaderFinished", handleLoaderFinished);
+      observer.disconnect();
+    };
+  }, []);
 
   // Scroll Parallax Effect Setup
   const { scrollYProgress } = useScroll({
@@ -240,67 +287,26 @@ export default function Hero() {
       <div className="relative z-10 w-11/12 mx-auto pt-24 pb-12 lg:py-0">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
           {/* LEFT CONTENT COLUMN */}
-          <div className="lg:col-span-7 space-y-3 md:space-y-7">
+          <div ref={contentRef} className="lg:col-span-7 space-y-3 md:space-y-7">
             {/* Headlines */}
-            <motion.div
-              initial={hasAnimated ? false : { opacity: 0, y: 25 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={
-                hasAnimated
-                  ? { duration: 0 }
-                  : {
-                      duration: 0.8,
-                      delay: 2.5,
-                      ease: "easeOut",
-                    }
-              }
-              className="space-y-1 sm:space-y-2"
-            >
-              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-medium text-white tracking-tight leading-[1.15]">
+            <div className="space-y-1 sm:space-y-2 overflow-hidden">
+              <h1 className="text text-4xl sm:text-5xl lg:text-7xl font-medium text-white tracking-tight leading-[1.15]">
                 Explore The World
               </h1>
-              {/* fancy heading using Playball font */}
-
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-medium text-white tracking-tight leading-[1.15]">
+              <h1 className="text text-4xl sm:text-5xl lg:text-6xl font-medium text-white tracking-tight leading-[1.15]">
                 With Confidence
               </h1>
-            </motion.div>
+            </div>
 
             {/* Paragraph Subtitle */}
-            <motion.p
-              initial={hasAnimated ? false : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={
-                hasAnimated
-                  ? { duration: 0 }
-                  : {
-                      duration: 0.8,
-                      delay: 2.2,
-                      ease: "easeOut",
-                    }
-              }
-              className="text-white text-xs sm:text-sm md:text-base font-normal max-w-md leading-relaxed"
-            >
+            <p className="text text-white text-xs sm:text-sm md:text-base font-normal max-w-md leading-relaxed">
               Explore handpicked holiday packages, instant visa assistance, and
               24/7 dedicated support. Your dream journey starts right here with
               Middle East Travels.
-            </motion.p>
+            </p>
 
             {/* CTA Buttons */}
-            <motion.div
-              initial={hasAnimated ? false : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={
-                hasAnimated
-                  ? { duration: 0 }
-                  : {
-                      duration: 0.8,
-                      delay: 2.4,
-                      ease: "easeOut",
-                    }
-              }
-              className="flex flex-wrap items-center gap-4 pt-3"
-            >
+            <div className="text flex flex-wrap items-center gap-4 pt-3">
               <Link
                 href="/contact-us"
                 className="px-10 py-4 rounded-xl bg-primary hover:bg-secondary text-white font-semibold text-xs md:text-sm shadow-md hover:shadow-lg active:scale-95 transition-all duration-200"
@@ -316,7 +322,7 @@ export default function Hero() {
                 <FaWhatsapp className="text-emerald-500 text-lg" />
                 <span>Speak to an Expert</span>
               </a>
-            </motion.div>
+            </div>
           </div>
 
           {/* MOBILE PACKAGE CARD DISPLAY */}
