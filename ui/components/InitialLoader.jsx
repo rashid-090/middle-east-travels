@@ -11,15 +11,25 @@ export default function InitialLoader() {
   useEffect(() => {
     // Lock body scroll while loader is active
     document.body.style.overflow = "hidden";
+    if (typeof window !== "undefined") {
+      window.__INITIAL_LOADER_RUNNING = true;
+    }
 
     const timer = setTimeout(() => {
       setLoading(false);
       document.body.style.overflow = "unset";
+      if (typeof window !== "undefined") {
+        window.__INITIAL_LOADER_RUNNING = false;
+        window.dispatchEvent(new CustomEvent("initialLoaderDone"));
+      }
     }, 1700);
 
     return () => {
       clearTimeout(timer);
       document.body.style.overflow = "unset";
+      if (typeof window !== "undefined") {
+        window.__INITIAL_LOADER_RUNNING = false;
+      }
     };
   }, []);
 

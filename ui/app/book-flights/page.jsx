@@ -257,7 +257,7 @@ export default function BookFlightsPage() {
                   className="w-[240px] sm:w-[270px] lg:w-[285px] px-2.5 py-2 shrink-0"
                 >
                   <a
-                    href={`https://wa.me/918714806661?text=${encodeURIComponent(
+                    href={`https://wa.me/7025144666?text=${encodeURIComponent(
                       `Hi, I want to book a flight ticket to ${item.title}. Please share available flights & best fares.`,
                     )}`}
                     target="_blank"
@@ -282,11 +282,8 @@ export default function BookFlightsPage() {
                         <h3 className="text-lg sm:text-xl font-medium text-white tracking-tight leading-tight">
                           {item.title}
                         </h3>
-                        <p className="text-xs sm:text-sm text-slate-200 font-normal">
-                          From{" "}
-                          <span className="text-sm font-semibold text-white">
-                            {item.price}
-                          </span>
+                        <p className="text-xs sm:text-sm font-semibold text-primary font-normal">
+                          Best Rate Available
                         </p>
                       </div>
 

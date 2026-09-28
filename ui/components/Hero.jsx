@@ -27,6 +27,9 @@ import {
   FaCar,
   FaBinoculars,
 } from "react-icons/fa6";
+import { MdFlight } from "react-icons/md";
+import { IoTicketOutline } from "react-icons/io5";
+
 import { HiSparkles } from "react-icons/hi2";
 import { heroBanners, heroCardsData } from "@/data/allData.js";
 
@@ -153,65 +156,75 @@ function renderPackageCardContent(item) {
   );
 }
 
+// Staggered reveal animation variants for text, heading, and buttons
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.18,
+      delayChildren: 0.15,
+    },
+  },
+};
+
+const revealItemVariants = {
+  hidden: {
+    opacity: 0,
+    y: 35,
+    filter: "blur(10px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.8,
+      ease: [0.25, 1, 0.5, 1],
+    },
+  },
+};
+
 export default function Hero() {
   const containerRef = useRef(null);
-  const contentRef = useRef(null);
-  const heroAnimatedRef = useRef(false);
+  const [animateState, setAnimateState] = useState("hidden");
 
-  // GSAP Fade-In animation synchronized with loading screen & viewport
   useEffect(() => {
-    if (!contentRef.current) return;
-    const el = contentRef.current;
-    const targets = el.querySelectorAll(".text");
-    if (!targets.length) return;
-
-    // Immediately set initial hidden state on client mount
-    gsap.set(targets, { opacity: 0, y: 25 });
-
-    const playFadeIn = () => {
-      if (heroAnimatedRef.current) return;
-      heroAnimatedRef.current = true;
-
-      gsap.to(targets, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "power2.out",
-        stagger: 0.15,
-      });
+    // Function to trigger the reveal animation
+    const triggerReveal = () => {
+      setAnimateState("visible");
     };
 
-    // Listen for custom event dispatched by InitialLoader when fade-out finishes
-    const handleLoaderFinished = () => {
-      playFadeIn();
-    };
+    // Check if initial preloader is active or running
+    const isLoaderRunning =
+      (typeof window !== "undefined" && window.__INITIAL_LOADER_RUNNING) ||
+      (typeof document !== "undefined" && document.body.style.overflow === "hidden");
 
-    window.addEventListener("initialLoaderFinished", handleLoaderFinished);
+    let timer;
+    if (isLoaderRunning) {
+      // Listen for loader completion event
+      const handleDone = () => {
+        triggerReveal();
+      };
 
-    // Observer for viewport entry
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            // If body overflow is not hidden (loader not active), run after short delay
-            if (document.body.style.overflow !== "hidden") {
-              setTimeout(playFadeIn, 150);
-            } else {
-              // Fallback timer (2100ms) in case event was missed
-              setTimeout(playFadeIn, 2100);
-            }
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
+      if (typeof window !== "undefined") {
+        window.addEventListener("initialLoaderDone", handleDone);
+      }
 
-    observer.observe(el);
+      // Fallback timer (1900ms) to guarantee animation triggers after loader
+      timer = setTimeout(triggerReveal, 1900);
 
-    return () => {
-      window.removeEventListener("initialLoaderFinished", handleLoaderFinished);
-      observer.disconnect();
-    };
+      return () => {
+        if (timer) clearTimeout(timer);
+        if (typeof window !== "undefined") {
+          window.removeEventListener("initialLoaderDone", handleDone);
+        }
+      };
+    } else {
+      // Fast reveal for standard route navigation
+      timer = setTimeout(triggerReveal, 150);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   // Scroll Parallax Effect Setup
@@ -278,7 +291,7 @@ export default function Hero() {
               className="object-cover object-center"
             />
             {/* Gradient Overlays for optimal text contrast */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/35 to-black/20 z-10 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/25 to-black/10 z-10 pointer-events-none" />
           </motion.div>
         </AnimatePresence>
       </motion.div>
@@ -287,33 +300,50 @@ export default function Hero() {
       <div className="relative z-10 w-11/12 mx-auto pt-24 pb-12 lg:py-0">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
           {/* LEFT CONTENT COLUMN */}
-          <div ref={contentRef} className="lg:col-span-7 space-y-3 md:space-y-7">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate={animateState}
+            className="lg:col-span-7 space-y-3 md:space-y-7"
+          >
             {/* Headlines */}
             <div className="space-y-1 sm:space-y-2 overflow-hidden">
-              <h1 className="text text-4xl sm:text-5xl lg:text-7xl font-medium text-white tracking-tight leading-[1.15]">
+              <motion.h1
+                variants={revealItemVariants}
+                className="text-4xl sm:text-5xl lg:text-7xl font-medium text-white tracking-tight leading-[1.15]"
+              >
                 Explore The World
-              </h1>
-              <h1 className="text text-4xl sm:text-5xl lg:text-6xl font-medium text-white tracking-tight leading-[1.15]">
-                With Confidence
-              </h1>
+              </motion.h1>
+           <motion.h1
+  variants={revealItemVariants}
+  className="text-4xl sm:text-5xl lg:text-6xl font-medium text-transparent [-webkit-text-stroke:1.5px_white] tracking-tight leading-[1.15]"
+>
+  With Confidence
+</motion.h1>
             </div>
 
             {/* Paragraph Subtitle */}
-            <p className="text text-white text-xs sm:text-sm md:text-base font-normal max-w-md leading-relaxed">
+            <motion.p
+              variants={revealItemVariants}
+              className="text-white text-xs sm:text-sm md:text-base font-normal max-w-md leading-relaxed"
+            >
               Explore handpicked holiday packages, instant visa assistance, and
               24/7 dedicated support. Your dream journey starts right here with
               Middle East Travels.
-            </p>
+            </motion.p>
 
             {/* CTA Buttons */}
-            <div className="text flex flex-wrap items-center gap-4 pt-3">
+            <motion.div
+              variants={revealItemVariants}
+              className="flex flex-wrap items-center gap-4 pt-3"
+            >
               <Link
                 href="/contact-us"
                 className="px-10 py-4 rounded-xl bg-primary hover:bg-secondary text-white font-semibold text-xs md:text-sm shadow-md hover:shadow-lg active:scale-95 transition-all duration-200"
               >
                 Apply for Visa
               </Link>
-              <a
+              {/* <a
                 href="https://wa.me/7025144666"
                 target="_blank"
                 rel="noreferrer"
@@ -321,9 +351,16 @@ export default function Hero() {
               >
                 <FaWhatsapp className="text-emerald-500 text-lg" />
                 <span>Speak to an Expert</span>
-              </a>
-            </div>
-          </div>
+              </a> */}
+               <Link
+                href="/book-tickets"
+                className="inline-flex items-center gap-2.5 px-10 py-4 rounded-xl bg-white hover:bg-black text-black hover:text-white font-medium text-xs md:text-sm shadow-md hover:shadow-lg active:scale-95 transition-all duration-200"
+              >
+                Book Tickets
+                <IoTicketOutline className="text-primary text-lg" />
+              </Link>
+            </motion.div>
+          </motion.div>
 
           {/* MOBILE PACKAGE CARD DISPLAY */}
           <div className="w-full max-w-[300px] mx-auto flex md:hidden flex-col justify-center items-center">

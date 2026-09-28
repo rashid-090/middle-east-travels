@@ -57,7 +57,7 @@ export default function AttestationServicePage() {
           <div className="absolute inset-0 bg-gradient-to-t from-[#edf8f3]/80 via-transparent to-[#edf8f3]/40 lg:hidden" />
         </div>
 
-        <div className="w-11/12 max-w-7xl mx-auto py-14 lg:py-16 relative z-10">
+        <div className="w-11/12 mx-auto py-14 lg:py-16 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
             {/* Left Column: Banner Content */}
@@ -107,7 +107,7 @@ export default function AttestationServicePage() {
       </section>
 
       {/* ================= FEATURES HIGHLIGHTS SECTION ================= */}
-      <section className="w-11/12 mx-auto mx-auto py-8 sm:py-12">
+      <section className="w-11/12 mx-auto py-8 sm:py-12">
         <div className="bg-[#f3faf6] border border-emerald-100/70 rounded-2xl sm:rounded-3xl p-2 md:p-4 shadow-xs">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-0 divide-y sm:divide-y-0 lg:divide-x divide-emerald-200/60">
             
