@@ -13,7 +13,7 @@ import "swiper/css/pagination";
 
 export default function Blogs() {
   return (
-    <section className="w-full py-12 lg:py-16 bg-white font-sans overflow-hidden">
+    <section className="w-full py-12 lg:py-16 bg-white overflow-hidden">
       <div className="w-11/12 mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12 items-start">
           

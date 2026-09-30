@@ -23,7 +23,7 @@ export default function NotFound() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans flex flex-col justify-between overflow-hidden relative selection:bg-[#19a64b] selection:text-white">
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-between overflow-hidden relative selection:bg-[#19a64b] selection:text-white">
       {/* Background Decorative Glow Accents */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#19a64b]/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl pointer-events-none" />

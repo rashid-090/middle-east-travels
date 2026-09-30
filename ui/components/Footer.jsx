@@ -57,7 +57,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="w-full bg-secondary text-white font-sans border-t border-slate-800/80 relative z-10 overflow-hidden">
+    <footer className="w-full bg-secondary text-white border-t border-slate-800/80 relative z-10 overflow-hidden">
       {/* Background Glow Decorative Accents */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
@@ -184,26 +184,36 @@ export default function Footer() {
             <ul className="space-y-2.5 text-sm text-slate-400 font-normal">
               <li>
                 <Link
+                  href="/"
+                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
+                >
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/about-us"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  About Our Agency
+                  About Us
                 </Link>
               </li>
-              <li>
+              
+             <li>
                 <Link
-                  href="/reviews"
+                  href="/tour-packages"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  Customer Reviews
+                 Tour packages
                 </Link>
               </li>
+
               <li>
                 <Link
-                  href="/blog"
+                  href="/visa-services"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  Travel Blog & Guides
+             Visa Services
                 </Link>
               </li>
               <li>
@@ -214,22 +224,7 @@ export default function Footer() {
                   Contact Us
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/privacy"
-                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/terms"
-                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
-                >
-                  Terms of Service
-                </Link>
-              </li>
+           
             </ul>
           </div>
 
@@ -243,52 +238,37 @@ export default function Footer() {
             <ul className="space-y-2.5 text-sm text-slate-400 font-normal">
               <li>
                 <Link
-                  href="/services/holidays"
+                  href="/attestation-service"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  Customized Holiday Packages
+               Attestation Service
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/visa"
+                  href="/book-flights"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  Express Tourist & Business Visa
+               Book Flights
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/flights"
+                  href="/travel-insurance"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  International Flight Reservations
+              Travel Insurance
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/hotels"
+                  href="/immigration-service"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
-                  Luxury Hotel & Resort Bookings
+                Immigration Service
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/services/transfers"
-                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
-                >
-                  VIP Airport Chauffeur Pickup
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services/insurance"
-                  className="hover:text-primary hover:translate-x-1 transition-all inline-block"
-                >
-                  Worldwide Travel Insurance
-                </Link>
-              </li>
+           
             </ul>
           </div>
 
@@ -300,7 +280,7 @@ export default function Footer() {
             <ul className="space-y-2.5 text-sm text-slate-400 font-normal">
               <li>
                 <Link
-                  href="/holidays/dubai"
+                  href="/tour-packages"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Dubai & Abu Dhabi Packages
@@ -308,7 +288,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/holidays/saudi"
+                  href="/tour-packages"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Saudi Arabia & AlUla Heritage
@@ -316,7 +296,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/holidays/oman"
+                  href="/tour-packages"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Oman Fjords & Muscat Tours
@@ -324,7 +304,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/holidays/qatar"
+                  href="/tour-packages"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Qatar Cultural & Souq Escapes
@@ -332,7 +312,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/holidays/thailand"
+                  href="/tour-packages"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Thailand Beach Getaways
@@ -340,7 +320,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/holidays/bali"
+                  href="/tour-packages"
                   className="hover:text-primary hover:translate-x-1 transition-all inline-block"
                 >
                   Bali Island Resorts

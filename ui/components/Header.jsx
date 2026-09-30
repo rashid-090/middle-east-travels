@@ -20,7 +20,7 @@ import {
 const navItems = [
   { name: "Home", href: "/" },
   { name: "Tour packages", href: "/tour-packages" },
-  { name: "Visa Services", href: "#" },
+  { name: "Visa Services", href: "/visa-services" },
   {
     name: "Other services",
     href: "#",
@@ -181,7 +181,7 @@ export default function Header() {
 
   return (
     <header
-      className={`w-full font-sans transition-all duration-300 z-50 ${
+      className={`w-full transition-all duration-300 z-50 ${
         isHome ? "fixed top-0 left-0 right-0" : "sticky top-0"
       } ${
         isTransparent

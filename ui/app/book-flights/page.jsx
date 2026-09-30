@@ -214,7 +214,7 @@ export default function BookFlightsPage() {
      
 
       {/* ================= POPULAR DESTINATIONS CAROUSEL SECTION ================= */}
-      <section className="w-full py-8 lg:py-14 bg-slate-50 font-sans overflow-hidden">
+      <section className="w-full py-8 lg:py-14 bg-slate-50 overflow-hidden">
         <div className="w-11/12 mx-auto space-y-6">
           {/* Section Header Row (Matching reference image layout) */}
           <div className="flex items-end justify-between">
@@ -458,7 +458,7 @@ export default function BookFlightsPage() {
       </section>
 
        {/* ================= FEATURED AIRLINES CAROUSEL SECTION ================= */}
-      <section className="w-full py-8 lg:py-12 bg-slate-50 font-sans overflow-hidden">
+      <section className="w-full py-8 lg:py-12 bg-slate-50 overflow-hidden">
         <div className="w-11/12 mx-auto space-y-5">
           {/* Section Header Row (Matching reference image layout) */}
           <div className="flex items-end justify-between">

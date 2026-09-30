@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { tourPackagesData } from "@/data/allData";
+import { client, urlFor } from "@/lib/sanity";
 import {
   FaArrowRight,
   FaFire,
@@ -63,6 +64,8 @@ const getInclusionIcon = (type) => {
 };
 
 export default function TourPackagesPage() {
+  const [packagesList, setPackagesList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedRegion, setSelectedRegion] = useState("All");
@@ -71,6 +74,63 @@ export default function TourPackagesPage() {
   const [sortBy, setSortBy] = useState("default");
 
   const bannerRef = useRef(null);
+
+  useEffect(() => {
+    async function fetchTourPackages() {
+      setIsLoading(true);
+      try {
+        const query = `*[_type == "tourPackage"] | order(orderRank asc, _createdAt desc)`;
+        const data = await client.fetch(query);
+        if (data && data.length > 0) {
+          const formatted = data.map((item) => {
+            const slugId = item.id?.current || item.id || item._id;
+            const mainImageUrl = item.image ? urlFor(item.image)?.url() : null;
+            const galleryUrls = item.gallery && Array.isArray(item.gallery)
+              ? item.gallery.map((g) => urlFor(g)?.url()).filter(Boolean)
+              : [];
+
+            return {
+              id: slugId,
+              title: item.title,
+              fullTitle: item.fullTitle || `${item.title} Tour Packages`,
+              category: item.category || "International",
+              region: item.region || "Eurasia",
+              duration: item.duration || "5 Days 4 Nights",
+              price: item.price,
+              oldPrice: item.oldPrice,
+              badge: item.badge,
+              badgeType: item.badgeType || "fire-orange",
+              rating: item.rating ? Number(item.rating) : 4.8,
+              reviewsCount: item.reviewsCount ? Number(item.reviewsCount) : 150,
+              image: mainImageUrl || "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=85",
+              gallery: galleryUrls.length > 0 ? galleryUrls : [mainImageUrl].filter(Boolean),
+              link: `/tour-packages/${slugId}`,
+              overview: item.overview || "",
+              inclusionIcons: item.inclusionIcons || [
+                { icon: "hotel", label: "04 Nights stay" },
+                { icon: "breakfast", label: "Daily breakfast" },
+                { icon: "transfer", label: "All transfers" },
+                { icon: "sightseeing", label: "Sight seeing" },
+              ],
+              highlights: item.highlights || [],
+              itinerary: item.itinerary || [],
+              inclusions: item.inclusions || [],
+              exclusions: item.exclusions || [],
+            };
+          });
+          setPackagesList(formatted);
+        } else {
+          setPackagesList(tourPackagesData);
+        }
+      } catch (err) {
+        console.error("Error fetching tour packages from Sanity:", err);
+        setPackagesList(tourPackagesData);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchTourPackages();
+  }, []);
 
   // Parallax Scroll Effect Setup for Maldives Sunset Banner
   const { scrollYProgress } = useScroll({
@@ -84,13 +144,11 @@ export default function TourPackagesPage() {
   const categories = ["All", "International", "Domestic"];
   const regions = [
     "All",
-    "Southeast Asia",
+    "Asia",
+    "Europe",
     "Middle East",
-    "South Asia",
-    "Eurasia",
-    "North India",
-    "South India",
-    "West India",
+    "Africa",
+    "Americas",
   ];
 
   // Handle Banner Category Selection (Icons)
@@ -110,7 +168,7 @@ export default function TourPackagesPage() {
 
   // Filter & Sort Logic
   const filteredPackages = useMemo(() => {
-    return tourPackagesData
+    return packagesList
       .filter((pkg) => {
         // 1. Search Query Filter
         const matchesSearch =
@@ -127,11 +185,23 @@ export default function TourPackagesPage() {
 
         // 2. Category Tab Filter (All, International, Domestic)
         const matchesCategory =
-          selectedCategory === "All" || pkg.category === selectedCategory;
+          selectedCategory === "All" ||
+          (Array.isArray(pkg.category)
+            ? pkg.category.includes(selectedCategory)
+            : pkg.category === selectedCategory);
 
         // 3. Region Filter
         const matchesRegion =
-          selectedRegion === "All" || pkg.region === selectedRegion;
+          selectedRegion === "All" ||
+          (pkg.region &&
+            (pkg.region === selectedRegion ||
+              pkg.region.toLowerCase().includes(selectedRegion.toLowerCase()) ||
+              (selectedRegion === "Asia" &&
+                (pkg.region.includes("Asia") ||
+                  pkg.region.includes("Southeast") ||
+                  pkg.region.includes("India"))) ||
+              (selectedRegion === "Europe" &&
+                (pkg.region.includes("Europe") || pkg.region.includes("Eurasia")))));
 
         // 4. Banner Icon Category Filter
         let matchesBannerCategory = true;
@@ -169,6 +239,7 @@ export default function TourPackagesPage() {
         return 0;
       });
   }, [
+    packagesList,
     searchQuery,
     selectedCategory,
     selectedRegion,
@@ -202,7 +273,7 @@ export default function TourPackagesPage() {
               />
             </motion.div>
             {/* Soft dark gradient overlay for crystal clear contrast */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/30 z-10 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/45 to-black/20 z-10 pointer-events-none" />
           </div>
 
           {/* Top Banner Content: Title & Subtitle */}
@@ -253,16 +324,16 @@ export default function TourPackagesPage() {
                 </div>
 
                 {/* Search & Sort Controls Bar */}
-                <div className="flex items-center gap-2 w-full lg:w-auto">
+                <div className="flex items-center gap-2 w-full">
                   {/* Search Bar */}
-                  <div className="relative flex items-center bg-black/30 sm:bg-white/20 backdrop-blur-md rounded-xl px-3 py-2 border border-white/25 focus-within:border-white transition-colors flex-1 lg:w-64">
+                  <div className="relative flex w-full items-center bg-black/30 sm:bg-white/20 backdrop-blur-md rounded-xl p-2 md:p-2.5 border border-white/25 focus-within:border-white transition-colors">
                     <FaMagnifyingGlass className="text-white/70 text-xs shrink-0 mr-2" />
                     <input
                       type="text"
                       placeholder="Search packages..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full bg-transparent text-white placeholder-white/60 text-xs outline-none font-sans"
+                      className="w-full bg-transparent text-white placeholder-white/60 text-sm outline-none "
                     />
                     {searchQuery && (
                       <button
@@ -279,7 +350,7 @@ export default function TourPackagesPage() {
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="bg-black/40 sm:bg-white/20 backdrop-blur-md text-white text-[11px] sm:text-xs font-semibold rounded-xl pl-3 pr-7 py-2 border border-white/25 focus:outline-none focus:border-white cursor-pointer appearance-none font-sans h-full"
+                      className="bg-black/40 sm:bg-white/20 backdrop-blur-md text-white text-[11px] sm:text-xs font-semibold rounded-xl pl-3 pr-7 py-2 md:py-3 border border-white/25 focus:outline-none focus:border-white cursor-pointer appearance-none h-full"
                     >
                       <option value="default" className="bg-slate-900 text-white">
                         Sort: Default
@@ -324,7 +395,41 @@ export default function TourPackagesPage() {
 
         {/* ================= PACKAGES GRID SECTION ================= */}
         <section className="w-11/12  mx-auto pb-10">
-          {filteredPackages.length > 0 ? (
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {[...Array(8)].map((_, idx) => (
+                <div
+                  key={idx}
+                  className="bg-white rounded-[2.25rem] border border-slate-200/80 p-3.5 flex flex-col justify-between h-full animate-pulse space-y-3"
+                >
+                  <div>
+                    <div className="w-full aspect-[4/3] rounded-[1.75rem] bg-slate-200 mb-3.5" />
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="h-5 bg-slate-200 rounded-md w-2/3" />
+                      <div className="h-4 bg-slate-200 rounded-md w-10" />
+                    </div>
+                    <div className="h-3.5 bg-slate-200 rounded-md w-1/3 mb-3" />
+                    <div className="grid grid-cols-4 gap-1 mb-3 bg-slate-50 p-2 rounded-2xl border border-slate-100">
+                      {[...Array(4)].map((_, i) => (
+                        <div key={i} className="flex flex-col items-center gap-1">
+                          <div className="w-10 h-10 rounded-xl bg-slate-200" />
+                          <div className="h-2.5 bg-slate-200 rounded w-8" />
+                        </div>
+                      ))}
+                    </div>
+                    <div className="space-y-2 mb-3">
+                      <div className="h-3 bg-slate-200 rounded w-full" />
+                      <div className="h-3 bg-slate-200 rounded w-3/4" />
+                    </div>
+                  </div>
+                  <div className="border-t border-slate-100 pt-3 flex items-center justify-between">
+                    <div className="h-6 bg-slate-200 rounded w-24" />
+                    <div className="w-9 h-9 rounded-full bg-slate-200" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : filteredPackages.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {filteredPackages.map((item) => renderPackageCard(item))}
             </div>
@@ -461,23 +566,18 @@ function renderPackageCard(item) {
               )}
             </ul>
 
-            {/* See X More Items Link */}
-            {item.highlights && item.highlights.length > 2 && (
-              <span className="text-[11px] font-semibold text-teal-700 hover:text-teal-800 hover:underline cursor-pointer block mb-3 pt-0.5">
-                See {item.highlights.length - 2} more items
-              </span>
-            )}
+            
 
             {/* Bottom Border & Price Section */}
             <div className="border-t border-slate-100 pt-3 mt-3 flex items-center justify-between">
               <div className="flex items-baseline gap-1.5 flex-wrap">
                 {item.oldPrice && (
                   <span className="text-xs text-slate-400 line-through font-normal">
-                    {item.oldPrice}
+                    INR ₹{item.oldPrice}
                   </span>
                 )}
                 <span className="text-lg sm:text-xl font-semibold text-slate-950 tracking-tight">
-                  {item.price}
+                  INR ₹{item.price}
                 </span>
           
               </div>

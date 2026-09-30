@@ -13,10 +13,10 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className="font-sans h-full antialiased"
+      className="h-full max-w-[1800px] mx-auto antialiased"
       cz-shortcut-listen="true"
     >
-      <body className="min-h-full flex flex-col font-sans">
+      <body className="min-h-full flex flex-col">
         {/* Fullscreen Initial Website Loader */}
         <InitialLoader />
 

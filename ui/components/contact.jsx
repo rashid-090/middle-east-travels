@@ -38,7 +38,7 @@ export default function Contact() {
   };
 
   return (
-    <section className="w-full py-14 lg:py-20 border-t border-slate-200/60 font-sans">
+    <section className="w-full py-14 lg:py-20 border-t border-slate-200/60">
       <div className="w-11/12 xl:w-10/12 mx-auto">
         
         {/* Main 2-Column Grid */}

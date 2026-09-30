@@ -26,7 +26,7 @@ export default function AboutUsPage() {
             <div className="lg:col-span-5 relative">
               <div className="relative w-full aspect-[4/5] rounded-[2.25rem] overflow-hidden shadow-lg border border-slate-200/80 bg-slate-100">
                 <Image
-                  src="/ctabg.webp"
+                  src="/abt-bg2.webp"
                   alt="Explorer looking over scenic travel landscape"
                   fill
                   priority
@@ -38,27 +38,7 @@ export default function AboutUsPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
               </div>
 
-              {/* Floating Award Badge Box */}
-              <div className="absolute -bottom-5 right-5 bg-white rounded-2xl p-4 shadow-xl border border-slate-100 flex items-center gap-3.5 max-w-xs">
-                <div className="w-12 h-12 animate-pulse rounded-xl bg-emerald-50 text-[#19a64b] flex items-center justify-center text-2xl shrink-0">
-                  <FaAward />
-                </div>
-                <div>
-                  <h4 className="text-xs font-semibold text-[#021b38]">
-                    Top Rated Travel Agency
-                  </h4>
-                  <div className="flex items-center gap-1 text-amber-400 text-xs py-0.5">
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <span className="text-slate-600 text-[10px] ml-1 font-medium">
-                      4.9/5 Rating
-                    </span>
-                  </div>
-                </div>
-              </div>
+           
             </div>
 
             {/* Right Column: Narrative Content (7 COLS) */}
@@ -67,24 +47,20 @@ export default function AboutUsPage() {
                 <span className="text-[10px] w-fit uppercase tracking-wider text-[#19a64b] bg-emerald-50 border border-emerald-100 px-3 py-1 rounded-full font-bold">
                   WHO WE ARE
                 </span>
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#021b38] tracking-tight leading-tight">
-                  Your Gateway to <br/>Seamless <span className="text-[#19a64b]">Global Travel</span>
-                </h2>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#021b38] tracking-tight leading-tight">
+                 Your Journey, 
+<br/><span className="text-[#19a64b]">Our Responsibility </span>
+                </h1>
               </div>
 
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-                Middle East Travels was founded with a single mission: to make
-                world travel effortless, inspiring, and accessible for everyone.
-                From exotic desert safaris in Dubai to cultural explorations in
-                Eurasia and luxury island getaways in Bali, we specialize in
-                delivering tailored holiday packages that create lifelong memories.
+At Middle East Travels & Tourism, we believe that every traveller has different needs, preferences, and budgets. That's why we offer customized travel solutions designed around your requirements.
               </p>
 
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-                With our main operational head office in Kozhikode, Kerala, and
-                dedicated partner networks across the Middle East and Asia, we
-                offer end-to-end solutions—including express tourist visas,
-                flight reservations, hotel bookings, and 24/7 on-ground assistance.
+From choosing the right destination and accommodation to arranging flights, transfers, sightseeing, and visa assistance, our experienced team works closely with you to make your journey smooth from start to finish.
+We serve travellers from Calicut and across Kerala, providing reliable travel services for popular destinations around the world.
+
               </p>
 
               {/* 4 Key Pillars Checklist */}

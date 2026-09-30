@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import TouchMarquee from "./TouchMarquee";
@@ -17,6 +17,7 @@ import {
 } from "react-icons/fa6";
 import { HiSparkles } from "react-icons/hi2";
 import { tourPackagesData } from "@/data/allData.js";
+import { client, urlFor } from "@/lib/sanity";
 
 const getBadgeIcon = (type) => {
   switch (type) {
@@ -51,18 +52,64 @@ const getInclusionIcon = (type) => {
 };
 
 export default function TourPackages() {
+  const [packages, setPackages] = useState(() => tourPackagesData.slice(0, 8));
+
+  useEffect(() => {
+    async function fetchPopularPackages() {
+      try {
+        const query = `*[_type == "tourPackage"] | order(orderRank asc, _createdAt desc)[0...8]`;
+        const data = await client.fetch(query);
+        if (data && data.length > 0) {
+          const formatted = data.map((item) => {
+            const slugId = item.id?.current || item.id || item._id;
+            const mainImageUrl = item.image ? urlFor(item.image)?.url() : null;
+
+            return {
+              id: slugId,
+              title: item.title,
+              fullTitle: item.fullTitle || `${item.title} Tour Packages`,
+              category: item.category || "International",
+              region: item.region || "Eurasia",
+              duration: item.duration || "5 Days 4 Nights",
+              price: item.price,
+              oldPrice: item.oldPrice,
+              badge: item.badge,
+              badgeType: item.badgeType || "fire-orange",
+              rating: item.rating ? Number(item.rating) : 4.8,
+              reviewsCount: item.reviewsCount ? Number(item.reviewsCount) : 150,
+              image: mainImageUrl || "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=85",
+              link: `/tour-packages/${slugId}`,
+              inclusionIcons: item.inclusionIcons || [
+                { icon: "hotel", label: "04 Nights stay" },
+                { icon: "breakfast", label: "Daily breakfast" },
+                { icon: "transfer", label: "All transfers" },
+                { icon: "sightseeing", label: "Sight seeing" },
+              ],
+              highlights: item.highlights || [],
+            };
+          });
+          setPackages(formatted);
+        }
+      } catch (err) {
+        console.error("Error fetching popular tour packages from Sanity:", err);
+      }
+    }
+    fetchPopularPackages();
+  }, []);
   return (
-    <section className="w-full py-12 lg:py-16 bg-slate-50 font-sans overflow-hidden">
+    <section className="w-full py-12 lg:py-16 bg-slate-50  overflow-hidden">
       <div className="w-11/12 mx-auto space-y-6">
         {/* Section Header Row */}
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl sm:text-3xl font-semibold capitalize text-[#021b38] tracking-tight">
-            Tour <span className="text-primary">packages</span>
+        <div className="flex flex-col md:flex-row items-start gap-y-5 md:items-center justify-between">
+          <div className="space-y-2">
+            <h2 className="text-2xl sm:text-3xl font-semibold capitalize text-[#021b38] tracking-tight">
+            Popular <span className="text-primary">Destinations</span>
           </h2>
-
+          <p>Handpicked holidays, customized to make your journey unforgettable.</p>
+          </div>
           <Link
             href="/tour-packages"
-            className="group flex items-center gap-2 text-sm hover:text-[#021b38] text-[#7d8083] transition-colors"
+            className="group flex items-center gap-2 text-sm hover:text-primary text-gray-600 transition-colors"
           >
             <span>View All Destinations</span>
             <FaArrowRight className="text-xs transition-transform duration-200 group-hover:translate-x-1" />
@@ -72,7 +119,7 @@ export default function TourPackages() {
         {/* Touch & Auto-Scroll Marquee Container */}
         <div className="w-full py-2">
           <TouchMarquee speed={1.2}>
-            {tourPackagesData.map((item) => (
+            {packages.map((item) => (
               <div
                 key={item.id}
                 className="w-[320px] lg:w-[340px] px-2.5 py-2 shrink-0"
@@ -84,13 +131,10 @@ export default function TourPackages() {
                   <div>
                     {/* Top Smooth Rounded Image Container */}
                     <div className="relative w-full aspect-[4/3] rounded-[1.75rem] overflow-hidden mb-3.5 bg-slate-100">
-                      <Image
+                      <img
                         src={item.image}
                         alt={item.title}
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
-                        quality={90}
-                        className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                       />
 
                       {/* Top Right Badge */}
@@ -198,11 +242,11 @@ export default function TourPackages() {
                         <div className="flex items-baseline gap-1.5 flex-wrap">
                           {item.oldPrice && (
                             <span className="text-xs text-slate-400 line-through font-normal">
-                              {item.oldPrice}
+                             INR ₹{item.oldPrice}
                             </span>
                           )}
                           <span className="text-lg sm:text-xl font-semibold text-slate-950 tracking-tight">
-                            {item.price}
+                           INR ₹{item.price}
                           </span>
                         </div>
 

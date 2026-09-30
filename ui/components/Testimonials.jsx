@@ -1,16 +1,63 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import TouchMarquee from "./TouchMarquee";
 import { FaStar, FaQuoteLeft } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { testimonialsData } from "@/data/allData.js";
+import { client, urlFor } from "@/lib/sanity";
 
 export default function Testimonials() {
+  const [testimonials, setTestimonials] = useState(testimonialsData);
+
+  useEffect(() => {
+    async function fetchTestimonials() {
+      try {
+        const query = `*[_type == "testimonial"] | order(orderRank asc, _createdAt desc)`;
+        const data = await client.fetch(query);
+        if (data && data.length > 0) {
+          const bgColors = ["bg-pink-600", "bg-blue-600", "bg-emerald-600", "bg-purple-600", "bg-amber-600", "bg-teal-600"];
+          const formatted = data.map((item, index) => {
+            const initials = item.name
+              ? item.name.trim().split(/\s+/).map((n) => n[0]).join("").slice(0, 2).toUpperCase()
+              : "ME";
+            
+            let avatarUrl = null;
+            if (item.avatar) {
+              avatarUrl = urlFor(item.avatar)?.url();
+            }
+
+            let branchText = item.branch || "Calicut Branch";
+            if (branchText && !branchText.toLowerCase().includes("branch")) {
+              branchText = `${branchText.charAt(0).toUpperCase() + branchText.slice(1)} Branch`;
+            }
+
+            return {
+              id: item._id || index,
+              quote: item.quote,
+              name: item.name,
+              branch: branchText,
+              rating: item.rating ? Number(item.rating) : 5,
+              location: item.location || "",
+              initials: initials,
+              initialBg: bgColors[index % bgColors.length],
+              avatar: avatarUrl,
+              timeAgo: item.location || "Verified Client",
+            };
+          });
+          setTestimonials(formatted);
+        }
+      } catch (err) {
+        console.error("Error fetching testimonials from Sanity:", err);
+      }
+    }
+    fetchTestimonials();
+  }, []);
+
   return (
-    <section className="w-full py-10 sm:py-14 bg-white font-sans overflow-hidden">
+    <section className="w-full py-10 sm:py-14 bg-white overflow-hidden">
       <div className="w-11/12 mx-auto space-y-4">
         
         {/* Section Header Row */}
@@ -28,7 +75,7 @@ export default function Testimonials() {
           {/* Left Testimonial Carousel (9 Cols) */}
           <div className="lg:col-span-9 w-full min-w-0 py-2">
             <TouchMarquee speed={1.2}>
-              {testimonialsData.map((item) => (
+              {testimonials.map((item) => (
                 <div key={item.id} className="w-[320px] lg:w-[340px] px-2.5 py-2 shrink-0">
                   <div className="bg-white rounded-[2rem] border border-slate-200/70 p-6 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full group">
                     
@@ -51,39 +98,43 @@ export default function Testimonials() {
                       </div>
 
                       {/* Testimonial Quote Text */}
-                      <p className="text-slate-600 text-sm leading-relaxed font-normal mb-2 line-clamp-4">
+                      <p className="text-slate-600 pb-8 text-sm leading-relaxed font-normal mb-2 line-clamp-4">
                         {item.quote}
                       </p>
 
-                      {/* Read More Link */}
-                      <button className="text-xs font-semibold text-gray-500 hover:text-primary transition-colors inline-block mb-4 cursor-pointer">
-                        Read more
-                      </button>
+                     
                     </div>
 
                     {/* Bottom Author Row */}
                     <div className="border-t border-slate-100 pt-4 mt-auto flex items-center gap-3.5">
-                      {/* Colored Initial Badge */}
-                      <div className={`w-12 h-12 rounded-full ${item.initialBg || "bg-pink-600"} text-white flex items-center justify-center font-bold text-sm tracking-wider shrink-0 shadow-xs`}>
-                        {item.initials || "DP"}
-                      </div>
+                      {/* Avatar Image or Colored Initial Badge */}
+                      {item.avatar ? (
+                        <img
+                          src={item.avatar}
+                          alt={item.name || "Traveller Avatar"}
+                          loading="lazy"
+                          className="w-12 h-12 rounded-full object-cover shrink-0 border border-slate-200 shadow-xs"
+                        />
+                      ) : (
+                        <div className={`w-12 h-12 rounded-full ${item.initialBg || "bg-pink-600"} text-white flex items-center justify-center font-bold text-sm tracking-wider shrink-0 shadow-xs`}>
+                          {item.initials || "DP"}
+                        </div>
+                      )}
 
                       <div className="space-y-1">
                         <h4 className="font-medium text-xs text-slate-900 uppercase tracking-wide leading-tight">
                           {item.name}
                         </h4>
 
-                        {/* 5 Yellow Stars */}
+                        {/* Yellow Stars */}
                         <div className="flex items-center gap-0.5 text-amber-400 text-xs py-0.5">
-                          <FaStar />
-                          <FaStar />
-                          <FaStar />
-                          <FaStar />
-                          <FaStar />
+                          {[...Array(Math.min(5, Math.max(1, item.rating || 5)))].map((_, i) => (
+                            <FaStar key={i} />
+                          ))}
                         </div>
 
                         <p className="text-[10px] text-slate-400 font-normal leading-none">
-                          {item.timeAgo || "3 months ago"}
+                          {item.timeAgo || "Verified Review"}
                         </p>
                       </div>
                     </div>
@@ -93,7 +144,6 @@ export default function Testimonials() {
               ))}
             </TouchMarquee>
           </div>
-
 
           {/* Right Google Summary Rating Card (3 Cols) */}
           <div className="lg:col-span-3 flex">

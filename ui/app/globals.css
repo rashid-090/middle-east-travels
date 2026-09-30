@@ -11,14 +11,13 @@
   --color-foreground: var(--foreground);
     --color-primary: var(--primary);
   --color-secondary: var(--secondary);
-  --font-sans: 'Google Sans Flex', 'Google Sans', system-ui, -apple-system, sans-serif;
   --font-google-sans: 'Google Sans Flex', 'Google Sans', system-ui, -apple-system, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #ffffff;
+    --foreground: #000000;
     --primary: #19A64B;
   --secondary: #040608;
   }

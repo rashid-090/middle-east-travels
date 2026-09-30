@@ -44,7 +44,7 @@ export default function InitialLoader() {
             scale: 1.03,
             transition: { duration: 0.5, ease: [0.32, 0, 0.67, 0] },
           }}
-          className="fixed inset-0 z-[99999] bg-white flex flex-col items-center justify-center pointer-events-auto select-none font-sans overflow-hidden"
+          className="fixed inset-0 z-[99999] bg-white flex flex-col items-center justify-center pointer-events-auto select-none overflow-hidden"
         >
           {/* Soft Radial Glow Accent */}
           <motion.div

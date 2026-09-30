@@ -7,7 +7,7 @@ import { Pagination, Autoplay } from "swiper/modules";
 import {
   FaLinkedinIn,
   FaEnvelope,
-  FaPhone,
+  FaInstagram,
 } from "react-icons/fa6";
 import { teamMembersData } from "@/data/allData.js";
 
@@ -35,24 +35,17 @@ export default function Team() {
           {/* Gradient Overlay */}
           {/* <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" /> */}
 
-          {/* Social Action Overlay Buttons */}
+          {/* Social Action Overlay Buttons: Instagram, LinkedIn, Email ONLY */}
           <div className="absolute bottom-3.5 left-3.5 right-3.5 z-20 flex items-center justify-center gap-2.5 opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 transform sm:translate-y-2 sm:group-hover:translate-y-0">
-            {member.email && (
+            {member.instagram && (
               <a
-                href={`mailto:${member.email}`}
-                title="Send Email"
-                className="w-9 h-9 rounded-full bg-white/90 hover:bg-[#19a64b] text-slate-800 hover:text-white backdrop-blur-md flex items-center justify-center text-xs shadow-md transition-all duration-200"
+                href={member.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Instagram Profile"
+                className="w-9 h-9 rounded-full bg-white/90 hover:bg-gradient-to-tr hover:from-amber-500 hover:via-rose-500 hover:to-purple-600 text-slate-800 hover:text-white backdrop-blur-md flex items-center justify-center text-xs shadow-md transition-all duration-200"
               >
-                <FaEnvelope />
-              </a>
-            )}
-            {member.phone && (
-              <a
-                href={`tel:${member.phone}`}
-                title="Call Expert"
-                className="w-9 h-9 rounded-full bg-white/90 hover:bg-[#19a64b] text-slate-800 hover:text-white backdrop-blur-md flex items-center justify-center text-xs shadow-md transition-all duration-200"
-              >
-                <FaPhone />
+                <FaInstagram />
               </a>
             )}
             {member.linkedin && (
@@ -64,6 +57,15 @@ export default function Team() {
                 className="w-9 h-9 rounded-full bg-white/90 hover:bg-sky-600 text-slate-800 hover:text-white backdrop-blur-md flex items-center justify-center text-xs shadow-md transition-all duration-200"
               >
                 <FaLinkedinIn />
+              </a>
+            )}
+            {member.email && (
+              <a
+                href={`mailto:${member.email}`}
+                title="Send Email"
+                className="w-9 h-9 rounded-full bg-white/90 hover:bg-[#19a64b] text-slate-800 hover:text-white backdrop-blur-md flex items-center justify-center text-xs shadow-md transition-all duration-200"
+              >
+                <FaEnvelope />
               </a>
             )}
           </div>
@@ -87,7 +89,7 @@ export default function Team() {
   );
 
   return (
-    <section className="w-full py-16 sm:py-20 bg-slate-50 font-sans relative overflow-hidden">
+    <section className="w-full py-16 sm:py-20 bg-slate-50 relative overflow-hidden">
       {/* Decorative Glow Accents */}
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#19a64b]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-10 w-80 h-80 bg-sky-500/5 rounded-full blur-3xl pointer-events-none" />

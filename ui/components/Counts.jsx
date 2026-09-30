@@ -59,7 +59,7 @@ function Counter({ stat }) {
 
 export default function Counts() {
   return (
-    <section className="w-full py-6 sm:py-10 font-sans">
+    <section className="w-full py-6 sm:py-10">
       <div className="w-11/12 mx-auto">
         
         {/* Dark Navy Main Banner Box */}

@@ -1,14 +1,45 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import TouchMarquee from "./TouchMarquee";
 import { FaLocationDot, FaQuoteLeft } from "react-icons/fa6";
 import { happyCustomersData } from "@/data/allData.js";
+import { client, urlFor } from "@/lib/sanity";
 
 export default function HappyCustomers() {
+  const [happyCustomers, setHappyCustomers] = useState(happyCustomersData);
+
+  useEffect(() => {
+    async function fetchHappyCustomers() {
+      try {
+        const query = `*[_type == "happyCustomer"] | order(orderRank asc, _createdAt desc)`;
+        const data = await client.fetch(query);
+        if (data && data.length > 0) {
+          const formatted = data.map((item, index) => {
+            let mainImageUrl = item.image ? urlFor(item.image)?.url() : null;
+            let avatarUrl = item.avatar ? urlFor(item.avatar)?.url() : null;
+
+            return {
+              id: item._id || index,
+              name: item.name,
+              location: item.location || "",
+              description: item.quote || "",
+              image: mainImageUrl || "/hpc/hc1.webp",
+              avatar: avatarUrl || "/hpc/user.avif",
+            };
+          });
+          setHappyCustomers(formatted);
+        }
+      } catch (err) {
+        console.error("Error fetching happy customers from Sanity:", err);
+      }
+    }
+    fetchHappyCustomers();
+  }, []);
+
   return (
-    <section className="w-full py-10 sm:py-14 bg-white font-sans overflow-hidden">
+    <section className="w-full py-10 sm:py-14 bg-white  overflow-hidden">
       <div className="w-11/12 mx-auto space-y-4">
         
         {/* Section Header */}
@@ -21,7 +52,7 @@ export default function HappyCustomers() {
         {/* Marquee Carousel Container */}
         <div className="w-full min-w-0 py-2">
           <TouchMarquee speed={1.2}>
-            {happyCustomersData.map((customer) => (
+            {happyCustomers.map((customer) => (
               <div
                 key={customer.id}
                 className="w-[320px] lg:w-[340px] px-2.5 py-2 shrink-0"
@@ -30,16 +61,11 @@ export default function HappyCustomers() {
                   
                   {/* Top Image + Location Badge */}
                   <div className="relative w-full aspect-[4/5] rounded-[1.5rem] overflow-hidden mb-4 bg-slate-100 shrink-0">
-                    <Image
+                    <img
                       src={customer.image}
                       alt={customer.name}
-                      fill
-                      sizes="(max-width: 768px) 320px, 340px"
-                      className="object-cover"
+                      className="w-full h-full object-cover"
                     />
-                    {/* <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20" /> */}
-                    
-                
                   </div>
 
                   {/* Customer Description / Review Quote */}
@@ -54,12 +80,10 @@ export default function HappyCustomers() {
                   {/* Footer - Customer Avatar & Name & Location */}
                   <div className="border-t border-slate-100 pt-3.5 mt-auto flex items-center gap-3">
                     <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border border-slate-200/80 shadow-xs">
-                      <Image
+                      <img
                         src={customer.avatar}
                         alt={customer.name}
-                        fill
-                        sizes="40px"
-                        className="object-cover"
+                        className="w-full h-full object-cover"
                       />
                     </div>
                     <div className="min-w-0 flex-1">

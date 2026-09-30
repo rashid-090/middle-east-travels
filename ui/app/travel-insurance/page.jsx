@@ -113,7 +113,7 @@ const travelInsuranceTypes = [
 
 export default function TravelInsurancePage() {
   return (
-    <div className="bg-slate-50 text-slate-900 font-sans">
+    <div className="bg-slate-50 text-slate-900">
       {/* ================= HERO BANNER SECTION ================= */}
       <section className="relative overflow-hidden bg-[#edf8f3] min-h-[350px] lg:min-h-[500px] flex items-center border-b border-slate-100">
         {/* Full Banner Right-Side Overlay Background Image */}

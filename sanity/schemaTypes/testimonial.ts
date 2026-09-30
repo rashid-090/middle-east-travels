@@ -1,0 +1,66 @@
+import { defineField, defineType } from 'sanity'
+import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list'
+
+export const testimonial = defineType({
+  name: 'testimonial',
+  title: 'Testimonial',
+  type: 'document',
+  orderings: [orderRankOrdering],
+  fields: [
+    orderRankField({ type: 'testimonial' }),
+    defineField({
+      name: 'name',
+      title: 'Customer Name',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'branch',
+      title: 'Branch Name',
+      type: 'string',
+      description: 'e.g. Calicut Branch, Cochin Branch',
+    }),
+    defineField({
+      name: 'quote',
+      title: 'Testimonial Quote',
+      type: 'text',
+      rows: 4,
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'rating',
+      title: 'Rating (1 to 5)',
+      type: 'number',
+      initialValue: 5,
+      validation: (Rule) => Rule.min(1).max(5),
+    }),
+    defineField({
+      name: 'location',
+      title: 'Location / City',
+      type: 'string',
+    }),
+    defineField({
+      name: 'avatar',
+      title: 'Customer Avatar Image',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+    }),
+  ],
+  preview: {
+    select: {
+      title: 'name',
+      subtitle: 'branch',
+      media: 'avatar',
+    },
+    prepare(selection) {
+      const { title, subtitle, media } = selection
+      return {
+        title: title || 'Untitled Testimonial',
+        subtitle: subtitle ? `Branch: ${subtitle}` : '',
+        media: media,
+      }
+    },
+  },
+})
