@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -28,6 +28,8 @@ import {
   FaCar,
   FaBinoculars,
   FaSliders,
+  FaChevronLeft,
+  FaChevronRight,
 } from "react-icons/fa6";
 import { HiSparkles } from "react-icons/hi2";
 
@@ -63,8 +65,11 @@ const getInclusionIcon = (type) => {
   }
 };
 
+const ITEMS_PER_PAGE = 8;
+
 export default function TourPackagesPage() {
   const [packagesList, setPackagesList] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -72,74 +77,9 @@ export default function TourPackagesPage() {
   const [activeBannerCategory, setActiveBannerCategory] =
     useState("All Packages");
   const [sortBy, setSortBy] = useState("default");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const bannerRef = useRef(null);
-
-  useEffect(() => {
-    async function fetchTourPackages() {
-      setIsLoading(true);
-      try {
-        const query = `*[_type == "tourPackage"] | order(orderRank asc, _createdAt desc)`;
-        const data = await client.fetch(query);
-        if (data && data.length > 0) {
-          const formatted = data.map((item) => {
-            const slugId = item.id?.current || item.id || item._id;
-            const mainImageUrl = item.image ? urlFor(item.image)?.url() : null;
-            const galleryUrls = item.gallery && Array.isArray(item.gallery)
-              ? item.gallery.map((g) => urlFor(g)?.url()).filter(Boolean)
-              : [];
-
-            return {
-              id: slugId,
-              title: item.title,
-              fullTitle: item.fullTitle || `${item.title} Tour Packages`,
-              category: item.category || "International",
-              region: item.region || "Eurasia",
-              duration: item.duration || "5 Days 4 Nights",
-              price: item.price,
-              oldPrice: item.oldPrice,
-              badge: item.badge,
-              badgeType: item.badgeType || "fire-orange",
-              rating: item.rating ? Number(item.rating) : 4.8,
-              reviewsCount: item.reviewsCount ? Number(item.reviewsCount) : 150,
-              image: mainImageUrl || "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=85",
-              gallery: galleryUrls.length > 0 ? galleryUrls : [mainImageUrl].filter(Boolean),
-              link: `/tour-packages/${slugId}`,
-              overview: item.overview || "",
-              inclusionIcons: item.inclusionIcons || [
-                { icon: "hotel", label: "04 Nights stay" },
-                { icon: "breakfast", label: "Daily breakfast" },
-                { icon: "transfer", label: "All transfers" },
-                { icon: "sightseeing", label: "Sight seeing" },
-              ],
-              highlights: item.highlights || [],
-              itinerary: item.itinerary || [],
-              inclusions: item.inclusions || [],
-              exclusions: item.exclusions || [],
-            };
-          });
-          setPackagesList(formatted);
-        } else {
-          setPackagesList(tourPackagesData);
-        }
-      } catch (err) {
-        console.error("Error fetching tour packages from Sanity:", err);
-        setPackagesList(tourPackagesData);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchTourPackages();
-  }, []);
-
-  // Parallax Scroll Effect Setup for Maldives Sunset Banner
-  const { scrollYProgress } = useScroll({
-    target: bannerRef,
-    offset: ["start end", "end start"],
-  });
-
-  const bgY = useTransform(scrollYProgress, [0, 1], ["-12%", "30%"]);
-  const bgScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.15]);
 
   const categories = ["All", "International", "Domestic"];
   const regions = [
@@ -151,95 +91,188 @@ export default function TourPackagesPage() {
     "Americas",
   ];
 
-  // Handle Banner Category Selection (Icons)
-  const handleBannerCategoryClick = (cat) => {
-    setActiveBannerCategory(cat.label);
-    setSelectedCategory("All");
-    setSelectedRegion("All");
-    setSearchQuery("");
-  };
+  // Fetch only 8 items from Sanity API based on pagination & active filters
+  useEffect(() => {
+    let isSubscribed = true;
 
-  const handleViewAll = () => {
-    setActiveBannerCategory("All Packages");
-    setSelectedCategory("All");
-    setSelectedRegion("All");
-    setSearchQuery("");
-  };
+    async function fetchTourPackages() {
+      setIsLoading(true);
+      const start = (currentPage - 1) * ITEMS_PER_PAGE;
+      const end = currentPage * ITEMS_PER_PAGE;
 
-  // Filter & Sort Logic
-  const filteredPackages = useMemo(() => {
-    return packagesList
-      .filter((pkg) => {
-        // 1. Search Query Filter
-        const matchesSearch =
-          !searchQuery ||
-          pkg.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (pkg.fullTitle &&
-            pkg.fullTitle.toLowerCase().includes(searchQuery.toLowerCase())) ||
-          (pkg.region &&
-            pkg.region.toLowerCase().includes(searchQuery.toLowerCase())) ||
-          (pkg.highlights &&
-            pkg.highlights.some((h) =>
-              h.toLowerCase().includes(searchQuery.toLowerCase()),
-            ));
+      try {
+        let filterConditions = [`_type == "tourPackage"`];
 
-        // 2. Category Tab Filter (All, International, Domestic)
-        const matchesCategory =
-          selectedCategory === "All" ||
-          (Array.isArray(pkg.category)
-            ? pkg.category.includes(selectedCategory)
-            : pkg.category === selectedCategory);
-
-        // 3. Region Filter
-        const matchesRegion =
-          selectedRegion === "All" ||
-          (pkg.region &&
-            (pkg.region === selectedRegion ||
-              pkg.region.toLowerCase().includes(selectedRegion.toLowerCase()) ||
-              (selectedRegion === "Asia" &&
-                (pkg.region.includes("Asia") ||
-                  pkg.region.includes("Southeast") ||
-                  pkg.region.includes("India"))) ||
-              (selectedRegion === "Europe" &&
-                (pkg.region.includes("Europe") || pkg.region.includes("Eurasia")))));
-
-        // 4. Banner Icon Category Filter
-        let matchesBannerCategory = true;
-        if (
-          activeBannerCategory !== "All Packages" &&
-          activeBannerCategory !== "All" &&
-          selectedCategory === "All"
-        ) {
-          const categoryConfig = bannerCategories.find(
-            (c) => c.label === activeBannerCategory,
+        if (searchQuery.trim()) {
+          const q = searchQuery.trim().replace(/"/g, '\\"');
+          filterConditions.push(
+            `(title match "*${q}*" || fullTitle match "*${q}*" || region match "*${q}*")`
           );
-          if (categoryConfig) {
-            const kw = categoryConfig.keyword.toLowerCase();
-            matchesBannerCategory =
-              pkg.title.toLowerCase().includes(kw) ||
-              (pkg.fullTitle && pkg.fullTitle.toLowerCase().includes(kw)) ||
-              (pkg.highlights &&
-                pkg.highlights.some((h) => h.toLowerCase().includes(kw)));
+        }
+
+        if (selectedCategory !== "All") {
+          filterConditions.push(
+            `(category == "${selectedCategory}" || category match "*${selectedCategory}*")`
+          );
+        }
+
+        if (selectedRegion !== "All") {
+          if (selectedRegion === "Asia") {
+            filterConditions.push(
+              `(region match "*Asia*" || region match "*Southeast*" || region match "*India*")`
+            );
+          } else if (selectedRegion === "Europe") {
+            filterConditions.push(
+              `(region match "*Europe*" || region match "*Eurasia*")`
+            );
+          } else {
+            filterConditions.push(`region match "*${selectedRegion}*"`);
           }
         }
 
-        return (
-          matchesSearch &&
-          matchesCategory &&
-          matchesRegion &&
-          matchesBannerCategory
-        );
-      })
-      .sort((a, b) => {
-        const getNumericPrice = (item) =>
-          item.price ? parseInt(item.price.replace(/[^0-9]/g, ""), 10) || 0 : 0;
-        if (sortBy === "price-low") return getNumericPrice(a) - getNumericPrice(b);
-        if (sortBy === "price-high") return getNumericPrice(b) - getNumericPrice(a);
-        if (sortBy === "rating") return (b.rating || 0) - (a.rating || 0);
-        return 0;
-      });
+        const filterString = filterConditions.join(" && ");
+        const orderString = `| order(orderRank asc, _createdAt desc)`;
+
+        const query = `{
+          "total": count(*[${filterString}]),
+          "items": *[${filterString}] ${orderString} [${start}...${end}]
+        }`;
+
+        const data = await client.fetch(query);
+
+        if (isSubscribed) {
+          if (data && data.items && data.total > 0) {
+            let formatted = data.items.map((item) => {
+              const slugId = item.id?.current || item.id || item._id;
+              const mainImageUrl = item.image ? urlFor(item.image)?.url() : null;
+              const galleryUrls =
+                item.gallery && Array.isArray(item.gallery)
+                  ? item.gallery.map((g) => urlFor(g)?.url()).filter(Boolean)
+                  : [];
+
+              return {
+                id: slugId,
+                title: item.title,
+                fullTitle: item.fullTitle || `${item.title} Tour Packages`,
+                category: item.category || "International",
+                region: item.region || "Eurasia",
+                duration: item.duration || "5 Days 4 Nights",
+                price: item.price,
+                oldPrice: item.oldPrice,
+                badge: item.badge,
+                badgeType: item.badgeType || "fire-orange",
+                rating: item.rating ? Number(item.rating) : 4.8,
+                reviewsCount: item.reviewsCount ? Number(item.reviewsCount) : 150,
+                image:
+                  mainImageUrl ||
+                  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=85",
+                gallery:
+                  galleryUrls.length > 0
+                    ? galleryUrls
+                    : [mainImageUrl].filter(Boolean),
+                link: `/tour-packages/${slugId}`,
+                overview: item.overview || "",
+                inclusionIcons: item.inclusionIcons || [
+                  { icon: "hotel", label: "04 Nights stay" },
+                  { icon: "breakfast", label: "Daily breakfast" },
+                  { icon: "transfer", label: "All transfers" },
+                  { icon: "sightseeing", label: "Sight seeing" },
+                ],
+                highlights: item.highlights || [],
+                itinerary: item.itinerary || [],
+                inclusions: item.inclusions || [],
+                exclusions: item.exclusions || [],
+              };
+            });
+
+            // Apply price/rating sorting
+            if (sortBy === "price-low") {
+              formatted.sort(
+                (a, b) =>
+                  (parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0) -
+                  (parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0)
+              );
+            } else if (sortBy === "price-high") {
+              formatted.sort(
+                (a, b) =>
+                  (parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0) -
+                  (parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0)
+              );
+            } else if (sortBy === "rating") {
+              formatted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+            }
+
+            setPackagesList(formatted);
+            setTotalCount(data.total);
+          } else {
+            // Fallback dataset slicing logic
+            const filteredFallback = tourPackagesData
+              .filter((pkg) => {
+                const matchesSearch =
+                  !searchQuery ||
+                  pkg.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  (pkg.fullTitle &&
+                    pkg.fullTitle
+                      .toLowerCase()
+                      .includes(searchQuery.toLowerCase())) ||
+                  (pkg.region &&
+                    pkg.region
+                      .toLowerCase()
+                      .includes(searchQuery.toLowerCase()));
+
+                const matchesCategory =
+                  selectedCategory === "All" ||
+                  (Array.isArray(pkg.category)
+                    ? pkg.category.includes(selectedCategory)
+                    : pkg.category === selectedCategory);
+
+                const matchesRegion =
+                  selectedRegion === "All" ||
+                  (pkg.region &&
+                    (pkg.region === selectedRegion ||
+                      pkg.region
+                        .toLowerCase()
+                        .includes(selectedRegion.toLowerCase())));
+
+                return matchesSearch && matchesCategory && matchesRegion;
+              })
+              .sort((a, b) => {
+                const pA =
+                  parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0;
+                const pB =
+                  parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0;
+                if (sortBy === "price-low") return pA - pB;
+                if (sortBy === "price-high") return pB - pA;
+                if (sortBy === "rating") return (b.rating || 0) - (a.rating || 0);
+                return 0;
+              });
+
+            setTotalCount(filteredFallback.length);
+            setPackagesList(filteredFallback.slice(start, end));
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching tour packages from Sanity:", err);
+        if (isSubscribed) {
+          const start = (currentPage - 1) * ITEMS_PER_PAGE;
+          const end = currentPage * ITEMS_PER_PAGE;
+          setTotalCount(tourPackagesData.length);
+          setPackagesList(tourPackagesData.slice(start, end));
+        }
+      } finally {
+        if (isSubscribed) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    fetchTourPackages();
+
+    return () => {
+      isSubscribed = false;
+    };
   }, [
-    packagesList,
+    currentPage,
     searchQuery,
     selectedCategory,
     selectedRegion,
@@ -247,10 +280,62 @@ export default function TourPackagesPage() {
     sortBy,
   ]);
 
+  // Parallax Scroll Effect Setup for Maldives Sunset Banner
+  const { scrollYProgress } = useScroll({
+    target: bannerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const bgY = useTransform(scrollYProgress, [0, 1], ["-12%", "30%"]);
+  const bgScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.15]);
+
+  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      const el = document.getElementById("packages-grid-section");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handleCategoryChange = (cat) => {
+    setSelectedCategory(cat);
+    setSelectedRegion("All");
+    setActiveBannerCategory("All Packages");
+    setCurrentPage(1);
+  };
+
+  const handleRegionChange = (region) => {
+    setSelectedRegion(region);
+    setCurrentPage(1);
+  };
+
+  const handleSortChange = (e) => {
+    setSortBy(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handleViewAll = () => {
+    setActiveBannerCategory("All Packages");
+    setSelectedCategory("All");
+    setSelectedRegion("All");
+    setSearchQuery("");
+    setSortBy("default");
+    setCurrentPage(1);
+  };
+
   return (
     <div className="min-h-screen bg-white text-slate-900 flex flex-col">
       <main className="flex-1">
-        {/* ================= MALDIVES SUNSET HERO BANNER ================= */}
+        {/* ================= HERO BANNER ================= */}
         <section
           ref={bannerRef}
           className="w-11/12 mx-auto my-6 lg:my-8 rounded-3xl md:rounded-[2rem] overflow-hidden relative shadow-2xl flex flex-col justify-between p-4 py-6 sm:p-10 lg:p-12 lg:py-16 text-white"
@@ -301,11 +386,7 @@ export default function TourPackagesPage() {
                   {categories.map((cat) => (
                     <button
                       key={cat}
-                      onClick={() => {
-                        setSelectedCategory(cat);
-                        setSelectedRegion("All");
-                        setActiveBannerCategory("All Packages");
-                      }}
+                      onClick={() => handleCategoryChange(cat)}
                       className={`flex-1 sm:flex-initial px-2.5 sm:px-4 py-2 rounded-lg sm:rounded-xl text-[9px] xs:text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
                         selectedCategory === cat
                           ? "bg-[#19a64b] text-white shadow-md"
@@ -332,12 +413,15 @@ export default function TourPackagesPage() {
                       type="text"
                       placeholder="Search packages..."
                       value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onChange={handleSearchChange}
                       className="w-full bg-transparent text-white placeholder-white/60 text-sm outline-none "
                     />
                     {searchQuery && (
                       <button
-                        onClick={() => setSearchQuery("")}
+                        onClick={() => {
+                          setSearchQuery("");
+                          setCurrentPage(1);
+                        }}
                         className="text-xs text-white/70 hover:text-white ml-1 cursor-pointer"
                       >
                         ✕
@@ -349,7 +433,7 @@ export default function TourPackagesPage() {
                   <div className="relative shrink-0">
                     <select
                       value={sortBy}
-                      onChange={(e) => setSortBy(e.target.value)}
+                      onChange={handleSortChange}
                       className="bg-black/40 sm:bg-white/20 backdrop-blur-md text-white text-[11px] sm:text-xs font-semibold rounded-xl pl-3 pr-7 py-2 md:py-3 border border-white/25 focus:outline-none focus:border-white cursor-pointer appearance-none h-full"
                     >
                       <option value="default" className="bg-slate-900 text-white">
@@ -378,7 +462,7 @@ export default function TourPackagesPage() {
                 {regions.map((region) => (
                   <button
                     key={region}
-                    onClick={() => setSelectedRegion(region)}
+                    onClick={() => handleRegionChange(region)}
                     className={`px-3 py-1.5 rounded-full text-[8px] md:text-[11px] font-medium transition-all duration-200 whitespace-nowrap cursor-pointer shrink-0 ${
                       selectedRegion === region
                         ? "bg-[#19a64b] text-white font-bold shadow-md"
@@ -394,7 +478,33 @@ export default function TourPackagesPage() {
         </section>
 
         {/* ================= PACKAGES GRID SECTION ================= */}
-        <section className="w-11/12  mx-auto pb-10">
+        <section id="packages-grid-section" className="w-11/12 mx-auto pb-10 pt-4">
+          {/* Results Counter Header */}
+          <div className="flex items-center justify-between mb-6">
+            <p className="text-xs text-slate-500 font-normal">
+              Showing{" "}
+              <span className="font-semibold text-slate-900">
+                {totalCount > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}
+              </span>{" "}
+              to{" "}
+              <span className="font-semibold text-slate-900">
+                {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)}
+              </span>{" "}
+              of <span className="font-semibold text-slate-900">{totalCount}</span> available tour packages
+            </p>
+            {(selectedCategory !== "All" ||
+              selectedRegion !== "All" ||
+              searchQuery ||
+              sortBy !== "default") && (
+              <button
+                onClick={handleViewAll}
+                className="text-xs text-primary hover:underline font-semibold cursor-pointer"
+              >
+                Reset Filters
+              </button>
+            )}
+          </div>
+
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {[...Array(8)].map((_, idx) => (
@@ -429,10 +539,73 @@ export default function TourPackagesPage() {
                 </div>
               ))}
             </div>
-          ) : filteredPackages.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {filteredPackages.map((item) => renderPackageCard(item))}
-            </div>
+          ) : packagesList.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {packagesList.map((item) => renderPackageCard(item))}
+              </div>
+
+              {/* Modern Responsive Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-12 pt-6 border-t border-slate-200/80">
+                  {/* Entry Counter Text */}
+                  <p className="text-xs text-slate-500 font-normal text-center sm:text-left">
+                    Showing{" "}
+                    <span className="font-semibold text-slate-900">
+                      {(currentPage - 1) * ITEMS_PER_PAGE + 1}
+                    </span>{" "}
+                    to{" "}
+                    <span className="font-semibold text-slate-900">
+                      {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)}
+                    </span>{" "}
+                    of <span className="font-semibold text-slate-900">{totalCount}</span> entries
+                  </p>
+
+                  {/* Pagination Controls */}
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    {/* Previous Button */}
+                    <button
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className="flex items-center justify-center gap-1.5 w-9 h-9 rounded-xl text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-2xs cursor-pointer"
+                      aria-label="Previous Page"
+                    >
+                      <FaChevronLeft className="text-[10px]" />
+                    </button>
+
+                    {/* Page Number Buttons */}
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                        const isActive = page === currentPage;
+                        return (
+                          <button
+                            key={page}
+                            onClick={() => handlePageChange(page)}
+                            className={`w-9 h-9 rounded-xl text-xs font-semibold flex items-center justify-center transition-all cursor-pointer ${
+                              isActive
+                                ? "bg-primary text-white shadow-md shadow-emerald-600/20 scale-105"
+                                : "bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
+                            }`}
+                          >
+                            {page}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Next Button */}
+                    <button
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className="flex items-center justify-center gap-1.5 w-9 h-9 rounded-xl text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-2xs cursor-pointer"
+                      aria-label="Next Page"
+                    >
+                      <FaChevronRight className="text-[10px]" />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
           ) : (
             /* Empty Search Results State */
             <div className="text-center py-16 bg-slate-50 rounded-3xl border border-slate-200 p-8 space-y-4">

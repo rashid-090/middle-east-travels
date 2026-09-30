@@ -1,66 +1,31 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
   FaArrowRight,
   FaPassport,
-  FaShieldHalved,
-  FaClock,
   FaMagnifyingGlass,
   FaSliders,
-  FaCheck,
-  FaGlobe,
-  FaFilter,
+  FaChevronLeft,
+  FaChevronRight,
 } from "react-icons/fa6";
 import { visaPackagesData } from "@/data/allData";
 import { client, urlFor } from "@/lib/sanity";
 import { IoTicketOutline } from "react-icons/io5";
 import { HiOutlineCheckBadge } from "react-icons/hi2";
 
+const ITEMS_PER_PAGE = 8;
+
 export default function VisasListingPage() {
   const [visasData, setVisasData] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("All");
   const [sortBy, setSortBy] = useState("default");
-
-  useEffect(() => {
-    async function fetchVisas() {
-      setIsLoading(true);
-      try {
-        const query = `*[_type == "visaService"] | order(orderRank asc, _createdAt desc)`;
-        const data = await client.fetch(query);
-        if (data && data.length > 0) {
-          const formatted = data.map((item) => ({
-            id: item._id,
-            title: item.title,
-            slug: item.slug?.current || item.slug || item._id,
-            duration: item.duration || "",
-            validity: item.validity || "",
-            price: item.price || "",
-            badge: item.badge || "",
-            image: item.image
-              ? urlFor(item.image)?.url()
-              : "https://images.unsplash.com/photo-1541417904950-b855846fe074?q=80",
-            highlights: item.highlights || [],
-            link: `/visas/${item.slug?.current || item.slug || item._id}`,
-          }));
-          setVisasData(formatted);
-        } else {
-          setVisasData(visaPackagesData);
-        }
-      } catch (error) {
-        console.error("Error fetching visa services from Sanity:", error);
-        setVisasData(visaPackagesData);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchVisas();
-  }, []);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const regions = [
     "All Regions",
@@ -71,65 +36,176 @@ export default function VisasListingPage() {
     "Americas",
   ];
 
-  // Filter & Sort Logic
-  const filteredVisas = useMemo(() => {
-    const list = visasData.length > 0 ? visasData : visaPackagesData;
-    return list
-      .filter((item) => {
-        // 1. Search Query Filter
-        const matchesSearch =
-          !searchQuery ||
-          (item.title &&
-            item.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
-          (item.duration &&
-            item.duration.toLowerCase().includes(searchQuery.toLowerCase())) ||
-          (item.highlights &&
-            item.highlights.some((h) =>
-              h.toLowerCase().includes(searchQuery.toLowerCase())
-            ));
+  // Fetch only 8 items from API based on currentPage, searchQuery, selectedRegion, and sortBy
+  useEffect(() => {
+    let isSubscribed = true;
 
-        // 2. Region Filter
-        let matchesRegion = true;
+    async function fetchVisas() {
+      setIsLoading(true);
+      const start = (currentPage - 1) * ITEMS_PER_PAGE;
+      const end = currentPage * ITEMS_PER_PAGE;
+
+      try {
+        let filterConditions = [`_type == "visaService"`];
+
+        if (searchQuery.trim()) {
+          const q = searchQuery.trim().replace(/"/g, '\\"');
+          filterConditions.push(`(title match "*${q}*" || duration match "*${q}*")`);
+        }
+
         if (selectedRegion !== "All Regions" && selectedRegion !== "All") {
-          const t = (item.title || "").toLowerCase();
           if (selectedRegion === "Middle East") {
-            matchesRegion =
-              t.includes("uae") ||
-              t.includes("saudi") ||
-              t.includes("qatar") ||
-              t.includes("oman") ||
-              t.includes("dubai") ||
-              t.includes("kuwait") ||
-              t.includes("bahrain");
+            filterConditions.push(
+              `(title match "*UAE*" || title match "*Saudi*" || title match "*Qatar*" || title match "*Oman*" || title match "*Dubai*" || title match "*Kuwait*" || title match "*Bahrain*")`
+            );
           } else if (selectedRegion === "Asia") {
-            matchesRegion =
-              t.includes("singapore") ||
-              t.includes("thailand") ||
-              t.includes("japan") ||
-              t.includes("malaysia") ||
-              t.includes("bali") ||
-              t.includes("vietnam");
+            filterConditions.push(
+              `(title match "*Singapore*" || title match "*Thailand*" || title match "*Japan*" || title match "*Malaysia*" || title match "*Bali*" || title match "*Vietnam*")`
+            );
           } else if (selectedRegion === "Europe") {
-            matchesRegion =
-              t.includes("uk") || t.includes("schengen") || t.includes("europe");
+            filterConditions.push(
+              `(title match "*UK*" || title match "*Schengen*" || title match "*Europe*")`
+            );
           } else if (selectedRegion === "Americas") {
-            matchesRegion =
-              t.includes("usa") || t.includes("canada") || t.includes("us");
+            filterConditions.push(
+              `(title match "*USA*" || title match "*Canada*")`
+            );
           }
         }
 
-        return matchesSearch && matchesRegion;
-      })
-      .sort((a, b) => {
-        const getNumericPrice = (item) =>
-          item.price
-            ? parseInt(String(item.price).replace(/[^0-9]/g, ""), 10) || 0
-            : 0;
-        if (sortBy === "price-low") return getNumericPrice(a) - getNumericPrice(b);
-        if (sortBy === "price-high") return getNumericPrice(b) - getNumericPrice(a);
-        return 0;
-      });
-  }, [visasData, searchQuery, selectedRegion, sortBy]);
+        const filterString = filterConditions.join(" && ");
+        const orderString = `| order(orderRank asc, _createdAt desc)`;
+
+        const query = `{
+          "total": count(*[${filterString}]),
+          "items": *[${filterString}] ${orderString} [${start}...${end}]
+        }`;
+
+        const data = await client.fetch(query);
+
+        if (isSubscribed) {
+          if (data && data.items && data.total > 0) {
+            let formatted = data.items.map((item) => ({
+              id: item._id,
+              title: item.title,
+              slug: item.slug?.current || item.slug || item._id,
+              duration: item.duration || "",
+              validity: item.validity || "",
+              price: item.price || "",
+              badge: item.badge || "",
+              image: item.image
+                ? urlFor(item.image)?.url()
+                : "/visapageban.webp",
+              highlights: item.highlights || [],
+              link: `/visas/${item.slug?.current || item.slug || item._id}`,
+            }));
+
+            // Client-side price sorting if applicable
+            if (sortBy === "price-low") {
+              formatted.sort((a, b) => {
+                const pA = parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0;
+                const pB = parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0;
+                return pA - pB;
+              });
+            } else if (sortBy === "price-high") {
+              formatted.sort((a, b) => {
+                const pA = parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0;
+                const pB = parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0;
+                return pB - pA;
+              });
+            }
+
+            setVisasData(formatted);
+            setTotalCount(data.total);
+          } else {
+            // Fallback dataset slicing logic
+            const filteredFallback = visaPackagesData.filter((item) => {
+              const matchesSearch =
+                !searchQuery ||
+                (item.title && item.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                (item.duration && item.duration.toLowerCase().includes(searchQuery.toLowerCase()));
+
+              let matchesRegion = true;
+              if (selectedRegion !== "All Regions" && selectedRegion !== "All") {
+                const t = (item.title || "").toLowerCase();
+                if (selectedRegion === "Middle East") {
+                  matchesRegion = ["uae", "saudi", "qatar", "oman", "dubai", "kuwait", "bahrain"].some((r) => t.includes(r));
+                } else if (selectedRegion === "Asia") {
+                  matchesRegion = ["singapore", "thailand", "japan", "malaysia", "bali", "vietnam"].some((r) => t.includes(r));
+                } else if (selectedRegion === "Europe") {
+                  matchesRegion = ["uk", "schengen", "europe"].some((r) => t.includes(r));
+                } else if (selectedRegion === "Americas") {
+                  matchesRegion = ["usa", "canada"].some((r) => t.includes(r));
+                }
+              }
+              return matchesSearch && matchesRegion;
+            }).sort((a, b) => {
+              const pA = parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0;
+              const pB = parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0;
+              if (sortBy === "price-low") return pA - pB;
+              if (sortBy === "price-high") return pB - pA;
+              return 0;
+            });
+
+            setTotalCount(filteredFallback.length);
+            setVisasData(filteredFallback.slice(start, end));
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching visa services from Sanity API:", error);
+        if (isSubscribed) {
+          const start = (currentPage - 1) * ITEMS_PER_PAGE;
+          const end = currentPage * ITEMS_PER_PAGE;
+          setTotalCount(visaPackagesData.length);
+          setVisasData(visaPackagesData.slice(start, end));
+        }
+      } finally {
+        if (isSubscribed) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    fetchVisas();
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, [currentPage, searchQuery, selectedRegion, sortBy]);
+
+  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      const el = document.getElementById("visa-grid-section");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handleRegionChange = (region) => {
+    setSelectedRegion(region);
+    setCurrentPage(1);
+  };
+
+  const handleSortChange = (e) => {
+    setSortBy(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const resetAllFilters = () => {
+    setSelectedRegion("All Regions");
+    setSearchQuery("");
+    setSortBy("default");
+    setCurrentPage(1);
+  };
 
   return (
     <div className="bg-slate-50 min-h-screen text-slate-900 pb-16">
@@ -139,7 +215,7 @@ export default function VisasListingPage() {
         {/* Background Image with Dark Gradient Overlay */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           <Image
-            src="https://images.unsplash.com/photo-1541417904950-b855846fe074?q=80"
+            src="/visapageban.webp"
             alt="Express Visa Services Background"
             fill
             priority
@@ -177,12 +253,15 @@ export default function VisasListingPage() {
                   type="text"
                   placeholder="Search packages..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={handleSearchChange}
                   className="w-full bg-transparent text-white placeholder-white/60 text-xs sm:text-sm outline-hidden"
                 />
                 {searchQuery && (
                   <button
-                    onClick={() => setSearchQuery("")}
+                    onClick={() => {
+                      setSearchQuery("");
+                      setCurrentPage(1);
+                    }}
                     className="text-xs text-white/70 hover:text-white ml-1 cursor-pointer font-medium"
                   >
                     ✕
@@ -194,7 +273,7 @@ export default function VisasListingPage() {
               <div className="relative shrink-0">
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
+                  onChange={handleSortChange}
                   className="w-full md:w-auto bg-black/40 sm:bg-white/20 backdrop-blur-md text-white text-xs sm:text-sm font-semibold rounded-xl pl-3.5 pr-8 py-2.5 border border-white/25 focus:outline-hidden focus:border-white cursor-pointer appearance-none"
                 >
                   <option value="default" className="bg-slate-900 text-white">
@@ -220,7 +299,7 @@ export default function VisasListingPage() {
               {regions.map((region) => (
                 <button
                   key={region}
-                  onClick={() => setSelectedRegion(region)}
+                  onClick={() => handleRegionChange(region)}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 whitespace-nowrap cursor-pointer shrink-0 ${
                     selectedRegion === region
                       ? "bg-[#19a64b] text-white shadow-md font-semibold"
@@ -238,20 +317,24 @@ export default function VisasListingPage() {
       </section>
 
       {/* ================= 4-COLUMN VISA GRID SECTION ================= */}
-      <section className="w-11/12 mx-auto pt-6">
+      <section id="visa-grid-section" className="w-11/12 mx-auto pt-6">
         
         {/* Results Counter Header */}
         <div className="flex items-center justify-between mb-6">
           <p className="text-xs sm:text-sm text-slate-500 font-normal">
-            Showing <span className="font-semibold text-slate-900">{filteredVisas.length}</span> available visa services
+            Showing{" "}
+            <span className="font-semibold text-slate-900">
+              {totalCount > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}
+            </span>{" "}
+            to{" "}
+            <span className="font-semibold text-slate-900">
+              {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)}
+            </span>{" "}
+            of <span className="font-semibold text-slate-900">{totalCount}</span> available visa services
           </p>
-          {(selectedRegion !== "All Regions" || searchQuery) && (
+          {(selectedRegion !== "All Regions" || searchQuery || sortBy !== "default") && (
             <button
-              onClick={() => {
-                setSelectedRegion("All Regions");
-                setSearchQuery("");
-                setSortBy("default");
-              }}
+              onClick={resetAllFilters}
               className="text-xs text-primary hover:underline font-semibold cursor-pointer"
             >
               Reset Filters
@@ -277,7 +360,7 @@ export default function VisasListingPage() {
               </div>
             ))}
           </div>
-        ) : filteredVisas.length === 0 ? (
+        ) : totalCount === 0 || visasData.length === 0 ? (
           /* Empty State */
           <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center space-y-4 max-w-md mx-auto my-8 shadow-xs">
             <div className="w-16 h-16 rounded-full bg-emerald-100 text-primary flex items-center justify-center text-3xl mx-auto">
@@ -292,11 +375,7 @@ export default function VisasListingPage() {
               </p>
             </div>
             <button
-              onClick={() => {
-                setSelectedRegion("All Regions");
-                setSearchQuery("");
-                setSortBy("default");
-              }}
+              onClick={resetAllFilters}
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-white text-xs font-medium shadow-md hover:bg-emerald-700 transition-all cursor-pointer"
             >
               Reset Filters
@@ -304,84 +383,149 @@ export default function VisasListingPage() {
           </div>
         ) : (
           /* 4-COLUMN VISA GRID */
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {filteredVisas.map((item) => (
-              <div
-                key={item.id}
-                className="bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between group"
-              >
-                <div>
-                  {/* Top Image Container */}
-                  <div className="relative w-full aspect-[4/3] bg-slate-100 overflow-hidden">
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {visasData.map((item) => (
+                <div
+                  key={item.id}
+                  className="bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between group"
+                >
+                  <div>
+                    {/* Top Image Container */}
+                    <div className="relative w-full aspect-[4/3] bg-slate-100 overflow-hidden">
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
 
-                    {/* Badge Overlay at Top-Left if available */}
-                    {item.badge && (
-                      <span className="absolute flex items-center gap-2 top-4 left-3 bg-white/95 backdrop-blur-xs text-[#021b38] text-[11px] font-semibold px-2.5 py-1 rounded-full shadow-xs z-10">
-                        <IoTicketOutline className="text-primary" />
-                        {item.badge}
-                      </span>
-                    )}
+                      {/* Badge Overlay at Top-Left if available */}
+                      {item.badge && (
+                        <span className="absolute flex items-center gap-2 top-4 left-3 bg-white/95 backdrop-blur-xs text-[#021b38] text-[11px] font-semibold px-2.5 py-1 rounded-full shadow-xs z-10">
+                          <IoTicketOutline className="text-primary" />
+                          {item.badge}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Text Details Section */}
+                    <div className="px-5 py-2 space-y-2">
+                      <h3 className="text-base sm:text-lg font-semibold group-hover:text-primary transition-colors leading-snug">
+                        {item.title} <span className="text-primary">Visa</span>
+                      </h3>
+                      {item.highlights && item.highlights.length > 0 ? (
+                        <ul className="space-y-0.5 pt-1">
+                          {item?.highlights?.slice(0, 2).map((highlight, index) => (
+                            <li
+                              key={index}
+                              className="flex items-start gap-2 text-xs text-slate-600 font-normal leading-snug"
+                            >
+                              <HiOutlineCheckBadge className="text-primary text-sm shrink-0 mt-0.5" />
+                              <span>{highlight}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-xs text-slate-500 font-normal leading-relaxed">
+                          {item.duration}
+                        </p>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Text Details Section */}
-                  <div className="px-5 py-2 space-y-2">
-                    <h3 className="text-base sm:text-lg font-semibold group-hover:text-primary transition-colors leading-snug">
-                      {item.title} <span className="text-primary">Visa</span>
-                    </h3>
-                    {item.highlights && item.highlights.length > 0 ? (
-                      <ul className="space-y-0.5 pt-1">
-                        {item?.highlights?.slice(0, 2).map((highlight, index) => (
-                          <li
-                            key={index}
-                            className="flex items-start gap-2 text-xs text-slate-600 font-normal leading-snug"
-                          >
-                            <HiOutlineCheckBadge className="text-primary text-sm shrink-0 mt-0.5" />
-                            <span>{highlight}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p className="text-xs text-slate-500 font-normal leading-relaxed">
-                        {item.duration}
-                      </p>
-                    )}
+                  {/* Footer Section: Price & Action Arrow Button */}
+                  <div className="px-5 pb-5 pt-3 border-t border-slate-100 flex items-center justify-between">
+                    <div className="flex flex-col">
+                      <span className="text-[11px] text-slate-400 font-normal">
+                        Starting from
+                      </span>
+                      <span className="text-base sm:text-lg font-bold text-[#021b38] tracking-tight">
+                        {item.price
+                          ? item.price.includes("₹") || item.price.includes("INR")
+                            ? item.price
+                            : `INR ${item.price}`
+                          : ""}
+                      </span>
+                    </div>
+
+                    {/* Circular Arrow CTA Button */}
+                    <Link
+                      href={`/visas/${item.slug || item.id}`}
+                      className="w-9 h-9 rounded-full bg-slate-100 group-hover:bg-primary text-slate-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs shrink-0 cursor-pointer"
+                      aria-label={`View details for ${item.title}`}
+                    >
+                      <FaArrowRight className="text-xs" />
+                    </Link>
                   </div>
                 </div>
+              ))}
+            </div>
 
-                {/* Footer Section: Price & Action Arrow Button */}
-                <div className="px-5 pb-5 pt-3 border-t border-slate-100 flex items-center justify-between">
-                  <div className="flex flex-col">
-                    <span className="text-[11px] text-slate-400 font-normal">
-                      Starting from
-                    </span>
-                    <span className="text-base sm:text-lg font-bold text-[#021b38] tracking-tight">
-                      {item.price
-                        ? item.price.includes("₹") || item.price.includes("INR")
-                          ? item.price
-                          : `INR ${item.price}`
-                        : ""}
-                    </span>
+            {/* Modern Responsive Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-12 pt-6 border-t border-slate-200/80">
+                {/* Entry Counter Text */}
+                <p className="text-xs text-slate-500 font-normal text-center sm:text-left">
+                  Showing{" "}
+                  <span className="font-semibold text-slate-900">
+                    {(currentPage - 1) * ITEMS_PER_PAGE + 1}
+                  </span>{" "}
+                  to{" "}
+                  <span className="font-semibold text-slate-900">
+                    {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)}
+                  </span>{" "}
+                  of <span className="font-semibold text-slate-900">{totalCount}</span> entries
+                </p>
+
+                {/* Pagination Controls */}
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  {/* Previous Button */}
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="flex items-center justify-center gap-1.5 w-9 h-9 rounded-xl text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-2xs cursor-pointer"
+                    aria-label="Previous Page"
+                  >
+                    <FaChevronLeft className="text-[10px]" />
+          
+                  </button>
+
+                  {/* Page Number Buttons */}
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                      const isActive = page === currentPage;
+                      return (
+                        <button
+                          key={page}
+                          onClick={() => handlePageChange(page)}
+                          className={`w-9 h-9 rounded-xl text-xs font-semibold flex items-center justify-center transition-all cursor-pointer ${
+                            isActive
+                              ? "bg-primary text-white shadow-md shadow-emerald-600/20 scale-105"
+                              : "bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      );
+                    })}
                   </div>
 
-                  {/* Circular Arrow CTA Button */}
-                  <Link
-                    href={`/visas/${item.slug || item.id}`}
-                    className="w-9 h-9 rounded-full bg-slate-100 group-hover:bg-primary text-slate-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs shrink-0 cursor-pointer"
-                    aria-label={`View details for ${item.title}`}
+                  {/* Next Button */}
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="flex items-center justify-center gap-1.5 w-9 h-9 rounded-xl text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-2xs cursor-pointer"
+                    aria-label="Next Page"
                   >
-                    <FaArrowRight className="text-xs" />
-                  </Link>
+
+                    <FaChevronRight className="text-[10px]" />
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
 
       </section>
