@@ -117,6 +117,7 @@ export default function ImmigrationServicePage() {
             fill
             priority
             loading="eager"
+            fetchPriority="high"
             sizes="100vw"
             quality={95}
             className="object-cover object-right opacity-90 lg:opacity-100"

@@ -16,6 +16,10 @@ export default function RootLayout({ children }) {
       className="h-full max-w-[1800px] mx-auto antialiased"
       cz-shortcut-listen="true"
     >
+      <head>
+        <link rel="preconnect" href="https://cdn.sanity.io" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://flagcdn.com" crossOrigin="anonymous" />
+      </head>
       <body className="min-h-full flex flex-col">
         {/* Fullscreen Initial Website Loader */}
         <InitialLoader />

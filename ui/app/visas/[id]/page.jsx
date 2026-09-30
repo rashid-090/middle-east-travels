@@ -46,7 +46,18 @@ export default function VisaDetailPage() {
       if (!rawId) return;
       setIsLoading(true);
       try {
-        const query = `*[_type == "visaService" && (slug.current == $id || _id == $id || slug.current match $id)][0]`;
+        const query = `*[_type == "visaService" && (slug.current == $id || _id == $id || slug.current match $id)][0]{
+          _id,
+          title,
+          slug,
+          duration,
+          validity,
+          price,
+          badge,
+          image,
+          highlights,
+          overview
+        }`;
         const data = await client.fetch(query, { id: String(rawId) });
         if (data) {
           const formatted = {
@@ -57,8 +68,9 @@ export default function VisaDetailPage() {
             validity: data.validity || "",
             price: data.price || "",
             badge: data.badge || "",
-            image: data.image ? urlFor(data.image)?.url() : null,
+            image: data.image ? urlFor(data.image)?.width(1000).auto("format").quality(85).url() : null,
             highlights: data.highlights || [],
+            overview: data.overview || "",
           };
           setSanityVisa(formatted);
         }
@@ -128,6 +140,7 @@ export default function VisaDetailPage() {
             fill
             priority
             loading="eager"
+            fetchPriority="high"
             sizes="100vw"
             quality={90}
             className="object-cover object-right opacity-80 lg:opacity-95"

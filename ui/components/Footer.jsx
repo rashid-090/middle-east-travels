@@ -77,7 +77,7 @@ export default function Footer() {
               className="object-cover object-[center_35%]"
             />
             {/* Dark Navy Gradient Overlay to ensure text readability */}
-            <div className="absolute inset-0 bg-gradient-to-r from-secondary/70 via-[#021b38]/20 to-[#021b38]/5 w-full " />
+            <div className="absolute inset-0 bg-gradient-to-r from-secondary/70 via-[#021b38]/10 to-[#021b38]/5 w-full " />
             <div className="absolute inset-0 bg-black/30 md:hidden" />
           </div>
 
@@ -87,7 +87,7 @@ export default function Footer() {
               <h3 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-white leading-tight">
                 Let's Make Your Next Trip Unforgettable
               </h3>
-              <p className="text-slate-200 text-xs sm:text-sm font-normal">
+              <p className="text-slate-200 text-xs sm:text-base font-normal">
                 Get personalized packages, best deals & expert advice.
               </p>
             </div>

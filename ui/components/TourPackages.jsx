@@ -57,12 +57,28 @@ export default function TourPackages() {
   useEffect(() => {
     async function fetchPopularPackages() {
       try {
-        const query = `*[_type == "tourPackage"] | order(orderRank asc, _createdAt desc)[0...8]`;
+        const query = `*[_type == "tourPackage"] | order(orderRank asc, _createdAt desc)[0...8]{
+          _id,
+          title,
+          fullTitle,
+          category,
+          region,
+          duration,
+          price,
+          oldPrice,
+          badge,
+          badgeType,
+          rating,
+          reviewsCount,
+          image,
+          inclusionIcons,
+          highlights
+        }`;
         const data = await client.fetch(query);
         if (data && data.length > 0) {
           const formatted = data.map((item) => {
             const slugId = item.id?.current || item.id || item._id;
-            const mainImageUrl = item.image ? urlFor(item.image)?.url() : null;
+            const mainImageUrl = item.image ? urlFor(item.image)?.width(640).auto("format").quality(80).url() : null;
 
             return {
               id: slugId,
@@ -131,10 +147,13 @@ export default function TourPackages() {
                   <div>
                     {/* Top Smooth Rounded Image Container */}
                     <div className="relative w-full aspect-[4/3] rounded-[1.75rem] overflow-hidden mb-3.5 bg-slate-100">
-                      <img
+                      <Image
                         src={item.image}
                         alt={item.title}
-                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 340px, 340px"
+                        loading="lazy"
+                        className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
                       />
 
                       {/* Top Right Badge */}

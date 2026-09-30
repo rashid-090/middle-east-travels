@@ -78,7 +78,7 @@ export default function VisasListingPage() {
 
         const query = `{
           "total": count(*[${filterString}]),
-          "items": *[${filterString}] ${orderString} [${start}...${end}]
+          "items": *[${filterString}] ${orderString} [${start}...${end}]{ _id, title, slug, duration, validity, price, badge, image, highlights }
         }`;
 
         const data = await client.fetch(query);
@@ -220,6 +220,7 @@ export default function VisasListingPage() {
             fill
             priority
             loading="eager"
+            fetchPriority="high"
             sizes="100vw"
             quality={95}
             className="object-cover object-center"

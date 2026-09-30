@@ -135,7 +135,7 @@ export default function TourPackagesPage() {
 
         const query = `{
           "total": count(*[${filterString}]),
-          "items": *[${filterString}] ${orderString} [${start}...${end}]
+          "items": *[${filterString}] ${orderString} [${start}...${end}]{ _id, id, title, fullTitle, category, region, duration, price, oldPrice, badge, badgeType, rating, reviewsCount, image, gallery, overview, inclusionIcons, highlights, itinerary, inclusions, exclusions }
         }`;
 
         const data = await client.fetch(query);
@@ -352,6 +352,7 @@ export default function TourPackagesPage() {
                 fill
                 priority
                 loading="eager"
+                fetchPriority="high"
                 sizes="100vw"
                 quality={95}
                 className="object-cover object-bottom scale-x-[-1]"

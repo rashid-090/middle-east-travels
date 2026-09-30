@@ -98,14 +98,37 @@ export default function TourPackageDetailPage() {
       }
       setIsLoading(true);
       try {
-        const query = `*[_type == "tourPackage" && (id.current == $id || _id == $id)][0]`;
+        const query = `*[_type == "tourPackage" && (id.current == $id || _id == $id)][0]{
+          _id,
+          id,
+          title,
+          fullTitle,
+          category,
+          region,
+          duration,
+          price,
+          oldPrice,
+          badge,
+          badgeType,
+          rating,
+          reviewsCount,
+          image,
+          gallery,
+          overview,
+          inclusionIcons,
+          highlights,
+          keyHighlights,
+          itinerary,
+          inclusions,
+          exclusions
+        }`;
         const data = await client.fetch(query, { id: packageId });
         
         let currentPkg = null;
         if (data) {
-          const mainImageUrl = data.image ? urlFor(data.image)?.url() : null;
+          const mainImageUrl = data.image ? urlFor(data.image)?.width(1000).auto("format").quality(85).url() : null;
           const galleryUrls = data.gallery && Array.isArray(data.gallery)
-            ? data.gallery.map((g) => urlFor(g)?.url()).filter(Boolean)
+            ? data.gallery.map((g) => urlFor(g)?.width(800).auto("format").quality(80).url()).filter(Boolean)
             : [];
 
           currentPkg = {
@@ -142,7 +165,24 @@ export default function TourPackageDetailPage() {
         }
 
         // Fetch real related packages from Sanity
-        const allQuery = `*[_type == "tourPackage"] | order(orderRank asc, _createdAt desc)`;
+        const allQuery = `*[_type == "tourPackage"] | order(orderRank asc, _createdAt desc)[0...6]{
+          _id,
+          id,
+          title,
+          fullTitle,
+          category,
+          region,
+          duration,
+          price,
+          oldPrice,
+          badge,
+          badgeType,
+          rating,
+          reviewsCount,
+          image,
+          inclusionIcons,
+          highlights
+        }`;
         const allData = await client.fetch(allQuery);
         if (allData && allData.length > 0) {
           const formattedAll = allData.map((item) => {

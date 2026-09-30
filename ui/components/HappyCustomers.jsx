@@ -13,12 +13,12 @@ export default function HappyCustomers() {
   useEffect(() => {
     async function fetchHappyCustomers() {
       try {
-        const query = `*[_type == "happyCustomer"] | order(orderRank asc, _createdAt desc)`;
+        const query = `*[_type == "happyCustomer"] | order(orderRank asc, _createdAt desc){ _id, name, location, quote, image, avatar }`;
         const data = await client.fetch(query);
         if (data && data.length > 0) {
           const formatted = data.map((item, index) => {
-            let mainImageUrl = item.image ? urlFor(item.image)?.url() : null;
-            let avatarUrl = item.avatar ? urlFor(item.avatar)?.url() : null;
+            let mainImageUrl = item.image ? urlFor(item.image)?.width(400).auto("format").quality(80).url() : null;
+            let avatarUrl = item.avatar ? urlFor(item.avatar)?.width(100).auto("format").quality(80).url() : null;
 
             return {
               id: item._id || index,
@@ -61,10 +61,13 @@ export default function HappyCustomers() {
                   
                   {/* Top Image + Location Badge */}
                   <div className="relative w-full aspect-[4/5] rounded-[1.5rem] overflow-hidden mb-4 bg-slate-100 shrink-0">
-                    <img
+                    <Image
                       src={customer.image}
                       alt={customer.name}
-                      className="w-full h-full object-cover"
+                      fill
+                      sizes="(max-width: 640px) 320px, 340px"
+                      loading="lazy"
+                      className="object-cover"
                     />
                   </div>
 
@@ -80,10 +83,13 @@ export default function HappyCustomers() {
                   {/* Footer - Customer Avatar & Name & Location */}
                   <div className="border-t border-slate-100 pt-3.5 mt-auto flex items-center gap-3">
                     <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border border-slate-200/80 shadow-xs">
-                      <img
+                      <Image
                         src={customer.avatar}
                         alt={customer.name}
-                        className="w-full h-full object-cover"
+                        fill
+                        sizes="40px"
+                        loading="lazy"
+                        className="object-cover"
                       />
                     </div>
                     <div className="min-w-0 flex-1">

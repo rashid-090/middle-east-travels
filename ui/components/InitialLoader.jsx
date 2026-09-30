@@ -75,6 +75,7 @@ export default function InitialLoader() {
                 fill
                 priority
                 loading="eager"
+                fetchPriority="high"
                 sizes="256px"
                 className="object-contain"
               />

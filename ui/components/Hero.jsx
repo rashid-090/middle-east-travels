@@ -179,7 +179,7 @@ function renderPackageCardContent(item) {
               </span>
             </div>
           </div>
-          <button className="bg-primary w-full py-3 px-4 rounded-xl text-white mt-2 text-sm">
+          <button className="bg-primary w-full py-3 px-4 rounded-xl font-medium text-white mt-2 text-sm">
             View Package
           </button>
         </div>
@@ -334,7 +334,7 @@ export default function Hero() {
         if (data && data.length > 0) {
           const formatted = data.map((item) => {
             const imageUrl = item.image
-              ? urlFor(item.image).width(800).url()
+              ? urlFor(item.image).width(800).auto("format").quality(80).url()
               : "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=85";
             return {
               id: item.id || item._id,
@@ -406,6 +406,7 @@ export default function Hero() {
               fill
               priority
               loading="eager"
+              fetchPriority="high"
               sizes="100vw"
               quality={90}
               className="object-cover object-center"
@@ -457,29 +458,27 @@ export default function Hero() {
             {/* CTA Buttons */}
             <motion.div
               variants={revealItemVariants}
-              className="flex flex-wrap items-center gap-4 pt-3"
+              className="flex flex-wrap items-center gap-2 md:gap-4 pt-3 md:pt-4"
             >
+              {/* Apply for Visa - Modern Pill CTA */}
               <Link
-                href="/contact-us"
-                className="px-10 py-4 rounded-xl bg-primary hover:bg-secondary text-white font-semibold text-xs md:text-sm shadow-md hover:shadow-lg active:scale-95 transition-all duration-200"
+                href="/visas"
+                className="group relative inline-flex items-center gap-2.5 px-6 md:px-9 py-5 md:py-4 rounded-2xl bg-gradient-to-r from-primary via-[#1cb854] to-emerald-600 text-white font-semibold text-xs md:text-sm shadow-lg shadow-emerald-950/40 hover:shadow-emerald-600/40 hover:scale-[1.02] active:scale-95 transition-all duration-300 overflow-hidden"
               >
-                Apply for Visa
+                <FaPassport className="text-sm md:text-base text-white/90 group-hover:rotate-12 transition-transform duration-300" />
+                <span>Apply for Visa</span>
+                <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform duration-200" />
               </Link>
-              {/* <a
-                href="https://wa.me/7025144666"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2.5 px-5 py-4 rounded-xl bg-white border border-slate-300 text-slate-900 font-semibold text-xs md:text-sm shadow-xs hover:bg-slate-50 hover:shadow-sm active:scale-95 transition-all duration-200"
-              >
-                <FaWhatsapp className="text-emerald-500 text-lg" />
-                <span>Speak to an Expert</span>
-              </a> */}
+
+              {/* Book Flights - Modern Glassmorphic Pill CTA */}
               <Link
-                href="/book-tickets"
-                className="inline-flex items-center gap-2.5 px-10 py-4 rounded-xl bg-white hover:bg-black text-black hover:text-white font-medium text-xs md:text-sm shadow-md hover:shadow-lg active:scale-95 transition-all duration-200"
+                href="/book-flights"
+                className="group inline-flex items-center gap-2.5 px-6 md:px-9 py-3.5 md:py-3 rounded-2xl bg-white/95 hover:bg-white backdrop-blur-md border border-white/80 text-slate-950 font-semibold text-xs md:text-sm shadow-lg shadow-black/20 hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all duration-300"
               >
-                Book Flights
-                <MdFlight className="text-primary text-lg rotate-90" />
+                <span>Book Flights</span>
+                <div className="w-6 h-6 md:w-7 md:h-7 rounded-full bg-primary/10 group-hover:bg-primary text-primary group-hover:text-white flex items-center justify-center transition-all duration-300 shrink-0">
+                  <MdFlight className="text-xs md:text-sm rotate-90 group-hover:translate-x-0.5 transition-transform duration-300" />
+                </div>
               </Link>
             </motion.div>
           </motion.div>

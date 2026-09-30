@@ -15,7 +15,7 @@ export default function Testimonials() {
   useEffect(() => {
     async function fetchTestimonials() {
       try {
-        const query = `*[_type == "testimonial"] | order(orderRank asc, _createdAt desc)`;
+        const query = `*[_type == "testimonial"] | order(orderRank asc, _createdAt desc){ _id, quote, name, branch, rating, location, avatar }`;
         const data = await client.fetch(query);
         if (data && data.length > 0) {
           const bgColors = ["bg-pink-600", "bg-blue-600", "bg-emerald-600", "bg-purple-600", "bg-amber-600", "bg-teal-600"];
@@ -26,7 +26,7 @@ export default function Testimonials() {
             
             let avatarUrl = null;
             if (item.avatar) {
-              avatarUrl = urlFor(item.avatar)?.url();
+              avatarUrl = urlFor(item.avatar)?.width(100).auto("format").quality(80).url();
             }
 
             let branchText = item.branch || "Calicut Branch";
@@ -109,12 +109,16 @@ export default function Testimonials() {
                     <div className="border-t border-slate-100 pt-4 mt-auto flex items-center gap-3.5">
                       {/* Avatar Image or Colored Initial Badge */}
                       {item.avatar ? (
-                        <img
-                          src={item.avatar}
-                          alt={item.name || "Traveller Avatar"}
-                          loading="lazy"
-                          className="w-12 h-12 rounded-full object-cover shrink-0 border border-slate-200 shadow-xs"
-                        />
+                        <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0 border border-slate-200 shadow-xs">
+                          <Image
+                            src={item.avatar}
+                            alt={item.name || "Traveller Avatar"}
+                            fill
+                            sizes="48px"
+                            loading="lazy"
+                            className="object-cover"
+                          />
+                        </div>
                       ) : (
                         <div className={`w-12 h-12 rounded-full ${item.initialBg || "bg-pink-600"} text-white flex items-center justify-center font-bold text-sm tracking-wider shrink-0 shadow-xs`}>
                           {item.initials || "DP"}
