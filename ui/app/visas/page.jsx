@@ -210,7 +210,7 @@ export default function VisasListingPage() {
   return (
     <div className="bg-slate-50 min-h-screen text-slate-900 pb-16">
       {/* ================= HERO BANNER SECTION ================= */}
-      <section className="w-11/12 mx-auto my-6 lg:my-8 rounded-3xl md:rounded-[2rem] overflow-hidden relative shadow-2xl flex flex-col justify-between p-4 py-6 sm:p-10 lg:p-12 lg:py-16 text-white">
+      <section className="w-full md:w-11/12 mx-auto mb-6 lg:my-8 rounded-none md:rounded-[2rem] overflow-hidden relative shadow-2xl flex flex-col justify-between p-4 py-6 sm:p-10 lg:p-12 lg:py-16 text-white">
         
         {/* Background Image with Dark Gradient Overlay */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -224,37 +224,37 @@ export default function VisasListingPage() {
             quality={95}
             className="object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-black/50 to-black/10 z-10 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/5 via-black/50 to-black/50 md:to-black/0 z-10 pointer-events-none" />
         </div>
 
         {/* Top Banner Content: Title & Subtitle */}
-        <div className="relative z-20 mb-6 flex flex-col md:flex-row md:items-start justify-between gap-4">
+        <div className="relative xl:pt-6 z-20 mb-6 flex flex-col md:flex-row md:items-start justify-between gap-4">
           <div>
-            <h1 className="text-3xl md:text-4xl font-medium text-white tracking-tight leading-tight">
-              Find Your Visa Services
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-normal text-white tracking-tight leading-tight">
+              Find Your <span className="font-semibold">Visa Services</span>
             </h1>
-            <p className="text-slate-200 text-xs sm:text-sm font-normal w-[90%] md:w-full leading-relaxed pt-1">
+            <p className="text-slate-200 text-xs sm:text-base font-normal w-[90%] md:w-full leading-relaxed pt-1.5">
               Explore our express tourist, business, and visitor visa options for every destination.
             </p>
           </div>
         </div>
 
-        {/* Middle Banner: Glassmorphism Filters Container */}
+        {/* Middle Banner: Highly Mobile Responsive Clean Filter Card */}
         <div className="relative z-20">
-          <div className="bg-white/10 backdrop-blur-md border border-white/50 rounded-2xl sm:rounded-[2rem] p-3 sm:p-5 shadow-2xl space-y-3 sm:space-y-4">
+          <div className="bg-white/95 backdrop-blur-xl border border-white/80 rounded-2xl sm:rounded-3xl p-3 sm:p-5 shadow-2xl space-y-3 sm:space-y-4 text-slate-800">
             
-            {/* Top Search & Sort Controls Row */}
-            <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+            {/* Top Row: Search Input & Sort Dropdown Group */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2.5 w-full flex-1">
               
               {/* Search Bar */}
-              <div className="relative flex items-center bg-black/40 sm:bg-white/20 backdrop-blur-md rounded-xl px-3.5 py-2.5 border border-white/25 focus-within:border-white transition-colors flex-1">
-                <FaMagnifyingGlass className="text-white/70 text-xs shrink-0 mr-2.5" />
+              <div className="relative flex items-center bg-slate-50 border border-slate-200/90 rounded-xl px-3 sm:px-3.5 py-2 sm:py-2.5 focus-within:border-[#19a64b] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#19a64b]/20 transition-all flex-1">
+                <FaMagnifyingGlass className="text-slate-400 text-xs shrink-0 mr-2 sm:mr-2.5" />
                 <input
                   type="text"
                   placeholder="Search packages..."
                   value={searchQuery}
                   onChange={handleSearchChange}
-                  className="w-full bg-transparent text-white placeholder-white/60 text-xs sm:text-sm outline-hidden"
+                  className="w-full bg-transparent text-slate-900 placeholder-slate-400 text-xs sm:text-sm outline-hidden font-medium"
                 />
                 {searchQuery && (
                   <button
@@ -262,7 +262,7 @@ export default function VisasListingPage() {
                       setSearchQuery("");
                       setCurrentPage(1);
                     }}
-                    className="text-xs text-white/70 hover:text-white ml-1 cursor-pointer font-medium"
+                    className="text-xs text-slate-400 hover:text-slate-700 ml-1 cursor-pointer font-medium"
                   >
                     ✕
                   </button>
@@ -274,36 +274,36 @@ export default function VisasListingPage() {
                 <select
                   value={sortBy}
                   onChange={handleSortChange}
-                  className="w-full md:w-auto bg-black/40 sm:bg-white/20 backdrop-blur-md text-white text-xs sm:text-sm font-semibold rounded-xl pl-3.5 pr-8 py-2.5 border border-white/25 focus:outline-hidden focus:border-white cursor-pointer appearance-none"
+                  className="w-full sm:w-auto bg-slate-50 text-slate-800 text-xs sm:text-sm font-semibold rounded-xl pl-3 sm:pl-3.5 pr-8 py-2 sm:py-2.5 border border-slate-200/90 focus:outline-hidden focus:border-[#19a64b] cursor-pointer appearance-none"
                 >
-                  <option value="default" className="bg-slate-900 text-white">
+                  <option value="default" className="bg-white text-slate-900">
                     Sort: Default
                   </option>
-                  <option value="price-low" className="bg-slate-900 text-white">
+                  <option value="price-low" className="bg-white text-slate-900">
                     Price: Low → High
                   </option>
-                  <option value="price-high" className="bg-slate-900 text-white">
+                  <option value="price-high" className="bg-white text-slate-900">
                     Price: High → Low
                   </option>
                 </select>
-                <FaSliders className="absolute right-3 top-1/2 -translate-y-1/2 text-white/70 text-xs pointer-events-none" />
+                <FaSliders className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none" />
               </div>
 
             </div>
 
-            {/* Region Sub-Filters Scrollable Pills Row */}
-            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-2.5 border-t border-white/15 scroll-smooth pb-0.5">
-              <span className="text-[10px] md:text-xs font-bold text-white/90 uppercase tracking-wider shrink-0 mr-1 bg-white/15 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/15">
+            {/* Bottom Row: Region Sub-Filter Pills */}
+            <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar pt-2 sm:pt-2.5 border-t border-slate-200/80 scroll-smooth pb-0.5">
+              <span className="text-[10px] sm:text-xs font-bold text-primary uppercase tracking-wider shrink-0 mr-1 bg-slate-100 px-2 sm:px-2.5 py-1 rounded-md border border-slate-200/80">
                 REGION:
               </span>
               {regions.map((region) => (
                 <button
                   key={region}
                   onClick={() => handleRegionChange(region)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 whitespace-nowrap cursor-pointer shrink-0 ${
+                  className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-medium transition-all duration-200 whitespace-nowrap cursor-pointer shrink-0 ${
                     selectedRegion === region
-                      ? "bg-[#19a64b] text-white shadow-md font-semibold"
-                      : "bg-white/15 text-white/80 hover:text-white hover:bg-white/25 border border-white/15"
+                      ? "bg-[#19a64b] text-white shadow-sm font-semibold"
+                      : "bg-slate-100 text-slate-600 hover:bg-slate-200/80 hover:text-slate-900 border border-slate-200/60"
                   }`}
                 >
                   {region}
