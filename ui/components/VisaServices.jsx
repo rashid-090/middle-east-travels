@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import TouchMarquee from "./TouchMarquee";
@@ -14,6 +14,7 @@ import {
 import { HiSparkles } from "react-icons/hi2";
 import { visaPackagesData } from "@/data/allData.js";
 import { IoTicketOutline } from "react-icons/io5";
+import { client, urlFor } from "@/lib/sanity";
 
 const getBadgeIcon = (type) => {
   switch (type) {
@@ -32,6 +33,50 @@ const getBadgeIcon = (type) => {
 };
 
 export default function VisaServices() {
+  const [visaServices, setVisaServices] = useState(visaPackagesData);
+
+  useEffect(() => {
+    let isSubscribed = true;
+
+    async function fetchVisaServices() {
+      try {
+        const query = `*[_type == "visaService"] | order(orderRank asc, _createdAt desc){
+          _id,
+          title,
+          slug,
+          duration,
+          validity,
+          price,
+          badge,
+          image
+        }`;
+        const data = await client.fetch(query);
+        if (isSubscribed && Array.isArray(data) && data.length > 0) {
+          const formatted = data.map((item) => ({
+            id: item._id,
+            title: item.title,
+            slug: item.slug?.current || item.slug || item._id,
+            duration: item.duration || "",
+            price: item.price || "",
+            badge: item.badge || "",
+            image: item.image
+              ? urlFor(item.image)?.auto("format").quality(80).url()
+              : "/visapageban.webp",
+          }));
+          setVisaServices(formatted);
+        }
+      } catch (err) {
+        console.error("Error fetching visa services from Sanity:", err);
+      }
+    }
+
+    fetchVisaServices();
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, []);
+
   return (
     <section className="w-full py-12 lg:py-16 bg-slate-50 overflow-hidden">
       <div className="w-11/12 mx-auto space-y-6">
@@ -57,7 +102,7 @@ export default function VisaServices() {
         {/* Touch & Auto-Scroll Marquee Container */}
         <div className="w-full py-2">
           <TouchMarquee speed={1.2}>
-            {visaPackagesData.map((item) => (
+            {visaServices.map((item) => (
               <div key={item.id} className="w-[300px] lg:w-[320px] px-2.5 py-2 shrink-0">
                 <Link
                   href={`/visas/${item.slug || item.id}`}
@@ -71,7 +116,7 @@ export default function VisaServices() {
                         alt={item.title}
                         fill
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
-                        quality={90}
+                        quality={85}
                         className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
                       />
 
@@ -90,9 +135,11 @@ export default function VisaServices() {
                       </h3>
 
                       {/* Duration / Processing Time */}
-                      <p className="text-xs text-slate-500 font-normal mb-3">
-                        {item.duration}
-                      </p>
+                      {item.duration && (
+                        <p className="text-xs text-slate-500 font-normal mb-3">
+                          {item.duration}
+                        </p>
+                      )}
 
                       {/* Bottom Border & Price Section */}
                       <div className="border-t border-slate-100 pt-4 mt-auto flex items-center justify-between">
@@ -101,9 +148,11 @@ export default function VisaServices() {
                             Starting from
                           </span>
                           <span className="text-lg sm:text-xl font-semibold text-slate-950 tracking-tight">
-                            {item.price.includes("₹") || item.price.includes("INR")
-                              ? item.price
-                              : `INR ${item.price}`}
+                            {item.price
+                              ? String(item.price).includes("₹") || String(item.price).includes("INR")
+                                ? item.price
+                                : `INR ₹${item.price}`
+                              : ""}
                           </span>
                         </div>
 
