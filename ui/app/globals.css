@@ -8,9 +8,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-    --color-primary: var(--primary);
+  --color-primary: var(--primary);
   --color-secondary: var(--secondary);
-  --font-google-sans: 'Google Sans Flex', 'Google Sans', system-ui, -apple-system, sans-serif;
+  --font-google-sans: 'Google Sans Flex', 'Google Sans Flex Variable', 'Google Sans', system-ui, -apple-system, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -18,14 +18,14 @@
     --background: #ffffff;
     --foreground: #000000;
     --primary: #19A64B;
-  --secondary: #040608;
+    --secondary: #040608;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: 'Google Sans Flex', 'Google Sans', system-ui, -apple-system, sans-serif;
+  font-family: 'Google Sans Flex', 'Google Sans Flex Variable', 'Google Sans', system-ui, -apple-system, sans-serif;
 }
 
 /* Swiper Custom Pagination Container & Bullets Centering */

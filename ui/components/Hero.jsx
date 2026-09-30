@@ -431,13 +431,13 @@ export default function Hero() {
             <div className="space-y-1 sm:space-y-2 overflow-hidden">
               <motion.h1
                 variants={revealItemVariants}
-                className="text-4xl sm:text-5xl lg:text-7xl font-medium text-white tracking-tight leading-[1.15]"
+                className="text-4xl md:text-5xl lg:text-7xl font-semibold text-white leading-[1.15]"
               >
                 Dream It. Plan It.
               </motion.h1>
               <motion.h1
                 variants={revealItemVariants}
-                className="text-4xl sm:text-5xl lg:text-6xl font-medium text-transparent [-webkit-text-stroke:1.5px_white] tracking-tight leading-[1.15]"
+                className="text-4xl md:text-5xl lg:text-6xl font-semibold text-transparent [-webkit-text-stroke:1.5px_white] tracking-wide leading-[1.15]"
               >
                 Travel It.
               </motion.h1>
