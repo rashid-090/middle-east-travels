@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import PhoneInput from "react-phone-number-input";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import {
   FaPaperPlane,
@@ -23,6 +23,7 @@ export default function Contact() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [phoneError, setPhoneError] = useState("");
   const resetTimerRef = useRef(null);
 
   useEffect(() => {
@@ -42,6 +43,7 @@ export default function Contact() {
       clearTimeout(resetTimerRef.current);
     }
     setSubmitted(false);
+    setPhoneError("");
     setFormData({
       name: "",
       email: "",
@@ -52,6 +54,18 @@ export default function Contact() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!formData.phone || !formData.phone.trim()) {
+      setPhoneError("Phone number is required");
+      return;
+    }
+
+    if (!isValidPhoneNumber(formData.phone)) {
+      setPhoneError("Please enter a valid phone number with country code");
+      return;
+    }
+
+    setPhoneError("");
     setIsSubmitting(true);
 
     const messageText = `Hi Middle East Travels,\n\nI would like to make an inquiry:\n\n👤 *Name:* ${formData.name}\n📞 *Phone:* ${formData.phone || "N/A"}\n✉️ *Email:* ${formData.email || "N/A"}\n💬 *Message:* ${formData.message || "N/A"}`;
@@ -70,6 +84,7 @@ export default function Contact() {
 
     resetTimerRef.current = setTimeout(() => {
       setSubmitted(false);
+      setPhoneError("");
       setFormData({
         name: "",
         email: "",
@@ -149,13 +164,23 @@ export default function Contact() {
                   </div>
                   <div>
                     <label className="text-xs font-medium text-slate-700 block mb-1">Phone Number *</label>
-                    <PhoneInput
-                      international
-                      defaultCountry="IN"
-                      value={formData.phone}
-                      onChange={(val) => setFormData({ ...formData, phone: val || "" })}
-                      placeholder="Enter phone number"
-                    />
+                    <div className={phoneError ? "[&_.PhoneInput]:border-red-400 [&_.PhoneInput]:focus-within:border-red-500" : ""}>
+                      <PhoneInput
+                        international
+                        defaultCountry="IN"
+                        value={formData.phone}
+                        onChange={(val) => {
+                          setFormData({ ...formData, phone: val || "" });
+                          if (phoneError && val && isValidPhoneNumber(val)) {
+                            setPhoneError("");
+                          }
+                        }}
+                        placeholder="Enter phone number"
+                      />
+                    </div>
+                    {phoneError && (
+                      <p className="text-red-500 text-[11px] mt-1 font-medium">{phoneError}</p>
+                    )}
                   </div>
                 </div>
 

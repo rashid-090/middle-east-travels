@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { tourPackagesData } from "@/data/allData";
 import { client, urlFor } from "@/lib/sanity";
-import PhoneInput from "react-phone-number-input";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import {
   FaAngleRight,
@@ -91,6 +91,7 @@ export default function TourPackageDetailPage() {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [phoneError, setPhoneError] = useState("");
 
   useEffect(() => {
     async function fetchPackageDetail() {
@@ -265,6 +266,18 @@ export default function TourPackageDetailPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!formData.phone || !formData.phone.trim()) {
+      setPhoneError("Phone number is required");
+      return;
+    }
+
+    if (!isValidPhoneNumber(formData.phone)) {
+      setPhoneError("Please enter a valid phone number with country code");
+      return;
+    }
+
+    setPhoneError("");
     setSubmitted(true);
 
     const messageText = `Hi Middle East Travels,\n\nI would like to inquire about *${pkg?.fullTitle || pkg?.title || "Tour Package"}*.\n\n👤 *Name:* ${formData.name}\n📞 *Phone:* ${formData.phone}\n📅 *Travel Date:* ${formData.date || "Not specified"}\n👥 *Travelers:* ${formData.guests}`;
@@ -274,6 +287,7 @@ export default function TourPackageDetailPage() {
 
     setTimeout(() => {
       setSubmitted(false);
+      setPhoneError("");
       setFormData({
         name: "",
         phone: "",
@@ -802,16 +816,23 @@ export default function TourPackageDetailPage() {
                       <label className="text-[11px] font-bold text-slate-700 block mb-1">
                         Phone / WhatsApp *
                       </label>
-                      <PhoneInput
-                        international
-                        defaultCountry="IN"
-                        value={formData.phone}
-                        onChange={(val) =>
-                          setFormData({ ...formData, phone: val || "" })
-                        }
-                        placeholder="Enter phone number"
-                        required
-                      />
+                      <div className={phoneError ? "[&_.PhoneInput]:border-red-400 [&_.PhoneInput]:focus-within:border-red-500" : ""}>
+                        <PhoneInput
+                          international
+                          defaultCountry="IN"
+                          value={formData.phone}
+                          onChange={(val) => {
+                            setFormData({ ...formData, phone: val || "" });
+                            if (phoneError && val && isValidPhoneNumber(val)) {
+                              setPhoneError("");
+                            }
+                          }}
+                          placeholder="Enter phone number"
+                        />
+                      </div>
+                      {phoneError && (
+                        <p className="text-red-500 text-[11px] mt-1 font-medium">{phoneError}</p>
+                      )}
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">

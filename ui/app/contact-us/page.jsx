@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import PhoneInput from "react-phone-number-input";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { motion, useScroll, useTransform } from "framer-motion";
 import TouchMarquee from "@/components/TouchMarquee";
@@ -191,6 +191,7 @@ export default function ContactUsPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [phoneError, setPhoneError] = useState("");
   const resetTimerRef = useRef(null);
 
   const heroRef = useRef(null);
@@ -221,6 +222,7 @@ export default function ContactUsPage() {
       clearTimeout(resetTimerRef.current);
     }
     setSubmitted(false);
+    setPhoneError("");
     setFormData({
       name: "",
       email: "",
@@ -232,6 +234,18 @@ export default function ContactUsPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!formData.phone || !formData.phone.trim()) {
+      setPhoneError("Phone number is required");
+      return;
+    }
+
+    if (!isValidPhoneNumber(formData.phone)) {
+      setPhoneError("Please enter a valid phone number with country code");
+      return;
+    }
+
+    setPhoneError("");
     setIsSubmitting(true);
 
     const messageText = `Hi Middle East Travels,\n\nI would like to make an inquiry:\n\n👤 *Name:* ${formData.name}\n📞 *Phone:* ${formData.phone || "N/A"}\n✉️ *Email:* ${formData.email || "N/A"}\n🎯 *Service:* ${formData.service || "N/A"}\n💬 *Message:* ${formData.message || "N/A"}`;
@@ -250,6 +264,7 @@ export default function ContactUsPage() {
 
     resetTimerRef.current = setTimeout(() => {
       setSubmitted(false);
+      setPhoneError("");
       setFormData({
         name: "",
         email: "",
@@ -487,13 +502,23 @@ export default function ContactUsPage() {
                       <label className="text-xs font-medium text-slate-700 block mb-1.5">
                         Phone Number *
                       </label>
-                      <PhoneInput
-                        international
-                        defaultCountry="IN"
-                        value={formData.phone}
-                        onChange={(val) => setFormData({ ...formData, phone: val || "" })}
-                        placeholder="Enter phone number"
-                      />
+                      <div className={phoneError ? "[&_.PhoneInput]:border-red-400 [&_.PhoneInput]:focus-within:border-red-500" : ""}>
+                        <PhoneInput
+                          international
+                          defaultCountry="IN"
+                          value={formData.phone}
+                          onChange={(val) => {
+                            setFormData({ ...formData, phone: val || "" });
+                            if (phoneError && val && isValidPhoneNumber(val)) {
+                              setPhoneError("");
+                            }
+                          }}
+                          placeholder="Enter phone number"
+                        />
+                      </div>
+                      {phoneError && (
+                        <p className="text-red-500 text-[11px] mt-1 font-medium">{phoneError}</p>
+                      )}
                     </div>
                   </div>
 
