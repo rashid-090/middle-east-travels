@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { tourPackagesData } from "@/data/allData";
 import { client, urlFor } from "@/lib/sanity";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import {
   FaAngleRight,
   FaStar,
@@ -796,55 +798,65 @@ export default function TourPackageDetailPage() {
                       />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2.5">
-                      <div>
-                        <label className="text-[11px] font-bold text-slate-700 block mb-1">
-                          Phone / WhatsApp *
-                        </label>
-                        <input
-                          type="tel"
-                          required
-                          placeholder="+91 98765 43210"
-                          value={formData.phone}
-                          onChange={(e) =>
-                            setFormData({ ...formData, phone: e.target.value })
-                          }
-                          className="w-full px-3 py-2.5 bg-slate-50/60 focus:bg-white rounded-xl border border-slate-200/80 text-xs outline-none focus:border-[#19a64b] focus:ring-2 focus:ring-[#19a64b]/10 transition-all "
-                        />
-                      </div>
+                    <div>
+                      <label className="text-[11px] font-bold text-slate-700 block mb-1">
+                        Phone / WhatsApp *
+                      </label>
+                      <PhoneInput
+                        international
+                        defaultCountry="IN"
+                        value={formData.phone}
+                        onChange={(val) =>
+                          setFormData({ ...formData, phone: val || "" })
+                        }
+                        placeholder="Enter phone number"
+                        required
+                      />
+                    </div>
 
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       <div>
                         <label className="text-[11px] font-bold text-slate-700 block mb-1">
                           Travel Date
                         </label>
-                        <input
-                          type="date"
-                          value={formData.date}
+                        <div className="relative">
+                          <input
+                            type="date"
+                            min={new Date().toISOString().split("T")[0]}
+                            value={formData.date}
+                            onChange={(e) =>
+                              setFormData({ ...formData, date: e.target.value })
+                            }
+                            onClick={(e) => {
+                              try {
+                                e.target.showPicker?.();
+                              } catch (err) {}
+                            }}
+                            className="w-full pl-9 pr-2.5 py-2.5 bg-slate-50/60 focus:bg-white rounded-xl border border-slate-200/80 text-xs outline-none focus:border-[#19a64b] focus:ring-2 focus:ring-[#19a64b]/10 transition-all cursor-pointer text-slate-800"
+                          />
+                          <FaCalendarDays className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none" />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="text-[11px] font-bold text-slate-700 block mb-1">
+                          Travelers
+                        </label>
+                        <select
+                          value={formData.guests}
                           onChange={(e) =>
-                            setFormData({ ...formData, date: e.target.value })
+                            setFormData({ ...formData, guests: e.target.value })
                           }
-                          className="w-full px-2.5 py-2.5 bg-slate-50/60 focus:bg-white rounded-xl border border-slate-200/80 text-xs outline-none focus:border-[#19a64b] focus:ring-2 focus:ring-[#19a64b]/10 transition-all"
-                        />
+                          className="w-full px-3 py-2.5 bg-slate-50/60 focus:bg-white rounded-xl border border-slate-200/80 text-xs outline-none focus:border-[#19a64b] focus:ring-2 focus:ring-[#19a64b]/10 transition-all cursor-pointer"
+                        >
+                          <option value="1">1 Person</option>
+                          <option value="2">2 Persons (Couple)</option>
+                          <option value="3-5">3 - 5 Persons</option>
+                          <option value="6+">6+ Persons</option>
+                        </select>
                       </div>
                     </div>
 
-                    <div>
-                      <label className="text-[11px] font-bold text-slate-700 block mb-1">
-                        Number of Travelers
-                      </label>
-                      <select
-                        value={formData.guests}
-                        onChange={(e) =>
-                          setFormData({ ...formData, guests: e.target.value })
-                        }
-                        className="w-full px-3 py-2.5 bg-slate-50/60 focus:bg-white rounded-xl border border-slate-200/80 text-xs outline-none focus:border-[#19a64b] focus:ring-2 focus:ring-[#19a64b]/10 transition-all cursor-pointer"
-                      >
-                        <option value="1">1 Person</option>
-                        <option value="2">2 Persons (Couple)</option>
-                        <option value="3-5">3 - 5 Persons (Family)</option>
-                        <option value="6+">6+ Persons (Group)</option>
-                      </select>
-                    </div>
 
                     <button
                       type="submit"

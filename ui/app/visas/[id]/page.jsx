@@ -238,13 +238,14 @@ export default function VisaDetailPage() {
                 </div>
 
                 <div className="space-y-3 pt-1">
-                  <button
-                    onClick={scrollToEnquiry}
+                  <a
+                                  href={`https://wa.me/7025144666?text=Hi!%20I%20want%20to%20talk%20to%20an%20expert%20about%20${encodeURIComponent(visaItem.title)}.`}
+    target="_blank"
                     className="w-full bg-[#008c45] hover:bg-[#00783b] active:scale-[0.98] text-white font-semibold py-3.5 px-6 rounded-full flex items-center justify-center gap-2 shadow-sm transition-all duration-200 text-sm cursor-pointer"
                   >
                     <span>Check Eligibility</span>
                     <FaArrowRight className="text-xs" />
-                  </button>
+                  </a>
 
                   <a
                     href={`https://wa.me/7025144666?text=Hi!%20I%20want%20to%20talk%20to%20an%20expert%20about%20${encodeURIComponent(visaItem.title)}.`}

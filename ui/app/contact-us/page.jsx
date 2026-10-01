@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import PhoneInput from "react-phone-number-input";
@@ -185,12 +185,13 @@ export default function ContactUsPage() {
     name: "",
     email: "",
     phone: "",
-    service: "Tour Packages",
+    service: "",
     message: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const resetTimerRef = useRef(null);
 
   const heroRef = useRef(null);
 
@@ -203,17 +204,60 @@ export default function ContactUsPage() {
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "35%"]);
   const bgScale = useTransform(scrollYProgress, [0, 1], [1.02, 1.15]);
 
+  useEffect(() => {
+    return () => {
+      if (resetTimerRef.current) {
+        clearTimeout(resetTimerRef.current);
+      }
+    };
+  }, []);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleResetForm = () => {
+    if (resetTimerRef.current) {
+      clearTimeout(resetTimerRef.current);
+    }
+    setSubmitted(false);
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      service: "",
+      message: "",
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    const messageText = `Hi Middle East Travels,\n\nI would like to make an inquiry:\n\n👤 *Name:* ${formData.name}\n📞 *Phone:* ${formData.phone || "N/A"}\n✉️ *Email:* ${formData.email || "N/A"}\n🎯 *Service:* ${formData.service || "N/A"}\n💬 *Message:* ${formData.message || "N/A"}`;
+    const whatsappUrl = `https://wa.me/7025144666?text=${encodeURIComponent(messageText)}`;
+
+    window.open(whatsappUrl, "_blank");
+
     setTimeout(() => {
       setIsSubmitting(false);
       setSubmitted(true);
     }, 1200);
+
+    if (resetTimerRef.current) {
+      clearTimeout(resetTimerRef.current);
+    }
+
+    resetTimerRef.current = setTimeout(() => {
+      setSubmitted(false);
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        service: "",
+        message: "",
+      });
+    }, 10000);
   };
 
   return (
@@ -413,7 +457,7 @@ export default function ContactUsPage() {
                     travel experts will contact you within 30 minutes.
                   </p>
                   <button
-                    onClick={() => setSubmitted(false)}
+                    onClick={handleResetForm}
                     className="mt-3 px-6 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-[#19a64b] hover:bg-slate-50 transition-all cursor-pointer"
                   >
                     Send another message
@@ -479,13 +523,13 @@ export default function ContactUsPage() {
                         name="service"
                         value={formData.service}
                         onChange={handleChange}
+                        required
                         className="w-full px-4  py-3 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50/60 focus:bg-white focus:border-[#19a64b] focus:outline-none transition-all cursor-pointer "
                       >
-                        <option value="Tour Packages">Holiday Tour Packages</option>
-                        <option value="Visa Services">Visa Processing</option>
-                        <option value="Flight Bookings">Flight Tickets</option>
-                        <option value="Hotel Bookings">Hotel Reservations</option>
-                        <option value="Custom Itinerary">Customized Trip</option>
+                        <option value="">Select Service</option>
+                        <option value="Tour Packages">Tour Packages</option>
+                        <option value="Visa Services">Visa Services</option>
+                        <option value="Flight Tickets">Flight Tickets</option>
                       </select>
                     </div>
                   </div>

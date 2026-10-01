@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
@@ -23,18 +23,60 @@ export default function Contact() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const resetTimerRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (resetTimerRef.current) {
+        clearTimeout(resetTimerRef.current);
+      }
+    };
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleResetForm = () => {
+    if (resetTimerRef.current) {
+      clearTimeout(resetTimerRef.current);
+    }
+    setSubmitted(false);
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      message: "",
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    const messageText = `Hi Middle East Travels,\n\nI would like to make an inquiry:\n\n👤 *Name:* ${formData.name}\n📞 *Phone:* ${formData.phone || "N/A"}\n✉️ *Email:* ${formData.email || "N/A"}\n💬 *Message:* ${formData.message || "N/A"}`;
+    const whatsappUrl = `https://wa.me/7025144666?text=${encodeURIComponent(messageText)}`;
+
+    window.open(whatsappUrl, "_blank");
+
     setTimeout(() => {
       setIsSubmitting(false);
       setSubmitted(true);
     }, 1000);
+
+    if (resetTimerRef.current) {
+      clearTimeout(resetTimerRef.current);
+    }
+
+    resetTimerRef.current = setTimeout(() => {
+      setSubmitted(false);
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        message: "",
+      });
+    }, 10000);
   };
 
   return (
@@ -83,7 +125,7 @@ export default function Contact() {
                   Thank you for reaching out. Our team will get back to you shortly.
                 </p>
                 <button
-                  onClick={() => setSubmitted(false)}
+                  onClick={handleResetForm}
                   className="mt-2 text-xs font-semibold text-[#19A64B] hover:underline cursor-pointer"
                 >
                   Send another message
