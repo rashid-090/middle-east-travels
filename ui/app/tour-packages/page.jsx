@@ -347,7 +347,7 @@ export default function TourPackagesPage() {
               className="absolute -inset-y-12 inset-x-0 w-full h-[130%]"
             >
               <Image
-                src="/headerbg1.webp"
+                src="/image123.webp"
                 alt="World Tour Packages Background"
                 fill
                 priority
