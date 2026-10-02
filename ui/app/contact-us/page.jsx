@@ -77,6 +77,19 @@ const branchesData = [
     mapUrl:
       "https://maps.app.goo.gl/pQSkEP1AihUsipBg8",
   },
+  {
+    id: 5,
+    city: "Puducherry",
+    title: "Middle East Travels & Tourism",
+    image:
+      "https://images.unsplash.com/photo-1597073642928-48c0971f7ded?q=80",
+    address:
+      "No. 43, Maraimalai Adigal Salai, Orleanpet, Puducherry – 605005, Puducherry, India",
+    email: "info@middleeasttravels.in",
+    phone: "+91 87148 06661",
+    mapUrl:
+      "#",
+  },
 ];
 
 function renderBranchCard(branch) {

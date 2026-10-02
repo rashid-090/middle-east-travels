@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -23,9 +23,14 @@ export default function VisasListingPage() {
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("All");
   const [sortBy, setSortBy] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
+
+  const cacheRef = useRef(new Map());
+  const abortControllerRef = useRef(null);
+  const requestIdRef = useRef(0);
 
   const regions = [
     "All Regions",
@@ -36,20 +41,74 @@ export default function VisasListingPage() {
     "Americas",
   ];
 
-  // Fetch only 8 items from API based on currentPage, searchQuery, selectedRegion, and sortBy
+  // Debounce search query: 350ms delay, minimum 3 characters required to trigger search
   useEffect(() => {
+    const trimmed = searchQuery.trim();
+
+    if (trimmed.length === 0) {
+      setDebouncedQuery("");
+      setCurrentPage(1);
+      return;
+    }
+
+    if (trimmed.length < 3) {
+      if (debouncedQuery !== "") {
+        const timer = setTimeout(() => {
+          setDebouncedQuery("");
+          setCurrentPage(1);
+        }, 350);
+        return () => clearTimeout(timer);
+      }
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setDebouncedQuery(trimmed);
+      setCurrentPage(1);
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, debouncedQuery]);
+
+  // Fetch only 8 items from API based on currentPage, debouncedQuery, selectedRegion, and sortBy
+  useEffect(() => {
+    // Cancel previous in-flight request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
+    const currentRequestId = ++requestIdRef.current;
     let isSubscribed = true;
 
     async function fetchVisas() {
-      setIsLoading(true);
       const start = (currentPage - 1) * ITEMS_PER_PAGE;
       const end = currentPage * ITEMS_PER_PAGE;
+
+      const cacheKey = JSON.stringify({
+        q: debouncedQuery,
+        reg: selectedRegion,
+        sort: sortBy,
+        page: currentPage,
+      });
+
+      // Check client-side cache first to prevent duplicate network calls
+      if (cacheRef.current.has(cacheKey)) {
+        const cachedData = cacheRef.current.get(cacheKey);
+        setVisasData(cachedData.items);
+        setTotalCount(cachedData.total);
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
 
       try {
         let filterConditions = [`_type == "visaService"`];
 
-        if (searchQuery.trim()) {
-          const q = searchQuery.trim().replace(/"/g, '\\"');
+        if (debouncedQuery) {
+          const q = debouncedQuery.replace(/[\\"*]/g, "\\$&");
           filterConditions.push(`(title match "*${q}*" || duration match "*${q}*")`);
         }
 
@@ -81,86 +140,106 @@ export default function VisasListingPage() {
           "items": *[${filterString}] ${orderString} [${start}...${end}]{ _id, title, slug, duration, validity, price, badge, image, highlights }
         }`;
 
-        const data = await client.fetch(query);
+        const data = await client.fetch(query, {}, { signal: controller.signal });
 
-        if (isSubscribed) {
-          if (data && data.items && data.total > 0) {
-            let formatted = data.items.map((item) => ({
-              id: item._id,
-              title: item.title,
-              slug: item.slug?.current || item.slug || item._id,
-              duration: item.duration || "",
-              validity: item.validity || "",
-              price: item.price || "",
-              badge: item.badge || "",
-              image: item.image
-                ? urlFor(item.image)?.url()
-                : "/visapageban.webp",
-              highlights: item.highlights || [],
-              link: `/visas/${item.slug?.current || item.slug || item._id}`,
-            }));
+        if (!isSubscribed || requestIdRef.current !== currentRequestId) {
+          return;
+        }
 
-            // Client-side price sorting if applicable
-            if (sortBy === "price-low") {
-              formatted.sort((a, b) => {
-                const pA = parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0;
-                const pB = parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0;
-                return pA - pB;
-              });
-            } else if (sortBy === "price-high") {
-              formatted.sort((a, b) => {
-                const pA = parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0;
-                const pB = parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0;
-                return pB - pA;
-              });
-            }
+        if (data && data.items && data.total > 0) {
+          let formatted = data.items.map((item) => ({
+            id: item._id,
+            title: item.title,
+            slug: item.slug?.current || item.slug || item._id,
+            duration: item.duration || "",
+            validity: item.validity || "",
+            price: item.price || "",
+            badge: item.badge || "",
+            image: item.image
+              ? urlFor(item.image)?.url()
+              : "/visapageban.webp",
+            highlights: item.highlights || [],
+            link: `/visas/${item.slug?.current || item.slug || item._id}`,
+          }));
 
-            setVisasData(formatted);
-            setTotalCount(data.total);
-          } else {
-            // Fallback dataset slicing logic
-            const filteredFallback = visaPackagesData.filter((item) => {
-              const matchesSearch =
-                !searchQuery ||
-                (item.title && item.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
-                (item.duration && item.duration.toLowerCase().includes(searchQuery.toLowerCase()));
-
-              let matchesRegion = true;
-              if (selectedRegion !== "All Regions" && selectedRegion !== "All") {
-                const t = (item.title || "").toLowerCase();
-                if (selectedRegion === "Middle East") {
-                  matchesRegion = ["uae", "saudi", "qatar", "oman", "dubai", "kuwait", "bahrain"].some((r) => t.includes(r));
-                } else if (selectedRegion === "Asia") {
-                  matchesRegion = ["singapore", "thailand", "japan", "malaysia", "bali", "vietnam"].some((r) => t.includes(r));
-                } else if (selectedRegion === "Europe") {
-                  matchesRegion = ["uk", "schengen", "europe"].some((r) => t.includes(r));
-                } else if (selectedRegion === "Americas") {
-                  matchesRegion = ["usa", "canada"].some((r) => t.includes(r));
-                }
-              }
-              return matchesSearch && matchesRegion;
-            }).sort((a, b) => {
+          // Client-side price sorting if applicable
+          if (sortBy === "price-low") {
+            formatted.sort((a, b) => {
               const pA = parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0;
               const pB = parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0;
-              if (sortBy === "price-low") return pA - pB;
-              if (sortBy === "price-high") return pB - pA;
-              return 0;
+              return pA - pB;
             });
-
-            setTotalCount(filteredFallback.length);
-            setVisasData(filteredFallback.slice(start, end));
+          } else if (sortBy === "price-high") {
+            formatted.sort((a, b) => {
+              const pA = parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0;
+              const pB = parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0;
+              return pB - pA;
+            });
           }
+
+          // Cache result (limit cache to 50 items)
+          if (cacheRef.current.size > 50) {
+            const firstKey = cacheRef.current.keys().next().value;
+            cacheRef.current.delete(firstKey);
+          }
+          cacheRef.current.set(cacheKey, { items: formatted, total: data.total });
+
+          setVisasData(formatted);
+          setTotalCount(data.total);
+        } else {
+          // Fallback dataset slicing logic
+          const filteredFallback = visaPackagesData.filter((item) => {
+            const matchesSearch =
+              !debouncedQuery ||
+              (item.title && item.title.toLowerCase().includes(debouncedQuery.toLowerCase())) ||
+              (item.duration && item.duration.toLowerCase().includes(debouncedQuery.toLowerCase()));
+
+            let matchesRegion = true;
+            if (selectedRegion !== "All Regions" && selectedRegion !== "All") {
+              const t = (item.title || "").toLowerCase();
+              if (selectedRegion === "Middle East") {
+                matchesRegion = ["uae", "saudi", "qatar", "oman", "dubai", "kuwait", "bahrain"].some((r) => t.includes(r));
+              } else if (selectedRegion === "Asia") {
+                matchesRegion = ["singapore", "thailand", "japan", "malaysia", "bali", "vietnam"].some((r) => t.includes(r));
+              } else if (selectedRegion === "Europe") {
+                matchesRegion = ["uk", "schengen", "europe"].some((r) => t.includes(r));
+              } else if (selectedRegion === "Americas") {
+                matchesRegion = ["usa", "canada"].some((r) => t.includes(r));
+              }
+            }
+            return matchesSearch && matchesRegion;
+          }).sort((a, b) => {
+            const pA = parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0;
+            const pB = parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0;
+            if (sortBy === "price-low") return pA - pB;
+            if (sortBy === "price-high") return pB - pA;
+            return 0;
+          });
+
+          const sliced = filteredFallback.slice(start, end);
+          if (cacheRef.current.size > 50) {
+            const firstKey = cacheRef.current.keys().next().value;
+            cacheRef.current.delete(firstKey);
+          }
+          cacheRef.current.set(cacheKey, { items: sliced, total: filteredFallback.length });
+
+          setTotalCount(filteredFallback.length);
+          setVisasData(sliced);
         }
       } catch (error) {
+        // Silently ignore aborted requests
+        if (error?.name === "AbortError" || controller.signal.aborted) {
+          return;
+        }
         console.error("Error fetching visa services from Sanity API:", error);
-        if (isSubscribed) {
+        if (isSubscribed && requestIdRef.current === currentRequestId) {
           const start = (currentPage - 1) * ITEMS_PER_PAGE;
           const end = currentPage * ITEMS_PER_PAGE;
           setTotalCount(visaPackagesData.length);
           setVisasData(visaPackagesData.slice(start, end));
         }
       } finally {
-        if (isSubscribed) {
+        if (isSubscribed && requestIdRef.current === currentRequestId) {
           setIsLoading(false);
         }
       }
@@ -170,8 +249,9 @@ export default function VisasListingPage() {
 
     return () => {
       isSubscribed = false;
+      controller.abort();
     };
-  }, [currentPage, searchQuery, selectedRegion, sortBy]);
+  }, [currentPage, debouncedQuery, selectedRegion, sortBy]);
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
@@ -187,6 +267,11 @@ export default function VisasListingPage() {
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    setDebouncedQuery("");
     setCurrentPage(1);
   };
 
@@ -203,6 +288,7 @@ export default function VisasListingPage() {
   const resetAllFilters = () => {
     setSelectedRegion("All Regions");
     setSearchQuery("");
+    setDebouncedQuery("");
     setSortBy("default");
     setCurrentPage(1);
   };
@@ -255,14 +341,14 @@ export default function VisasListingPage() {
                   placeholder="Search packages..."
                   value={searchQuery}
                   onChange={handleSearchChange}
+                  aria-label="Search visa packages"
                   className="w-full bg-transparent text-slate-900 placeholder-slate-400 text-xs sm:text-sm outline-hidden font-medium"
                 />
                 {searchQuery && (
                   <button
-                    onClick={() => {
-                      setSearchQuery("");
-                      setCurrentPage(1);
-                    }}
+                    type="button"
+                    onClick={handleClearSearch}
+                    aria-label="Clear search"
                     className="text-xs text-slate-400 hover:text-slate-700 ml-1 cursor-pointer font-medium"
                   >
                     ✕

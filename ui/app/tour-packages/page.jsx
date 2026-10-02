@@ -72,6 +72,7 @@ export default function TourPackagesPage() {
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedRegion, setSelectedRegion] = useState("All");
   const [activeBannerCategory, setActiveBannerCategory] =
@@ -80,6 +81,9 @@ export default function TourPackagesPage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const bannerRef = useRef(null);
+  const cacheRef = useRef(new Map());
+  const abortControllerRef = useRef(null);
+  const requestIdRef = useRef(0);
 
   const categories = ["All", "International", "Domestic"];
   const regions = [
@@ -91,20 +95,75 @@ export default function TourPackagesPage() {
     "Americas",
   ];
 
-  // Fetch only 8 items from Sanity API based on pagination & active filters
+  // Debounce search query: 350ms delay, minimum 3 characters required to trigger search
   useEffect(() => {
+    const trimmed = searchQuery.trim();
+
+    if (trimmed.length === 0) {
+      setDebouncedQuery("");
+      setCurrentPage(1);
+      return;
+    }
+
+    if (trimmed.length < 3) {
+      if (debouncedQuery !== "") {
+        const timer = setTimeout(() => {
+          setDebouncedQuery("");
+          setCurrentPage(1);
+        }, 350);
+        return () => clearTimeout(timer);
+      }
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setDebouncedQuery(trimmed);
+      setCurrentPage(1);
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, debouncedQuery]);
+
+  // Fetch items from Sanity API based on pagination, debounced search & active filters
+  useEffect(() => {
+    // Cancel previous in-flight request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
+    const currentRequestId = ++requestIdRef.current;
     let isSubscribed = true;
 
     async function fetchTourPackages() {
-      setIsLoading(true);
       const start = (currentPage - 1) * ITEMS_PER_PAGE;
       const end = currentPage * ITEMS_PER_PAGE;
+
+      const cacheKey = JSON.stringify({
+        q: debouncedQuery,
+        cat: selectedCategory,
+        reg: selectedRegion,
+        sort: sortBy,
+        page: currentPage,
+      });
+
+      // Check client-side cache first to prevent duplicate network calls
+      if (cacheRef.current.has(cacheKey)) {
+        const cachedData = cacheRef.current.get(cacheKey);
+        setPackagesList(cachedData.items);
+        setTotalCount(cachedData.total);
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
 
       try {
         let filterConditions = [`_type == "tourPackage"`];
 
-        if (searchQuery.trim()) {
-          const q = searchQuery.trim().replace(/"/g, '\\"');
+        if (debouncedQuery) {
+          const q = debouncedQuery.replace(/[\\"*]/g, "\\$&");
           filterConditions.push(
             `(title match "*${q}*" || fullTitle match "*${q}*" || region match "*${q}*")`
           );
@@ -133,134 +192,154 @@ export default function TourPackagesPage() {
         const filterString = filterConditions.join(" && ");
         const orderString = `| order(orderRank asc, _createdAt desc)`;
 
+        // Optimized projection: only fetch fields required by the listing card
         const query = `{
           "total": count(*[${filterString}]),
-          "items": *[${filterString}] ${orderString} [${start}...${end}]{ _id, id, title, fullTitle, category, region, duration, price, oldPrice, badge, badgeType, rating, reviewsCount, image, gallery, overview, inclusionIcons, highlights, itinerary, inclusions, exclusions }
+          "items": *[${filterString}] ${orderString} [${start}...${end}]{
+            _id,
+            id,
+            title,
+            fullTitle,
+            duration,
+            price,
+            oldPrice,
+            badge,
+            badgeType,
+            rating,
+            image,
+            inclusionIcons,
+            highlights
+          }
         }`;
 
-        const data = await client.fetch(query);
+        const data = await client.fetch(query, {}, { signal: controller.signal });
 
-        if (isSubscribed) {
-          if (data && data.items && data.total > 0) {
-            let formatted = data.items.map((item) => {
-              const slugId = item.id?.current || item.id || item._id;
-              const mainImageUrl = item.image ? urlFor(item.image)?.url() : null;
-              const galleryUrls =
-                item.gallery && Array.isArray(item.gallery)
-                  ? item.gallery.map((g) => urlFor(g)?.url()).filter(Boolean)
-                  : [];
+        if (!isSubscribed || requestIdRef.current !== currentRequestId) {
+          return;
+        }
 
-              return {
-                id: slugId,
-                title: item.title,
-                fullTitle: item.fullTitle || `${item.title} Tour Packages`,
-                category: item.category || "International",
-                region: item.region || "Eurasia",
-                duration: item.duration || "5 Days 4 Nights",
-                price: item.price,
-                oldPrice: item.oldPrice,
-                badge: item.badge,
-                badgeType: item.badgeType || "fire-orange",
-                rating: item.rating ? Number(item.rating) : 4.8,
-                reviewsCount: item.reviewsCount ? Number(item.reviewsCount) : 150,
-                image:
-                  mainImageUrl ||
-                  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=85",
-                gallery:
-                  galleryUrls.length > 0
-                    ? galleryUrls
-                    : [mainImageUrl].filter(Boolean),
-                link: `/tour-packages/${slugId}`,
-                overview: item.overview || "",
-                inclusionIcons: item.inclusionIcons || [
-                  { icon: "hotel", label: "04 Nights stay" },
-                  { icon: "breakfast", label: "Daily breakfast" },
-                  { icon: "transfer", label: "All transfers" },
-                  { icon: "sightseeing", label: "Sight seeing" },
-                ],
-                highlights: item.highlights || [],
-                itinerary: item.itinerary || [],
-                inclusions: item.inclusions || [],
-                exclusions: item.exclusions || [],
-              };
-            });
+        if (data && data.items && data.total > 0) {
+          let formatted = data.items.map((item) => {
+            const slugId = item.id?.current || item.id || item._id;
+            const mainImageUrl = item.image ? urlFor(item.image)?.url() : null;
 
-            // Apply price/rating sorting
-            if (sortBy === "price-low") {
-              formatted.sort(
-                (a, b) =>
-                  (parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0) -
-                  (parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0)
-              );
-            } else if (sortBy === "price-high") {
-              formatted.sort(
-                (a, b) =>
-                  (parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0) -
-                  (parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0)
-              );
-            } else if (sortBy === "rating") {
-              formatted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-            }
+            return {
+              id: slugId,
+              title: item.title,
+              fullTitle: item.fullTitle || `${item.title} Tour Packages`,
+              duration: item.duration || "5 Days 4 Nights",
+              price: item.price,
+              oldPrice: item.oldPrice,
+              badge: item.badge,
+              badgeType: item.badgeType || "fire-orange",
+              rating: item.rating ? Number(item.rating) : 4.8,
+              image:
+                mainImageUrl ||
+                "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=85",
+              inclusionIcons: item.inclusionIcons || [
+                { icon: "hotel", label: "04 Nights stay" },
+                { icon: "breakfast", label: "Daily breakfast" },
+                { icon: "transfer", label: "All transfers" },
+                { icon: "sightseeing", label: "Sight seeing" },
+              ],
+              highlights: item.highlights || [],
+            };
+          });
 
-            setPackagesList(formatted);
-            setTotalCount(data.total);
-          } else {
-            // Fallback dataset slicing logic
-            const filteredFallback = tourPackagesData
-              .filter((pkg) => {
-                const matchesSearch =
-                  !searchQuery ||
-                  pkg.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                  (pkg.fullTitle &&
-                    pkg.fullTitle
-                      .toLowerCase()
-                      .includes(searchQuery.toLowerCase())) ||
-                  (pkg.region &&
+          // Apply price/rating sorting
+          if (sortBy === "price-low") {
+            formatted.sort(
+              (a, b) =>
+                (parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0) -
+                (parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0)
+            );
+          } else if (sortBy === "price-high") {
+            formatted.sort(
+              (a, b) =>
+                (parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0) -
+                (parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0)
+            );
+          } else if (sortBy === "rating") {
+            formatted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+          }
+
+          // Cache result (limit cache to 50 items to conserve memory)
+          if (cacheRef.current.size > 50) {
+            const firstKey = cacheRef.current.keys().next().value;
+            cacheRef.current.delete(firstKey);
+          }
+          cacheRef.current.set(cacheKey, { items: formatted, total: data.total });
+
+          setPackagesList(formatted);
+          setTotalCount(data.total);
+        } else {
+          // Fallback dataset slicing logic
+          const filteredFallback = tourPackagesData
+            .filter((pkg) => {
+              const matchesSearch =
+                !debouncedQuery ||
+                pkg.title.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
+                (pkg.fullTitle &&
+                  pkg.fullTitle
+                    .toLowerCase()
+                    .includes(debouncedQuery.toLowerCase())) ||
+                (pkg.region &&
+                  pkg.region
+                    .toLowerCase()
+                    .includes(debouncedQuery.toLowerCase()));
+
+              const matchesCategory =
+                selectedCategory === "All" ||
+                (Array.isArray(pkg.category)
+                  ? pkg.category.includes(selectedCategory)
+                  : pkg.category === selectedCategory);
+
+              const matchesRegion =
+                selectedRegion === "All" ||
+                (pkg.region &&
+                  (pkg.region === selectedRegion ||
                     pkg.region
                       .toLowerCase()
-                      .includes(searchQuery.toLowerCase()));
+                      .includes(selectedRegion.toLowerCase())));
 
-                const matchesCategory =
-                  selectedCategory === "All" ||
-                  (Array.isArray(pkg.category)
-                    ? pkg.category.includes(selectedCategory)
-                    : pkg.category === selectedCategory);
+              return matchesSearch && matchesCategory && matchesRegion;
+            })
+            .sort((a, b) => {
+              const pA =
+                parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0;
+              const pB =
+                parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0;
+              if (sortBy === "price-low") return pA - pB;
+              if (sortBy === "price-high") return pB - pA;
+              if (sortBy === "rating") return (b.rating || 0) - (a.rating || 0);
+              return 0;
+            });
 
-                const matchesRegion =
-                  selectedRegion === "All" ||
-                  (pkg.region &&
-                    (pkg.region === selectedRegion ||
-                      pkg.region
-                        .toLowerCase()
-                        .includes(selectedRegion.toLowerCase())));
+          const sliced = filteredFallback.slice(start, end);
 
-                return matchesSearch && matchesCategory && matchesRegion;
-              })
-              .sort((a, b) => {
-                const pA =
-                  parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0;
-                const pB =
-                  parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0;
-                if (sortBy === "price-low") return pA - pB;
-                if (sortBy === "price-high") return pB - pA;
-                if (sortBy === "rating") return (b.rating || 0) - (a.rating || 0);
-                return 0;
-              });
-
-            setTotalCount(filteredFallback.length);
-            setPackagesList(filteredFallback.slice(start, end));
+          if (cacheRef.current.size > 50) {
+            const firstKey = cacheRef.current.keys().next().value;
+            cacheRef.current.delete(firstKey);
           }
+          cacheRef.current.set(cacheKey, { items: sliced, total: filteredFallback.length });
+
+          setTotalCount(filteredFallback.length);
+          setPackagesList(sliced);
         }
       } catch (err) {
+        // Silently ignore aborted requests
+        if (err?.name === "AbortError" || controller.signal.aborted) {
+          return;
+        }
         console.error("Error fetching tour packages from Sanity:", err);
-        if (isSubscribed) {
+        if (isSubscribed && requestIdRef.current === currentRequestId) {
           const start = (currentPage - 1) * ITEMS_PER_PAGE;
           const end = currentPage * ITEMS_PER_PAGE;
           setTotalCount(tourPackagesData.length);
           setPackagesList(tourPackagesData.slice(start, end));
         }
       } finally {
-        if (isSubscribed) {
+        if (isSubscribed && requestIdRef.current === currentRequestId) {
           setIsLoading(false);
         }
       }
@@ -270,13 +349,13 @@ export default function TourPackagesPage() {
 
     return () => {
       isSubscribed = false;
+      controller.abort();
     };
   }, [
     currentPage,
-    searchQuery,
+    debouncedQuery,
     selectedCategory,
     selectedRegion,
-    activeBannerCategory,
     sortBy,
   ]);
 
@@ -303,6 +382,11 @@ export default function TourPackagesPage() {
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    setDebouncedQuery("");
     setCurrentPage(1);
   };
 
@@ -328,6 +412,7 @@ export default function TourPackagesPage() {
     setSelectedCategory("All");
     setSelectedRegion("All");
     setSearchQuery("");
+    setDebouncedQuery("");
     setSortBy("default");
     setCurrentPage(1);
   };
@@ -420,11 +505,9 @@ export default function TourPackagesPage() {
                     />
                     {searchQuery && (
                       <button
-                        onClick={() => {
-                          setSearchQuery("");
-                          setCurrentPage(1);
-                        }}
+                        onClick={handleClearSearch}
                         className="text-xs text-slate-400 hover:text-slate-700 ml-1 cursor-pointer font-medium"
+                        aria-label="Clear search"
                       >
                         ✕
                       </button>
