@@ -4,14 +4,8 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import TouchMarquee from "./TouchMarquee";
-import {
-  FaArrowRight,
-  FaFire,
-  FaCrown,
-  FaStar,
-  FaTag,
-} from "react-icons/fa6";
-import { HiSparkles } from "react-icons/hi2";
+import { FaArrowRight, FaFire, FaCrown, FaStar, FaTag } from "react-icons/fa6";
+import { HiOutlineCheckBadge, HiSparkles } from "react-icons/hi2";
 import { visaPackagesData } from "@/data/allData.js";
 import { IoTicketOutline } from "react-icons/io5";
 import { client, urlFor } from "@/lib/sanity";
@@ -48,7 +42,8 @@ export default function VisaServices() {
           validity,
           price,
           badge,
-          image
+          image,
+          highlights
         }`;
         const data = await client.fetch(query);
         if (isSubscribed && Array.isArray(data) && data.length > 0) {
@@ -57,8 +52,10 @@ export default function VisaServices() {
             title: item.title,
             slug: item.slug?.current || item.slug || item._id,
             duration: item.duration || "",
+            validity: item.validity || "",
             price: item.price || "",
             badge: item.badge || "",
+            highlights: item.highlights || [],
             image: item.image
               ? urlFor(item.image)?.auto("format").quality(80).url()
               : "/visapageban.webp",
@@ -80,12 +77,12 @@ export default function VisaServices() {
   return (
     <section className="w-full py-12 lg:py-16 bg-slate-50 overflow-hidden">
       <div className="w-11/12 mx-auto space-y-6">
-        
         {/* Section Header Row */}
         <div className="flex flex-col md:flex-row items-start gap-y-5 md:items-center justify-between">
           <div className="space-y-2">
             <h2 className="text-2xl sm:text-3xl font-semibold text-[#021b38] tracking-tight">
-              Visa Services for <span className="text-primary">Your International Journey</span>
+              Visa Services for{" "}
+              <span className="text-primary">Your International Journey</span>
             </h2>
             <p>Simple, reliable visa assistance for your next trip. </p>
           </div>
@@ -103,7 +100,10 @@ export default function VisaServices() {
         <div className="w-full py-2">
           <TouchMarquee speed={1.2}>
             {visaServices.map((item) => (
-              <div key={item.id} className="w-[300px] lg:w-[320px] px-2.5 py-2 shrink-0">
+              <div
+                key={item.id}
+                className="w-[300px] lg:w-[320px] px-2.5 py-2 shrink-0"
+              >
                 <Link
                   href={`/visas/${item.slug || item.id}`}
                   className="bg-white rounded-[2.25rem] overflow-hidden border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full group block"
@@ -120,12 +120,13 @@ export default function VisaServices() {
                         className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
                       />
 
-                    {/* Badge Overlay at Top-Right if available */}
-                    {item.badge && (
-                      <span className="absolute flex items-center gap-2 top-4 left-3 bg-white/95 backdrop-blur-xs text-[#021b38] text-[11px] font-semibold px-2.5 py-1 rounded-full shadow-xs z-10">
-                        <IoTicketOutline className="text-primary"/>{item.badge}
-                      </span>
-                    )}
+                      {/* Badge Overlay at Top-Right if available */}
+                      {item.badge && (
+                        <span className="absolute flex items-center gap-2 top-4 left-3 bg-white/95 backdrop-blur-xs text-[#021b38] text-[11px] font-semibold px-2.5 py-1 rounded-full shadow-xs z-10">
+                          <IoTicketOutline className="text-primary" />
+                          {item.badge}
+                        </span>
+                      )}
                     </div>
 
                     <div className="p-5 pt-0">
@@ -134,9 +135,22 @@ export default function VisaServices() {
                         {item.title}
                       </h3>
 
-                      {/* Duration / Processing Time */}
-                      {item.duration && (
-                        <p className="text-xs text-slate-500 font-normal mb-3">
+                      {item.highlights && item.highlights.length > 0 ? (
+                        <ul className="space-y-0.5 py-2">
+                          {item?.highlights
+                            ?.slice(0, 2)
+                            .map((highlight, index) => (
+                              <li
+                                key={index}
+                                className="flex items-start gap-2 text-xs text-slate-600 font-normal leading-snug"
+                              >
+                                <HiOutlineCheckBadge className="text-primary text-sm shrink-0 mt-0.5" />
+                                <span>{highlight}</span>
+                              </li>
+                            ))}
+                        </ul>
+                      ) : (
+                        <p className="text-xs text-slate-500 font-normal leading-relaxed">
                           {item.duration}
                         </p>
                       )}
@@ -149,7 +163,8 @@ export default function VisaServices() {
                           </span>
                           <span className="text-lg sm:text-xl font-semibold text-slate-950 tracking-tight">
                             {item.price
-                              ? String(item.price).includes("₹") || String(item.price).includes("INR")
+                              ? String(item.price).includes("₹") ||
+                                String(item.price).includes("INR")
                                 ? item.price
                                 : `INR ₹${item.price}`
                               : ""}
@@ -167,7 +182,6 @@ export default function VisaServices() {
             ))}
           </TouchMarquee>
         </div>
-
       </div>
     </section>
   );
