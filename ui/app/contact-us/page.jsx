@@ -30,7 +30,7 @@ const branchesData = [
     city: "CALICUT",
     title: "METT Middle East Holidays & Travels pvt .ltd",
     image:
-      "https://images.unsplash.com/photo-1654673285799-272434e0ef00?q=80",
+      "/branches/CALICUT.webp",
     address:
       "63\\2914 Mavoor Rd, Emerald Mall, Ground Floor Arayidathupalam, Kozhikode, Kerala 673004",
     email: "visas.mettholidays@gmail.com",
@@ -43,7 +43,7 @@ const branchesData = [
     city: "COCHIN",
     title: "Middle East Travel & Tours",
     image:
-      "https://images.unsplash.com/photo-1590123732197-e7079d2ceb89?q=80",
+      "/branches/COCHIN.webp",
     address:
       "Jai Building, Ground Floor Opp : Vallamattam Estate Kurishupally Road Near Cochin Shippiyard Ravipuram Cochin 15",
     email: "mettcok@gmail.com",
@@ -56,7 +56,7 @@ const branchesData = [
     city: "BANGALORE",
     title: "Middle East travels & tourism",
     image:
-      "https://images.unsplash.com/photo-1627306036351-036986f292a9?q=80",
+      "/branches/BANGALORE.webp",
     address:
       "No 137 Business Point Brigade Road Albert street Bangalore 560 025",
     email: "visablr@middleeasttravels.in",
@@ -69,7 +69,7 @@ const branchesData = [
     city: "DUBAI",
     title: "Middle East Holidays",
     image:
-      "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=600&q=80",
+      "/branches/DUBAI.webp",
     address:
       "Al Dar Building. Mezzanine Floor, M22. Opp Coral Deira Hotel , Al Muraqqabat St Deira– Dubai 04222299",
     email: "info@mettholidays.ae",
@@ -82,7 +82,7 @@ const branchesData = [
     city: "Puducherry",
     title: "Middle East Travels & Tourism",
     image:
-      "https://images.unsplash.com/photo-1597073642928-48c0971f7ded?q=80",
+      "/branches/Puducherry.webp",
     address:
       "No. 43, Maraimalai Adigal Salai, Orleanpet, Puducherry – 605005, Puducherry, India",
     email: "info@middleeasttravels.in",
