@@ -1,6 +1,6 @@
 {
-  "createdAt": "2026-10-02T10:02:18.751Z",
-  "studioVersion": "6.17.0",
+  "createdAt": "2026-10-07T12:04:15.510Z",
+  "studioVersion": "6.18.0",
   "version": 3,
   "workspaces": [
     {
@@ -13,7 +13,7 @@
       },
       "name": "default",
       "projectId": "j088vign",
-      "schema": "c97df5ca.create-schema.json",
+      "schema": "340fcdfb.create-schema.json",
       "title": "Middle-East Travels",
       "tools": "41c87638.create-tools.json"
     }
