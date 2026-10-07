@@ -107,12 +107,7 @@ export const tourPackage = defineType({
       initialValue: 4.8,
       validation: (Rule) => Rule.min(1).max(5),
     }),
-    defineField({
-      name: 'reviewsCount',
-      title: 'Reviews Count',
-      type: 'number',
-      initialValue: 150,
-    }),
+
     defineField({
       name: 'image',
       title: 'Main Cover Image',
@@ -169,7 +164,7 @@ export const tourPackage = defineType({
     }),
     defineField({
       name: 'highlights',
-      title: 'Package Highlights (Bullet Points)',
+      title: 'Card Front Highlight (Bullet Points)',
       type: 'array',
       of: [{ type: 'string' }],
     }),

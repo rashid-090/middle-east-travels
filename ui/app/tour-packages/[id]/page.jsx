@@ -114,7 +114,6 @@ export default function TourPackageDetailPage() {
           badge,
           badgeType,
           rating,
-          reviewsCount,
           image,
           gallery,
           overview,
@@ -146,7 +145,6 @@ export default function TourPackageDetailPage() {
             badge: data.badge,
             badgeType: data.badgeType || "fire-orange",
             rating: data.rating ? Number(data.rating) : 4.8,
-            reviewsCount: data.reviewsCount ? Number(data.reviewsCount) : 150,
             image: mainImageUrl || "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=85",
             gallery: galleryUrls.length > 0 ? galleryUrls : [mainImageUrl].filter(Boolean),
             overview: data.overview || "",
@@ -181,7 +179,6 @@ export default function TourPackageDetailPage() {
           badge,
           badgeType,
           rating,
-          reviewsCount,
           image,
           inclusionIcons,
           highlights
@@ -204,7 +201,6 @@ export default function TourPackageDetailPage() {
               badge: item.badge,
               badgeType: item.badgeType || "fire-orange",
               rating: item.rating ? Number(item.rating) : 4.8,
-              reviewsCount: item.reviewsCount ? Number(item.reviewsCount) : 150,
               image: mainImageUrl || "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=85",
               inclusionIcons: item.inclusionIcons || [
                 { icon: "hotel", label: "04 Nights stay" },

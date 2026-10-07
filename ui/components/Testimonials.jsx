@@ -90,15 +90,10 @@ export default function Testimonials() {
                         </div>
                       </div>
 
-                      {/* Branch Badge Pill */}
-                      <div className="mt-4 mb-3">
-                        <span className="inline-block px-3.5 py-1 rounded-full bg-primary/10 text-secondary font-medium text-xs border border-sky-100/80">
-                          {item.branch || "Calicut Branch"}
-                        </span>
-                      </div>
+                    
 
                       {/* Testimonial Quote Text */}
-                      <p className="text-slate-600 pb-8 text-sm leading-relaxed font-normal mb-2 line-clamp-4">
+                      <p className="text-slate-600 pb-8 mt-5 text-sm leading-relaxed font-normal mb-2 line-clamp-4">
                         {item.quote}
                       </p>
 
@@ -108,22 +103,10 @@ export default function Testimonials() {
                     {/* Bottom Author Row */}
                     <div className="border-t border-slate-100 pt-4 mt-auto flex items-center gap-3.5">
                       {/* Avatar Image or Colored Initial Badge */}
-                      {item.avatar ? (
-                        <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0 border border-slate-200 shadow-xs">
-                          <Image
-                            src={item.avatar}
-                            alt={item.name || "Traveller Avatar"}
-                            fill
-                            sizes="48px"
-                            loading="lazy"
-                            className="object-cover"
-                          />
-                        </div>
-                      ) : (
+                     
                         <div className={`w-12 h-12 rounded-full ${item.initialBg || "bg-pink-600"} text-white flex items-center justify-center font-bold text-sm tracking-wider shrink-0 shadow-xs`}>
                           {item.initials || "DP"}
                         </div>
-                      )}
 
                       <div className="space-y-1">
                         <h4 className="font-medium text-xs text-slate-900 uppercase tracking-wide leading-tight">
@@ -137,9 +120,7 @@ export default function Testimonials() {
                           ))}
                         </div>
 
-                        <p className="text-[10px] text-slate-400 font-normal leading-none">
-                          {item.timeAgo || "Verified Review"}
-                        </p>
+                       
                       </div>
                     </div>
 

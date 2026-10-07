@@ -15,12 +15,6 @@ export const testimonial = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'branch',
-      title: 'Branch Name',
-      type: 'string',
-      description: 'e.g. Calicut Branch, Cochin Branch',
-    }),
-    defineField({
       name: 'quote',
       title: 'Testimonial Quote',
       type: 'text',
@@ -33,11 +27,6 @@ export const testimonial = defineType({
       type: 'number',
       initialValue: 5,
       validation: (Rule) => Rule.min(1).max(5),
-    }),
-    defineField({
-      name: 'location',
-      title: 'Location / City',
-      type: 'string',
     }),
     defineField({
       name: 'avatar',
@@ -58,8 +47,6 @@ export const testimonial = defineType({
       const { title, subtitle, media } = selection
       return {
         title: title || 'Untitled Testimonial',
-        subtitle: subtitle ? `Branch: ${subtitle}` : '',
-        media: media,
       }
     },
   },

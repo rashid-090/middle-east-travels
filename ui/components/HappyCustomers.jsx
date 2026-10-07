@@ -3,22 +3,57 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import TouchMarquee from "./TouchMarquee";
-import { FaLocationDot, FaQuoteLeft } from "react-icons/fa6";
+import { FaLocationDot } from "react-icons/fa6";
 import { happyCustomersData } from "@/data/allData.js";
 import { client, urlFor } from "@/lib/sanity";
 
+const bgColors = [
+  "bg-pink-600",
+  "bg-blue-600",
+  "bg-emerald-600",
+  "bg-purple-600",
+  "bg-amber-600",
+  "bg-teal-600",
+];
+
+const getInitials = (name) => {
+  if (!name) return "ME";
+  return name
+    .trim()
+    .split(/\s+/)
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+};
+
+const formatInitialData = (items) => {
+  return items.map((item, index) => ({
+    id: item._id || item.id || index,
+    name: item.name,
+    location: item.location || "",
+    description: item.quote || item.description || "",
+    image: item.image || "/hpc/hc1.webp",
+    initials: getInitials(item.name),
+    initialBg: bgColors[index % bgColors.length],
+  }));
+};
+
 export default function HappyCustomers() {
-  const [happyCustomers, setHappyCustomers] = useState(happyCustomersData);
+  const [happyCustomers, setHappyCustomers] = useState(() =>
+    formatInitialData(happyCustomersData)
+  );
 
   useEffect(() => {
     async function fetchHappyCustomers() {
       try {
-        const query = `*[_type == "happyCustomer"] | order(orderRank asc, _createdAt desc){ _id, name, location, quote, image, avatar }`;
+        const query = `*[_type == "happyCustomer"] | order(orderRank asc, _createdAt desc){ _id, name, location, quote, image }`;
         const data = await client.fetch(query);
         if (data && data.length > 0) {
           const formatted = data.map((item, index) => {
-            let mainImageUrl = item.image ? urlFor(item.image)?.width(400).auto("format").quality(80).url() : null;
-            let avatarUrl = item.avatar ? urlFor(item.avatar)?.width(100).auto("format").quality(80).url() : null;
+            let mainImageUrl = item.image
+              ? urlFor(item.image)?.width(400).auto("format").quality(80).url()
+              : null;
 
             return {
               id: item._id || index,
@@ -26,7 +61,8 @@ export default function HappyCustomers() {
               location: item.location || "",
               description: item.quote || "",
               image: mainImageUrl || "/hpc/hc1.webp",
-              avatar: avatarUrl || "/hpc/user.avif",
+              initials: getInitials(item.name),
+              initialBg: bgColors[index % bgColors.length],
             };
           });
           setHappyCustomers(formatted);
@@ -39,7 +75,7 @@ export default function HappyCustomers() {
   }, []);
 
   return (
-    <section className="w-full py-10 sm:py-14 bg-white  overflow-hidden">
+    <section className="w-full py-10 sm:py-14 bg-white overflow-hidden">
       <div className="w-11/12 mx-auto space-y-4">
         
         {/* Section Header */}
@@ -80,17 +116,14 @@ export default function HappyCustomers() {
                     </div>
                   </div>
 
-                  {/* Footer - Customer Avatar & Name & Location */}
+                  {/* Footer - Customer Initial Badge & Name & Location */}
                   <div className="border-t border-slate-100 pt-3.5 mt-auto flex items-center gap-3">
-                    <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 border border-slate-200/80 shadow-xs">
-                      <Image
-                        src={customer.avatar}
-                        alt={customer.name}
-                        fill
-                        sizes="40px"
-                        loading="lazy"
-                        className="object-cover"
-                      />
+                    <div
+                      className={`w-10 h-10 rounded-full ${
+                        customer.initialBg || "bg-pink-600"
+                      } text-white flex items-center justify-center font-bold text-xs tracking-wider shrink-0 shadow-xs`}
+                    >
+                      {customer.initials || "ME"}
                     </div>
                     <div className="min-w-0 flex-1">
                       <h4 className="font-semibold text-xs text-slate-900 uppercase tracking-wide leading-tight truncate">

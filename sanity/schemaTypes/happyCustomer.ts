@@ -34,14 +34,6 @@ export const happyCustomer = defineType({
         hotspot: true,
       },
     }),
-    defineField({
-      name: 'avatar',
-      title: 'Avatar Image',
-      type: 'image',
-      options: {
-        hotspot: true,
-      },
-    }),
   ],
   preview: {
     select: {
