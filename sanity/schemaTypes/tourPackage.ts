@@ -1,5 +1,6 @@
 import { defineField, defineType } from 'sanity'
 import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list'
+import { validateMaxImageSize } from './imageValidation'
 
 export const tourPackage = defineType({
   name: 'tourPackage',
@@ -90,7 +91,18 @@ export const tourPackage = defineType({
       name: 'badge',
       title: 'Badge Text',
       type: 'string',
-      description: 'e.g. Popular, Most Booked, Special Offer',
+      options: {
+     list: [
+  { title: '💖 Recommended', value: '💖 Recommended' },
+  { title: '🔥 Popular', value: '🔥 Popular' },
+  { title: '🏆 Most Booked', value: '🏆 Most Booked' },
+  { title: '🎉 Special Offer', value: '🎉 Special Offer' },
+  { title: '📈 Trending', value: '📈 Trending' },
+  { title: '✨ Exclusive', value: '✨ Exclusive' },
+  { title: '💎 Premium', value: '💎 Premium' },
+  { title: '🌴 Seasonal Special', value: '🌴 Seasonal Special' },
+],
+      },
     }),
     defineField({
       name: 'badgeType',
@@ -122,13 +134,20 @@ export const tourPackage = defineType({
       options: {
         hotspot: true,
       },
-      validation: (Rule) => Rule.required(),
+      validation: (Rule) => Rule.required().custom(validateMaxImageSize(2)),
     }),
     defineField({
       name: 'gallery',
       title: 'Photo Gallery',
       type: 'array',
-      of: [{ type: 'image', options: { hotspot: true } }],
+      of: [
+        {
+          type: 'image',
+          options: { hotspot: true },
+          validation: (Rule) => Rule.custom(validateMaxImageSize(2)),
+        },
+      ],
+      validation: (Rule) => Rule.max(7).error('You can add a maximum of 7 images to the photo gallery'),
     }),
     defineField({
       name: 'itinerary',

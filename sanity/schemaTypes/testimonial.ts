@@ -1,5 +1,6 @@
 import { defineField, defineType } from 'sanity'
 import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list'
+import { validateMaxImageSize } from './imageValidation'
 
 export const testimonial = defineType({
   name: 'testimonial',
@@ -27,14 +28,6 @@ export const testimonial = defineType({
       type: 'number',
       initialValue: 5,
       validation: (Rule) => Rule.min(1).max(5),
-    }),
-    defineField({
-      name: 'avatar',
-      title: 'Customer Avatar Image',
-      type: 'image',
-      options: {
-        hotspot: true,
-      },
     }),
   ],
   preview: {

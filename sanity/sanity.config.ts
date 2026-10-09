@@ -1,8 +1,11 @@
+import React from 'react'
 import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { media } from 'sanity-plugin-media'
 import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list'
 import { schemaTypes } from './schemaTypes'
+import { StudioLayoutWithUploadGuard } from './components/StudioLayoutWithUploadGuard'
+import { RestrictedImageInput } from './components/RestrictedImageInput'
 
 export default defineConfig({
   name: 'default',
@@ -63,6 +66,25 @@ export default defineConfig({
     prev.filter(
       (tool) => tool.name !== 'vision' && tool.name !== 'releases' && tool.name !== 'release'
     ),
+
+  studio: {
+    components: {
+      layout: StudioLayoutWithUploadGuard,
+    },
+  },
+
+  form: {
+    components: {
+      input: (props: any) => {
+        const typeName = props.schemaType?.name
+        const baseTypeName = props.schemaType?.type?.name
+        if (typeName === 'image' || baseTypeName === 'image') {
+          return React.createElement(RestrictedImageInput, props)
+        }
+        return props.renderDefault(props)
+      },
+    },
+  },
 
   schema: {
     types: schemaTypes,

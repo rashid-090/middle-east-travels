@@ -107,7 +107,7 @@ function renderPackageCardContent(item) {
   return (
     <Link
       href={item.link || `/tour-packages/${item.id}`}
-      className="bg-white rounded-[2.25rem] border border-slate-200/80 shadow-2xl hover:shadow-2xl transition-all duration-300 p-3 flex flex-col justify-between h-full group block text-left w-full"
+      className="bg-white rounded-[2.25rem] relative border border-slate-200/80 shadow-2xl hover:shadow-2xl transition-all duration-300 p-3 flex flex-col justify-between h-full group block text-left w-full"
     >
       <div>
         {/* Top Smooth Rounded Image Container */}
@@ -131,7 +131,7 @@ function renderPackageCardContent(item) {
               {item.title} <span className="text-primary">Tour Packages</span>
             </h3>
             {item.rating && (
-              <div className="flex items-center gap-1 font-medium text-slate-900 text-xs shrink-0 pt-0.5">
+              <div className="absolute top-7 left-7 flex justify-center items-center bg-white p-1 px-2 rounded-full items-center gap-1 font-medium text-slate-900 text-xs shrink-0 pt-0.5">
                 <span>{item.rating}</span>
                 <FaStar className="text-amber-400 text-sm fill-amber-400" />
               </div>
@@ -171,7 +171,7 @@ function renderPackageCardContent(item) {
             <div className="flex items-baseline gap-1.5 flex-wrap">
               {item.oldPrice && (
                 <span className="text-xs text-slate-400 line-through font-normal">
-                 INR ₹{item.oldPrice}
+                  INR ₹{item.oldPrice}
                 </span>
               )}
               <span className="md:text-xl font-semibold text-slate-950 tracking-tight">
@@ -326,7 +326,9 @@ export default function Hero() {
           const fallbackData = await client.fetch(fallbackQuery);
           if (fallbackData && fallbackData.length > 0) {
             const existingIds = new Set((data || []).map((item) => item._id));
-            const extra = fallbackData.filter((item) => !existingIds.has(item._id));
+            const extra = fallbackData.filter(
+              (item) => !existingIds.has(item._id),
+            );
             data = [...(data || []), ...extra].slice(0, 4);
           }
         }
@@ -379,7 +381,8 @@ export default function Hero() {
   }, [cardsList.length]);
 
   const currentBanner = heroBanners[activeBannerIndex];
-  const currentCard = cardsList[activeCardIndex % cardsList.length] || cardsList[0];
+  const currentCard =
+    cardsList[activeCardIndex % cardsList.length] || cardsList[0];
 
   return (
     <section

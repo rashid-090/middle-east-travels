@@ -16,13 +16,6 @@ import {
   FaWhatsapp,
   FaArrowRight,
   FaPercent,
-  FaFire,
-  FaTag,
-  FaCrown,
-  FaHotel,
-  FaMugHot,
-  FaCar,
-  FaBinoculars,
   FaCalendarDays,
   FaCircleCheck,
   FaCircleXmark,
@@ -33,39 +26,8 @@ import {
   FaExpand,
   FaImages,
 } from "react-icons/fa6";
-import { HiSparkles } from "react-icons/hi2";
 
-const getBadgeIcon = (type) => {
-  switch (type) {
-    case "fire-orange":
-      return <FaFire className="text-orange-500 text-xs" />;
-    case "fire-red":
-      return <FaFire className="text-red-500 text-xs" />;
-    case "tag-emerald":
-      return <FaTag className="text-emerald-500 text-xs" />;
-    case "crown-amber":
-      return <FaCrown className="text-amber-500 text-xs" />;
-    case "sparkles-purple":
-      return <HiSparkles className="text-purple-500 text-xs" />;
-    default:
-      return <FaStar className="text-amber-400 text-xs" />;
-  }
-};
 
-const getInclusionIcon = (type) => {
-  switch (type) {
-    case "hotel":
-      return <FaHotel className="text-[#19a64b] text-sm" />;
-    case "breakfast":
-      return <FaMugHot className="text-[#19a64b] text-sm" />;
-    case "transfer":
-      return <FaCar className="text-[#19a64b] text-sm" />;
-    case "sightseeing":
-      return <FaBinoculars className="text-[#19a64b] text-sm" />;
-    default:
-      return <FaHotel className="text-[#19a64b] text-sm" />;
-  }
-};
 
 export default function TourPackageDetailPage() {
   const params = useParams();
@@ -442,8 +404,7 @@ export default function TourPackageDetailPage() {
                 <span>{pkg.title}</span>
               </span>
               {pkg.badge && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/80 text-amber-900 text-xs font-medium">
-                  {getBadgeIcon(pkg.badgeType)}
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-amber-50 border border-amber-200/80 text-amber-900 text-xs font-medium">
                   <span>{pkg.badge}</span>
                 </span>
               )}
@@ -1153,8 +1114,7 @@ export default function TourPackageDetailPage() {
                         {/* Top Right Badge */}
                         {item.badge && (
                           <div className="absolute top-3 right-3 z-10">
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/85 backdrop-blur-md text-xs font-semibold text-slate-800 shadow-md">
-                              {getBadgeIcon(item.badgeType)}
+                            <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/85 backdrop-blur-md text-xs font-semibold text-slate-800 shadow-md">
                               <span>{item.badge}</span>
                             </span>
                           </div>
@@ -1182,39 +1142,6 @@ export default function TourPackageDetailPage() {
                         <p className="text-xs text-slate-500 font-medium mb-3">
                           {item.duration || "5 Days 4 Nights"}
                         </p>
-
-                        {/* 4 Inclusion Icons Row */}
-                        <div className="grid grid-cols-4 gap-1 mb-3 bg-slate-50/80 p-2 rounded-2xl border border-slate-100">
-                          {(
-                            item.inclusionIcons || [
-                              { icon: "hotel", label: "04 Nights stay" },
-                              { icon: "breakfast", label: "Daily breakfast" },
-                              { icon: "transfer", label: "All transfers" },
-                              { icon: "sightseeing", label: "Sight seeing" },
-                            ]
-                          ).map((inc, i) => (
-                            <div
-                              key={i}
-                              className="flex flex-col items-center text-center relative group/tooltip"
-                              title={inc.label}
-                            >
-                              <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/70 shadow-xs flex items-center justify-center mb-1">
-                                {getInclusionIcon(inc.icon)}
-                              </div>
-                              <span className="text-[10px] text-slate-700 leading-tight line-clamp-1 w-full text-center">
-                                {inc.label}
-                              </span>
-
-                              {/* Full Label Tooltip on Hover */}
-                              <div className="absolute bottom-full mb-1.5 hidden group-hover/tooltip:flex flex-col items-center z-30 pointer-events-none whitespace-nowrap">
-                                <span className="bg-slate-900 text-white text-[10px] font-medium px-2 py-1 rounded-md shadow-lg">
-                                  {inc.label}
-                                </span>
-                                <span className="w-1.5 h-1.5 bg-slate-900 rotate-45 -mt-1" />
-                              </div>
-                            </div>
-                          ))}
-                        </div>
 
                         {/* Bullet Points Highlights */}
                         <ul className="space-y-1 text-xs text-slate-600 font-normal my-1">

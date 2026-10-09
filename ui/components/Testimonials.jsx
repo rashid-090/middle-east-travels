@@ -93,7 +93,7 @@ export default function Testimonials() {
                     
 
                       {/* Testimonial Quote Text */}
-                      <p className="text-slate-600 pb-8 mt-5 text-sm leading-relaxed font-normal mb-2 line-clamp-4">
+                      <p className="text-slate-600 pb-8 mt-5 text-sm leading-relaxed font-normal mb-2">
                         {item.quote}
                       </p>
 
@@ -138,8 +138,8 @@ export default function Testimonials() {
               <FcGoogle className="text-4xl sm:text-5xl" />
 
               {/* Score */}
-              <div className="text-3xl sm:text-4xl font-bold text-[#021b38] tracking-tight pt-1">
-                4.9/5
+              <div className="text-3xl sm:text-4xl font-semibold tracking-wider text-[#021b38] tracking-tight pt-1">
+                4.7/5
               </div>
 
               {/* 5 Golden Stars */}
@@ -153,7 +153,7 @@ export default function Testimonials() {
 
               {/* Bottom Label */}
               <p className="text-xs font-medium text-[#021b38] pt-1">
-                From 500+ Happy Travellers
+                From 100+ Happy Travellers
               </p>
 
             </div>

@@ -4,14 +4,10 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { tourPackagesData } from "@/data/allData";
 import { client, urlFor } from "@/lib/sanity";
 import {
   FaArrowRight,
-  FaFire,
-  FaCrown,
   FaStar,
-  FaTag,
   FaMagnifyingGlass,
   FaGlobe,
   FaLocationDot,
@@ -31,24 +27,7 @@ import {
   FaChevronLeft,
   FaChevronRight,
 } from "react-icons/fa6";
-import { HiSparkles } from "react-icons/hi2";
 
-const getBadgeIcon = (type) => {
-  switch (type) {
-    case "fire-orange":
-      return <FaFire className="text-orange-500 text-xs" />;
-    case "fire-red":
-      return <FaFire className="text-red-500 text-xs" />;
-    case "tag-emerald":
-      return <FaTag className="text-emerald-500 text-xs" />;
-    case "crown-amber":
-      return <FaCrown className="text-amber-500 text-xs" />;
-    case "sparkles-purple":
-      return <HiSparkles className="text-purple-500 text-xs" />;
-    default:
-      return <FaStar className="text-amber-400 text-xs" />;
-  }
-};
 
 const getInclusionIcon = (type) => {
   switch (type) {
@@ -165,24 +144,24 @@ export default function TourPackagesPage() {
         if (debouncedQuery) {
           const q = debouncedQuery.replace(/[\\"*]/g, "\\$&");
           filterConditions.push(
-            `(title match "*${q}*" || fullTitle match "*${q}*" || region match "*${q}*")`
+            `(title match "*${q}*" || fullTitle match "*${q}*" || region match "*${q}*")`,
           );
         }
 
         if (selectedCategory !== "All") {
           filterConditions.push(
-            `(category == "${selectedCategory}" || category match "*${selectedCategory}*")`
+            `(category == "${selectedCategory}" || category match "*${selectedCategory}*")`,
           );
         }
 
         if (selectedRegion !== "All") {
           if (selectedRegion === "Asia") {
             filterConditions.push(
-              `(region match "*Asia*" || region match "*Southeast*" || region match "*India*")`
+              `(region match "*Asia*" || region match "*Southeast*" || region match "*India*")`,
             );
           } else if (selectedRegion === "Europe") {
             filterConditions.push(
-              `(region match "*Europe*" || region match "*Eurasia*")`
+              `(region match "*Europe*" || region match "*Eurasia*")`,
             );
           } else {
             filterConditions.push(`region match "*${selectedRegion}*"`);
@@ -212,7 +191,11 @@ export default function TourPackagesPage() {
           }
         }`;
 
-        const data = await client.fetch(query, {}, { signal: controller.signal });
+        const data = await client.fetch(
+          query,
+          {},
+          { signal: controller.signal },
+        );
 
         if (!isSubscribed || requestIdRef.current !== currentRequestId) {
           return;
@@ -236,12 +219,6 @@ export default function TourPackagesPage() {
               image:
                 mainImageUrl ||
                 "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=85",
-              inclusionIcons: item.inclusionIcons || [
-                { icon: "hotel", label: "04 Nights stay" },
-                { icon: "breakfast", label: "Daily breakfast" },
-                { icon: "transfer", label: "All transfers" },
-                { icon: "sightseeing", label: "Sight seeing" },
-              ],
               highlights: item.highlights || [],
             };
           });
@@ -251,13 +228,13 @@ export default function TourPackagesPage() {
             formatted.sort(
               (a, b) =>
                 (parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0) -
-                (parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0)
+                (parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0),
             );
           } else if (sortBy === "price-high") {
             formatted.sort(
               (a, b) =>
                 (parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0) -
-                (parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0)
+                (parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0),
             );
           } else if (sortBy === "rating") {
             formatted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
@@ -268,63 +245,26 @@ export default function TourPackagesPage() {
             const firstKey = cacheRef.current.keys().next().value;
             cacheRef.current.delete(firstKey);
           }
-          cacheRef.current.set(cacheKey, { items: formatted, total: data.total });
+          cacheRef.current.set(cacheKey, {
+            items: formatted,
+            total: data.total,
+          });
 
           setPackagesList(formatted);
           setTotalCount(data.total);
         } else {
-          // Fallback dataset slicing logic
-          const filteredFallback = tourPackagesData
-            .filter((pkg) => {
-              const matchesSearch =
-                !debouncedQuery ||
-                pkg.title.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
-                (pkg.fullTitle &&
-                  pkg.fullTitle
-                    .toLowerCase()
-                    .includes(debouncedQuery.toLowerCase())) ||
-                (pkg.region &&
-                  pkg.region
-                    .toLowerCase()
-                    .includes(debouncedQuery.toLowerCase()));
-
-              const matchesCategory =
-                selectedCategory === "All" ||
-                (Array.isArray(pkg.category)
-                  ? pkg.category.includes(selectedCategory)
-                  : pkg.category === selectedCategory);
-
-              const matchesRegion =
-                selectedRegion === "All" ||
-                (pkg.region &&
-                  (pkg.region === selectedRegion ||
-                    pkg.region
-                      .toLowerCase()
-                      .includes(selectedRegion.toLowerCase())));
-
-              return matchesSearch && matchesCategory && matchesRegion;
-            })
-            .sort((a, b) => {
-              const pA =
-                parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0;
-              const pB =
-                parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0;
-              if (sortBy === "price-low") return pA - pB;
-              if (sortBy === "price-high") return pB - pA;
-              if (sortBy === "rating") return (b.rating || 0) - (a.rating || 0);
-              return 0;
-            });
-
-          const sliced = filteredFallback.slice(start, end);
-
+          // No items in Sanity for this query - do not show demo data
           if (cacheRef.current.size > 50) {
             const firstKey = cacheRef.current.keys().next().value;
             cacheRef.current.delete(firstKey);
           }
-          cacheRef.current.set(cacheKey, { items: sliced, total: filteredFallback.length });
+          cacheRef.current.set(cacheKey, {
+            items: [],
+            total: 0,
+          });
 
-          setTotalCount(filteredFallback.length);
-          setPackagesList(sliced);
+          setTotalCount(0);
+          setPackagesList([]);
         }
       } catch (err) {
         // Silently ignore aborted requests
@@ -333,10 +273,8 @@ export default function TourPackagesPage() {
         }
         console.error("Error fetching tour packages from Sanity:", err);
         if (isSubscribed && requestIdRef.current === currentRequestId) {
-          const start = (currentPage - 1) * ITEMS_PER_PAGE;
-          const end = currentPage * ITEMS_PER_PAGE;
-          setTotalCount(tourPackagesData.length);
-          setPackagesList(tourPackagesData.slice(start, end));
+          setTotalCount(0);
+          setPackagesList([]);
         }
       } finally {
         if (isSubscribed && requestIdRef.current === currentRequestId) {
@@ -351,13 +289,7 @@ export default function TourPackagesPage() {
       isSubscribed = false;
       controller.abort();
     };
-  }, [
-    currentPage,
-    debouncedQuery,
-    selectedCategory,
-    selectedRegion,
-    sortBy,
-  ]);
+  }, [currentPage, debouncedQuery, selectedCategory, selectedRegion, sortBy]);
 
   // Parallax Scroll Effect Setup for Maldives Sunset Banner
   const { scrollYProgress } = useScroll({
@@ -450,12 +382,13 @@ export default function TourPackagesPage() {
           {/* Top Banner Content: Title & Subtitle */}
           <div className="relative xl:pt-10 z-20 mb-6 flex flex-col md:flex-row md:items-start justify-between gap-4">
             <div>
-            
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-normal text-white tracking-tight leading-tight">
-                Find Your <span className="font-semibold">Perfect Vacation</span>
+                Find Your{" "}
+                <span className="font-semibold">Perfect Vacation</span>
               </h1>
               <p className="text-slate-200 text-xs sm:text-base font-normal w-[80%] md:w-full leading-relaxed pt-1.5">
-                Explore our curated selection of holiday packages for every traveler.
+                Explore our curated selection of holiday packages for every
+                traveler.
               </p>
             </div>
           </div>
@@ -463,10 +396,8 @@ export default function TourPackagesPage() {
           {/* Middle Banner: Highly Mobile Responsive Clean Filter Card */}
           <div className="relative z-20">
             <div className="bg-white/95 backdrop-blur-xl border border-white/80 rounded-2xl sm:rounded-3xl p-3 sm:p-5 shadow-2xl space-y-3 sm:space-y-4 text-slate-800">
-              
               {/* Top Row: Category Tabs, Search Bar & Sort Dropdown */}
               <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2.5 sm:gap-3">
-                
                 {/* Category Segmented Tabs */}
                 <div className="flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl sm:rounded-2xl border border-slate-200/80 w-full lg:w-auto overflow-x-auto no-scrollbar">
                   {categories.map((cat) => (
@@ -492,7 +423,6 @@ export default function TourPackagesPage() {
 
                 {/* Search Input & Sort Dropdown Group */}
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2.5 w-full flex-1">
-                  
                   {/* Search Bar */}
                   <div className="relative flex items-center bg-slate-50 border border-slate-200/90 rounded-xl px-3 sm:px-3.5 py-2 sm:py-2.5 focus-within:border-[#19a64b] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#19a64b]/20 transition-all flex-1">
                     <FaMagnifyingGlass className="text-slate-400 text-xs shrink-0 mr-2 sm:mr-2.5" />
@@ -521,24 +451,34 @@ export default function TourPackagesPage() {
                       onChange={handleSortChange}
                       className="w-full sm:w-auto bg-slate-50 text-slate-800 text-xs sm:text-sm font-semibold rounded-xl pl-3 sm:pl-3.5 pr-8 py-2 sm:py-2.5 border border-slate-200/90 focus:outline-hidden focus:border-[#19a64b] cursor-pointer appearance-none"
                     >
-                      <option value="default" className="bg-white text-slate-900">
+                      <option
+                        value="default"
+                        className="bg-white text-slate-900"
+                      >
                         Sort: Default
                       </option>
-                      <option value="price-low" className="bg-white text-slate-900">
+                      <option
+                        value="price-low"
+                        className="bg-white text-slate-900"
+                      >
                         Price: Low → High
                       </option>
-                      <option value="price-high" className="bg-white text-slate-900">
+                      <option
+                        value="price-high"
+                        className="bg-white text-slate-900"
+                      >
                         Price: High → Low
                       </option>
-                      <option value="rating" className="bg-white text-slate-900">
+                      <option
+                        value="rating"
+                        className="bg-white text-slate-900"
+                      >
                         Rating: Top Rated
                       </option>
                     </select>
                     <FaSliders className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none" />
                   </div>
-
                 </div>
-
               </div>
 
               {/* Bottom Row: Region Sub-Filter Pills */}
@@ -560,13 +500,15 @@ export default function TourPackagesPage() {
                   </button>
                 ))}
               </div>
-
             </div>
           </div>
         </section>
 
         {/* ================= PACKAGES GRID SECTION ================= */}
-        <section id="packages-grid-section" className="w-11/12 mx-auto pb-10 pt-4">
+        <section
+          id="packages-grid-section"
+          className="w-11/12 mx-auto pb-10 pt-4"
+        >
           {/* Results Counter Header */}
           <div className="flex items-center justify-between mb-6">
             <p className="text-xs text-slate-500 font-normal">
@@ -578,7 +520,9 @@ export default function TourPackagesPage() {
               <span className="font-semibold text-slate-900">
                 {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)}
               </span>{" "}
-              of <span className="font-semibold text-slate-900">{totalCount}</span> available tour packages
+              of{" "}
+              <span className="font-semibold text-slate-900">{totalCount}</span>{" "}
+              available tour packages
             </p>
             {(selectedCategory !== "All" ||
               selectedRegion !== "All" ||
@@ -609,7 +553,10 @@ export default function TourPackagesPage() {
                     <div className="h-3.5 bg-slate-200 rounded-md w-1/3 mb-3" />
                     <div className="grid grid-cols-4 gap-1 mb-3 bg-slate-50 p-2 rounded-2xl border border-slate-100">
                       {[...Array(4)].map((_, i) => (
-                        <div key={i} className="flex flex-col items-center gap-1">
+                        <div
+                          key={i}
+                          className="flex flex-col items-center gap-1"
+                        >
                           <div className="w-10 h-10 rounded-xl bg-slate-200" />
                           <div className="h-2.5 bg-slate-200 rounded w-8" />
                         </div>
@@ -646,7 +593,11 @@ export default function TourPackagesPage() {
                     <span className="font-semibold text-slate-900">
                       {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)}
                     </span>{" "}
-                    of <span className="font-semibold text-slate-900">{totalCount}</span> entries
+                    of{" "}
+                    <span className="font-semibold text-slate-900">
+                      {totalCount}
+                    </span>{" "}
+                    entries
                   </p>
 
                   {/* Pagination Controls */}
@@ -663,22 +614,24 @@ export default function TourPackagesPage() {
 
                     {/* Page Number Buttons */}
                     <div className="flex items-center gap-1">
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                        const isActive = page === currentPage;
-                        return (
-                          <button
-                            key={page}
-                            onClick={() => handlePageChange(page)}
-                            className={`w-9 h-9 rounded-xl text-xs font-semibold flex items-center justify-center transition-all cursor-pointer ${
-                              isActive
-                                ? "bg-primary text-white shadow-md shadow-emerald-600/20 scale-105"
-                                : "bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
-                            }`}
-                          >
-                            {page}
-                          </button>
-                        );
-                      })}
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                        (page) => {
+                          const isActive = page === currentPage;
+                          return (
+                            <button
+                              key={page}
+                              onClick={() => handlePageChange(page)}
+                              className={`w-9 h-9 rounded-xl text-xs font-semibold flex items-center justify-center transition-all cursor-pointer ${
+                                isActive
+                                  ? "bg-primary text-white shadow-md shadow-emerald-600/20 scale-105"
+                                  : "bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
+                              }`}
+                            >
+                              {page}
+                            </button>
+                          );
+                        },
+                      )}
                     </div>
 
                     {/* Next Button */}
@@ -701,11 +654,10 @@ export default function TourPackagesPage() {
                 <FaMagnifyingGlass />
               </div>
               <h3 className="text-xl font-semibold text-slate-900">
-                No Tour Packages Found
+                No Tour Packages Available
               </h3>
               <p className="text-sm text-slate-500 max-w-md mx-auto">
-                We couldn't find any holiday packages matching your search. Try
-                adjusting your filters or search keywords.
+                There are currently no tour packages available matching your criteria. Try adjusting your filters or search keywords.
               </p>
               <button
                 onClick={handleViewAll}
@@ -724,7 +676,7 @@ export default function TourPackagesPage() {
 // Package Card Render Helper
 function renderPackageCard(item) {
   return (
-    <div key={item.id} className="w-full">
+    <div key={item.id} className="w-full relative">
       <Link
         href={`/tour-packages/${item.id}`}
         className="bg-white rounded-[2.25rem] border border-slate-200/80 shadow-xs hover:shadow-lg transition-all duration-300 p-3.5 flex flex-col justify-between h-full group block"
@@ -744,8 +696,7 @@ function renderPackageCard(item) {
             {/* Top Right Badge */}
             {item.badge && (
               <div className="absolute top-3 right-3 z-10">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/85 backdrop-blur-md text-xs font-semibold text-slate-800 shadow-md">
-                  {getBadgeIcon(item.badgeType)}
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/85 backdrop-blur-md text-xs font-semibold text-slate-800 shadow-md">
                   <span>{item.badge}</span>
                 </span>
               </div>
@@ -759,7 +710,7 @@ function renderPackageCard(item) {
                 {item.title} <span className="text-primary">Tour Packages</span>
               </h3>
               {item.rating && (
-                <div className="flex items-center gap-1 font-medium text-slate-900 text-xs shrink-0 pt-0.5">
+                <div className="absolute top-7 left-7 flex justify-center items-center bg-white p-1 px-2 rounded-full items-center gap-1 font-medium text-slate-900 text-xs shrink-0 pt-0.5">
                   <span>{item.rating}</span>
                   <FaStar className="text-amber-400 text-sm fill-amber-400" />
                 </div>
@@ -827,8 +778,6 @@ function renderPackageCard(item) {
               )}
             </ul>
 
-            
-
             {/* Bottom Border & Price Section */}
             <div className="border-t border-slate-100 pt-3 mt-3 flex items-center justify-between">
               <div className="flex items-baseline gap-1.5 flex-wrap">
@@ -840,7 +789,6 @@ function renderPackageCard(item) {
                 <span className="text-lg sm:text-xl font-semibold text-slate-950 tracking-tight">
                   INR ₹{item.price}
                 </span>
-          
               </div>
 
               <div className="w-9 h-9 rounded-full bg-slate-100 group-hover:bg-primary text-slate-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs shrink-0">

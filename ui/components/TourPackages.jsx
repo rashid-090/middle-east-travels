@@ -6,50 +6,12 @@ import Link from "next/link";
 import TouchMarquee from "./TouchMarquee";
 import {
   FaArrowRight,
-  FaFire,
-  FaCrown,
   FaStar,
-  FaTag,
-  FaHotel,
-  FaMugHot,
-  FaCar,
-  FaBinoculars,
 } from "react-icons/fa6";
-import { HiSparkles } from "react-icons/hi2";
 import { tourPackagesData } from "@/data/allData.js";
 import { client, urlFor } from "@/lib/sanity";
 
-const getBadgeIcon = (type) => {
-  switch (type) {
-    case "fire-orange":
-      return <FaFire className="text-orange-500 text-xs" />;
-    case "fire-red":
-      return <FaFire className="text-red-500 text-xs" />;
-    case "tag-emerald":
-      return <FaTag className="text-emerald-500 text-xs" />;
-    case "crown-amber":
-      return <FaCrown className="text-amber-500 text-xs" />;
-    case "sparkles-purple":
-      return <HiSparkles className="text-purple-500 text-xs" />;
-    default:
-      return <FaStar className="text-amber-400 text-xs" />;
-  }
-};
 
-const getInclusionIcon = (type) => {
-  switch (type) {
-    case "hotel":
-      return <FaHotel className="text-primary text-sm" />;
-    case "breakfast":
-      return <FaMugHot className="text-primary text-sm" />;
-    case "transfer":
-      return <FaCar className="text-primary text-sm" />;
-    case "sightseeing":
-      return <FaBinoculars className="text-primary text-sm" />;
-    default:
-      return <FaHotel className="text-primary text-sm" />;
-  }
-};
 
 export default function TourPackages() {
   const [packages, setPackages] = useState(() => tourPackagesData.slice(0, 8));
@@ -138,7 +100,7 @@ export default function TourPackages() {
             {packages.map((item) => (
               <div
                 key={item.id}
-                className="w-[320px] lg:w-[340px] px-2.5 py-2 shrink-0"
+                className="w-[320px] lg:w-[340px] px-2.5 py-2 shrink-0 relative"
               >
                 <Link
                   href={item.link || `/tour-packages/${item.id}`}
@@ -159,8 +121,7 @@ export default function TourPackages() {
                       {/* Top Right Badge */}
                       {item.badge && (
                         <div className="absolute top-3 right-3 z-10">
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/85 backdrop-blur-md text-xs font-semibold text-slate-800 shadow-md">
-                            {getBadgeIcon(item.badgeType)}
+                          <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/85 backdrop-blur-md text-xs font-semibold text-slate-800 shadow-md">
                             <span>{item.badge}</span>
                           </span>
                         </div>
@@ -174,7 +135,7 @@ export default function TourPackages() {
                           {item.title} <span className="text-primary">Tour Packages</span>
                         </h3>
                         {item.rating && (
-                          <div className="flex items-center gap-1 font-medium text-slate-900 text-xs shrink-0 pt-0.5">
+                          <div className="absolute top-9 left-10 flex justify-center items-center bg-white p-1 px-2 rounded-full items-center gap-1 font-medium text-slate-900 text-xs shrink-0 pt-0.5">
                             <span>{item.rating}</span>
                             <FaStar className="text-amber-400 text-sm fill-amber-400" />
                           </div>
@@ -185,39 +146,6 @@ export default function TourPackages() {
                       <p className="text-xs text-slate-500 font-medium mb-3">
                         {item.duration || "5 Days 4 Nights"}
                       </p>
-
-                      {/* 4 Inclusion Icons Row */}
-                      <div className="grid grid-cols-4 gap-1.5 mb-3 bg-slate-50/80 p-2 rounded-2xl border border-slate-100">
-                        {(
-                          item.inclusionIcons || [
-                            { icon: "hotel", label: "04 Nights stay" },
-                            { icon: "breakfast", label: "Daily breakfast" },
-                            { icon: "transfer", label: "All transfers" },
-                            { icon: "sightseeing", label: "Sight seeing" },
-                          ]
-                        ).map((inc, i) => (
-                          <div
-                            key={i}
-                            className="flex flex-col items-center text-center relative group/tooltip"
-                            title={inc.label}
-                          >
-                            <div className="w-10 h-10 rounded-xl bg-white border border-slate-200/70 shadow-xs flex items-center justify-center mb-1">
-                              {getInclusionIcon(inc.icon)}
-                            </div>
-                            <span className="text-[9px] text-slate-700 leading-tight line-clamp-1 w-full text-center">
-                              {inc.label}
-                            </span>
-
-                            {/* Full Label Tooltip on Hover */}
-                            <div className="absolute bottom-full mb-1.5 hidden group-hover/tooltip:flex flex-col items-center z-30 pointer-events-none whitespace-nowrap">
-                              <span className="bg-slate-900 text-white text-[10px] font-medium px-2 py-1 rounded-md shadow-lg">
-                                {inc.label}
-                              </span>
-                              <span className="w-1.5 h-1.5 bg-slate-900 rotate-45 -mt-1" />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
 
                       {/* Bullet Points Highlights */}
                       <ul className="space-y-1 text-xs text-slate-600 font-normal my-1">
