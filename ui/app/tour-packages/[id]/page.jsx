@@ -25,6 +25,7 @@ import {
   FaChevronRight,
   FaExpand,
   FaImages,
+  FaMagnifyingGlass,
 } from "react-icons/fa6";
 
 
@@ -92,13 +93,13 @@ export default function TourPackageDetailPage() {
         let currentPkg = null;
         if (data) {
           const mainImageUrl = data.image
-            ? urlFor(data.image)?.width(1000).auto("format").quality(85).url()
+            ? urlFor(data.image)?.auto("format").quality(95).url()
             : null;
           const galleryUrls =
             data.gallery && Array.isArray(data.gallery)
               ? data.gallery
                   .map((g) =>
-                    urlFor(g)?.width(800).auto("format").quality(80).url(),
+                    urlFor(g)?.auto("format").quality(95).url(),
                   )
                   .filter(Boolean)
               : [];
@@ -417,8 +418,8 @@ export default function TourPackageDetailPage() {
             </div>
 
             <div className=" flex flex-wrap items-center gap-2 md:gap-5">
-              <h1 className=" text-2xl md:text-3xl font-semibold text-[#021b38] tracking-tight leading-tight">
-                {pkg.fullTitle || `${pkg.title} Tour Package`}
+              <h1 className=" text-2xl md:text-3xl font-semibold text-[#021b38] tracking-tight xl:max-w-[80%] leading-tight">
+                {pkg.fullTitle || `${pkg.title} Tour Package`} 
               </h1>
 
               <p className="bg-primary border border-emerald-200/80 px-3 py-1 rounded-full w-fit text-xs md:text-sm font-semibold text-white">
@@ -1271,8 +1272,9 @@ export default function TourPackageDetailPage() {
                   src={galleryImages[lightboxIndex]}
                   alt={`${pkg.title} photo ${lightboxIndex + 1}`}
                   fill
-                  sizes="(max-width: 1280px) 100vw, 1280px"
-                  quality={95}
+                  sizes="100vw"
+                  quality={100}
+                  unoptimized={true}
                   priority
                   className="object-contain"
                 />
