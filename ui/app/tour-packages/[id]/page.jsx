@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -106,6 +106,7 @@ export default function TourPackageDetailPage() {
           id,
           title,
           fullTitle,
+          description,
           category,
           region,
           duration,
@@ -125,18 +126,26 @@ export default function TourPackageDetailPage() {
           exclusions
         }`;
         const data = await client.fetch(query, { id: packageId });
-        
+
         let currentPkg = null;
         if (data) {
-          const mainImageUrl = data.image ? urlFor(data.image)?.width(1000).auto("format").quality(85).url() : null;
-          const galleryUrls = data.gallery && Array.isArray(data.gallery)
-            ? data.gallery.map((g) => urlFor(g)?.width(800).auto("format").quality(80).url()).filter(Boolean)
-            : [];
+          const mainImageUrl = data.image
+            ? urlFor(data.image)?.width(1000).auto("format").quality(85).url()
+            : null;
+          const galleryUrls =
+            data.gallery && Array.isArray(data.gallery)
+              ? data.gallery
+                  .map((g) =>
+                    urlFor(g)?.width(800).auto("format").quality(80).url(),
+                  )
+                  .filter(Boolean)
+              : [];
 
           currentPkg = {
             id: data.id?.current || data._id,
             title: data.title,
             fullTitle: data.fullTitle || `${data.title} Tour Package`,
+            description: data.description || "",
             category: data.category || "International",
             region: data.region || "Eurasia",
             duration: data.duration || "5 Days 4 Nights",
@@ -145,11 +154,19 @@ export default function TourPackageDetailPage() {
             badge: data.badge,
             badgeType: data.badgeType || "fire-orange",
             rating: data.rating ? Number(data.rating) : 4.8,
-            image: mainImageUrl || "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=85",
-            gallery: galleryUrls.length > 0 ? galleryUrls : [mainImageUrl].filter(Boolean),
+            image:
+              mainImageUrl ||
+              "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=85",
+            gallery:
+              galleryUrls.length > 0
+                ? galleryUrls
+                : [mainImageUrl].filter(Boolean),
             overview: data.overview || "",
             inclusionIcons: data.inclusionIcons || [],
-            highlights: data.keyHighlights && data.keyHighlights.length > 0 ? data.keyHighlights : (data.highlights || []),
+            highlights:
+              data.keyHighlights && data.keyHighlights.length > 0
+                ? data.keyHighlights
+                : data.highlights || [],
             itinerary: data.itinerary || [],
             inclusions: data.inclusions || [],
             exclusions: data.exclusions || [],
@@ -160,7 +177,7 @@ export default function TourPackageDetailPage() {
           }
         } else {
           const fallback = tourPackagesData.find((p) => p.id === packageId);
-          currentPkg = fallback || null;
+          currentPkg = fallback ? { ...fallback, description: fallback.description || fallback.overview || "" } : null;
           setPkg(currentPkg);
           if (fallback?.image) setActiveImage(fallback.image);
         }
@@ -201,7 +218,9 @@ export default function TourPackageDetailPage() {
               badge: item.badge,
               badgeType: item.badgeType || "fire-orange",
               rating: item.rating ? Number(item.rating) : 4.8,
-              image: mainImageUrl || "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=85",
+              image:
+                mainImageUrl ||
+                "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=85",
               inclusionIcons: item.inclusionIcons || [
                 { icon: "hotel", label: "04 Nights stay" },
                 { icon: "breakfast", label: "Daily breakfast" },
@@ -213,18 +232,28 @@ export default function TourPackageDetailPage() {
           });
 
           const activeId = currentPkg ? currentPkg.id : packageId;
-          const filtered = formattedAll.filter((p) => p.id !== activeId).slice(0, 4);
-          setRelatedPackages(filtered.length > 0 ? filtered : tourPackagesData.filter((p) => p.id !== activeId).slice(0, 4));
+          const filtered = formattedAll
+            .filter((p) => p.id !== activeId)
+            .slice(0, 4);
+          setRelatedPackages(
+            filtered.length > 0
+              ? filtered
+              : tourPackagesData.filter((p) => p.id !== activeId).slice(0, 4),
+          );
         } else {
           const activeId = currentPkg ? currentPkg.id : packageId;
-          setRelatedPackages(tourPackagesData.filter((p) => p.id !== activeId).slice(0, 4));
+          setRelatedPackages(
+            tourPackagesData.filter((p) => p.id !== activeId).slice(0, 4),
+          );
         }
       } catch (err) {
         console.error("Error fetching package detail from Sanity:", err);
         const fallback = tourPackagesData.find((p) => p.id === packageId);
         setPkg(fallback || null);
         if (fallback?.image) setActiveImage(fallback.image);
-        setRelatedPackages(tourPackagesData.filter((p) => p.id !== packageId).slice(0, 4));
+        setRelatedPackages(
+          tourPackagesData.filter((p) => p.id !== packageId).slice(0, 4),
+        );
       } finally {
         setIsLoading(false);
       }
@@ -232,15 +261,23 @@ export default function TourPackageDetailPage() {
     fetchPackageDetail();
   }, [packageId]);
 
-  const galleryImages =
-    pkg && pkg.gallery && pkg.gallery.length > 0
-      ? pkg.gallery
-      : pkg && pkg.image
-      ? [pkg.image, pkg.image, pkg.image]
-      : [];
+  const galleryImages = useMemo(() => {
+    if (!pkg) return [];
+    const list = [];
+    if (pkg.image) list.push(pkg.image);
+    if (pkg.gallery && Array.isArray(pkg.gallery)) {
+      pkg.gallery.forEach((img) => {
+        if (img) {
+          list.push(img);
+        }
+      });
+    }
+    return list.length > 0 ? list : [];
+  }, [pkg]);
 
   const openLightbox = (index = 0) => {
-    setLightboxIndex(index);
+    const validIndex = Math.max(0, Math.min(index, galleryImages.length - 1));
+    setLightboxIndex(validIndex);
     setIsLightboxOpen(true);
   };
 
@@ -251,7 +288,7 @@ export default function TourPackageDetailPage() {
   const prevLightboxImage = (e) => {
     e?.stopPropagation();
     setLightboxIndex(
-      (prev) => (prev - 1 + galleryImages.length) % galleryImages.length
+      (prev) => (prev - 1 + galleryImages.length) % galleryImages.length,
     );
   };
 
@@ -259,6 +296,31 @@ export default function TourPackageDetailPage() {
     e?.stopPropagation();
     setLightboxIndex((prev) => (prev + 1) % galleryImages.length);
   };
+
+  // Keyboard navigation & body scroll lock for Lightbox
+  useEffect(() => {
+    if (!isLightboxOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") {
+        setLightboxIndex(
+          (prev) => (prev - 1 + galleryImages.length) % galleryImages.length,
+        );
+      }
+      if (e.key === "ArrowRight") {
+        setLightboxIndex((prev) => (prev + 1) % galleryImages.length);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [isLightboxOpen, galleryImages.length]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -294,8 +356,6 @@ export default function TourPackageDetailPage() {
       });
     }, 4000);
   };
-
-  
 
   if (isLoading) {
     return (
@@ -335,7 +395,8 @@ export default function TourPackageDetailPage() {
         </div>
         <h2 className="text-2xl font-bold text-[#021b38]">No Package Found</h2>
         <p className="text-sm text-slate-500 max-w-md">
-          We couldn't find the tour package you are looking for. It may have been moved or updated.
+          We couldn't find the tour package you are looking for. It may have
+          been moved or updated.
         </p>
         <Link
           href="/tour-packages"
@@ -374,7 +435,7 @@ export default function TourPackageDetailPage() {
           </nav>
 
           {/* Header Title Section */}
-          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/70 shadow-xs space-y-3">
+          <div className="bg-white p-3 md:p-6 rounded-3xl border border-slate-200/70 shadow-xs space-y-3">
             <div className="flex items-center flex-wrap gap-2">
               <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#19a64b] capitalize tracking-wider bg-emerald-50 border border-emerald-200/80 px-3 py-1 rounded-full">
                 <FaLocationDot className="text-[11px]" />
@@ -392,20 +453,17 @@ export default function TourPackageDetailPage() {
                   <span>{pkg.rating} Rating</span>
                 </span>
               )}
-
             </div>
 
-           <div className="pt-3 flex flex-wrap items-center gap-5">
-             <h1 className=" text-2xl md:text-3xl font-semibold text-[#021b38] tracking-tight leading-tight">
-              {pkg.fullTitle || `${pkg.title} Tour Package`}
-            </h1>
+            <div className=" flex flex-wrap items-center gap-2 md:gap-5">
+              <h1 className=" text-2xl md:text-3xl font-semibold text-[#021b38] tracking-tight leading-tight">
+                {pkg.fullTitle || `${pkg.title} Tour Package`}
+              </h1>
 
-             <p className="bg-primary border border-emerald-200/80 px-3 py-1 rounded-full w-fit text-sm font-semibold text-white">
-                {pkg.duration ||
-                  `${pkg.duration} Holiday Package`}
+              <p className="bg-primary border border-emerald-200/80 px-3 py-1 rounded-full w-fit text-xs md:text-sm font-semibold text-white">
+                {pkg.duration || `${pkg.duration} Holiday Package`}
               </p>
-             
-           </div>
+            </div>
 
             {pkg.intro && (
               <p className="text-sm text-slate-600 leading-relaxed font-normal">
@@ -417,96 +475,223 @@ export default function TourPackageDetailPage() {
 
         {/* ================= PHOTO GALLERY ================= */}
         <section className="w-11/12 mx-auto py-3">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-1.5 md:gap-3.5">
-            {/* Main Featured Photo */}
-            <div
-              onClick={() => openLightbox(galleryImages.indexOf(activeImage) >= 0 ? galleryImages.indexOf(activeImage) : 0)}
-              className="lg:col-span-2 relative h-[240px] md:h-[480px] rounded-3xl overflow-hidden bg-slate-100 border border-slate-200/70 shadow-xs group cursor-pointer"
-            >
-              <Image
-                src={activeImage}
-                alt={pkg.title}
-                fill
-                sizes="(max-width: 1024px) 100vw, 66vw"
-                quality={95}
-                priority
-                loading="eager"
-                className="object-cover object-center transition-all duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-4 text-white">
-                <span className="bg-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-medium border border-white/30 flex items-center gap-2">
-                  <FaExpand className="text-xs" />
-                  <span>Click to Expand</span>
-                </span>
-                <span className="bg-[#19a64b] px-3.5 py-1.5 rounded-full text-xs font-bold shadow-md">
-                  📷 {galleryImages.length} Photos
-                </span>
-              </div>
-
-              {/* Static View Photos Badge (Mobile/Desktop Default) */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openLightbox(galleryImages.indexOf(activeImage) >= 0 ? galleryImages.indexOf(activeImage) : 0);
-                }}
-                className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-md hover:bg-white text-slate-900 px-3.5 py-1.5 rounded-full text-xs font-medium border border-white/60 shadow-md flex items-center gap-2 transition-all duration-200 cursor-pointer"
+          <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-xs border border-slate-200/80 bg-white p-2 sm:p-3">
+            {galleryImages.length <= 1 ? (
+              /* 1 Photo: Full-width Hero */
+              <div
+                onClick={() => openLightbox(0)}
+                className="relative w-full h-[350px] md:h-[480px] rounded-xl sm:rounded-2xl overflow-hidden bg-slate-100 group cursor-pointer"
               >
-                <FaImages className="text-[#19a64b] text-sm" />
-                <span>View Gallery ({galleryImages.length})</span>
-              </button>
-            </div>
-
-            {/* Thumbnail Stack */}
-            <div className="grid grid-cols-3 lg:grid-cols-1 gap-1.5 md:gap-3.5">
-              {galleryImages.slice(0, 3).map((imgUrl, idx) => {
-                const isThirdAndMore = idx === 2 && galleryImages.length > 3;
-
-                return (
-                  <div
-                    key={idx}
-                    onClick={() => {
-                      setActiveImage(imgUrl);
-                      if (isThirdAndMore) {
-                        openLightbox(2);
-                      }
-                    }}
-                    className={`relative h-[90px] md:min-h-[145px] lg:h-full rounded-2xl overflow-hidden cursor-pointer border-2 transition-all duration-300 group bg-slate-100 ${
-                      activeImage === imgUrl
-                        ? "border-[#19a64b] ring-4 ring-[#19a64b]/20 scale-[0.98] shadow-sm"
-                        : "border-transparent opacity-85 hover:opacity-100 hover:scale-[1.01]"
-                    }`}
-                  >
-                    <Image
-                      src={imgUrl}
-                      alt={`${pkg.title} photo ${idx + 1}`}
-                      fill
-                      sizes="33vw"
-                      className="object-cover object-center group-hover:scale-105 transition-transform duration-300"
-                    />
-
-                    {/* "+ More" Overlay on 3rd item if more than 3 images */}
-                    {isThirdAndMore && (
-                      <div
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          openLightbox(2);
-                        }}
-                        className="absolute inset-0 bg-slate-950/65 backdrop-blur-xs flex flex-col items-center justify-center text-white p-2 text-center transition-all group-hover:bg-slate-950/75"
-                      >
-                        <span className="text-lg sm:text-xl font-semibold text-white leading-tight">
-                          +{galleryImages.length - 2}
-                        </span>
-                        <span className="text-[10px] font-medium text-slate-200 uppercase tracking-wider">
-                          More Photos
-                        </span>
-                      </div>
-                    )}
+                <Image
+                  src={galleryImages[0] || "/visapageban.webp"}
+                  alt={pkg.title}
+                  fill
+                  sizes="100vw"
+                  quality={95}
+                  priority
+                  loading="eager"
+                  className="object-cover object-center transition-all duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-4 sm:p-6 text-white">
+                  <span className="bg-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-medium border border-white/30 flex items-center gap-2">
+                    <FaExpand className="text-xs" />
+                    <span>Click to Expand</span>
+                  </span>
+                </div>
+              </div>
+            ) : (
+              /* Left: Featured Hero Photo + Right: All Rest Images in a Clean Grid */
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-2.5 sm:gap-3 items-stretch">
+                
+                {/* Left Side: Large Featured Photo (7 of 12 cols on desktop) */}
+                <div
+                  onClick={() => openLightbox(0)}
+                  className="md:col-span-7 relative h-[200px] md:h-[480px] lg:h-[500px] rounded-xl sm:rounded-2xl overflow-hidden bg-slate-100 group cursor-pointer shadow-xs"
+                >
+                  <Image
+                    src={galleryImages[0]}
+                    alt={pkg.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 58vw"
+                    quality={95}
+                    priority
+                    loading="eager"
+                    className="object-cover object-center transition-all duration-500 group-hover:scale-105"
+                  />
+                  
+                  {/* Subtle Gradient & Hover Info */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-between p-4 sm:p-5 text-white">
+                    <span className="bg-white/20 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-medium border border-white/30 flex items-center gap-2">
+                      <FaExpand className="text-xs" />
+                      <span>Main Cover Photo</span>
+                    </span>
+                
                   </div>
-                );
-              })}
-            </div>
+
+                
+                </div>
+
+                {/* Right Side: 6 images max on desktop, 4 images max on mobile (5 of 12 cols) */}
+                <div className="md:col-span-5 h-full md:h-[480px] lg:h-[500px] overflow-hidden rounded-xl sm:rounded-2xl">
+                  {(() => {
+                    const restImages = galleryImages.slice(1);
+                    const totalRest = restImages.length;
+
+                    if (totalRest === 0) return null;
+
+                    if (totalRest === 1) {
+                      return (
+                        <div
+                          onClick={() => openLightbox(1)}
+                          className="relative h-full rounded-xl sm:rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/70 shadow-xs group cursor-pointer"
+                        >
+                          <Image
+                            src={restImages[0]}
+                            alt={`${pkg.title} photo 2`}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 40vw"
+                            className="object-cover object-center transition-all duration-500 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span className="w-10 h-10 rounded-full bg-white/25 backdrop-blur-md text-white flex items-center justify-center text-sm border border-white/40 shadow-sm group-hover:scale-110 transition-transform">
+                              <FaExpand />
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    }
+
+                    if (totalRest === 2) {
+                      return (
+                        <div className="grid grid-cols-1 gap-2 sm:gap-2.5 h-full">
+                          {restImages.map((imgUrl, idx) => (
+                            <div
+                              key={idx + 1}
+                              onClick={() => openLightbox(idx + 1)}
+                              className="relative h-full rounded-xl sm:rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/70 shadow-xs group cursor-pointer"
+                            >
+                              <Image
+                                src={imgUrl}
+                                alt={`${pkg.title} photo ${idx + 2}`}
+                                fill
+                                sizes="(max-width: 768px) 100vw, 40vw"
+                                className="object-cover object-center transition-all duration-500 group-hover:scale-105"
+                              />
+                              <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                <span className="w-9 h-9 rounded-full bg-white/25 backdrop-blur-md text-white flex items-center justify-center text-xs border border-white/40 shadow-sm group-hover:scale-110 transition-transform">
+                                  <FaExpand />
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    }
+
+                    // For 3 or more rest images:
+                    // Desktop: 2 cols x 3 rows grid (up to 6 images)
+                    // Mobile: 2 cols x 2 rows grid (up to 4 images)
+                    const displayed = restImages.slice(0, 6);
+
+                    return (
+                      <div className="grid grid-cols-2 gap-2 sm:gap-2.5 h-full auto-rows-fr">
+                        {displayed.map((imgUrl, idx) => {
+                          const actualIndex = idx + 1;
+                          const isMobileHidden = idx >= 4; // 5th and 6th items hidden on mobile
+                          const isMobileLast = idx === 3 && totalRest > 4; // 4th item on mobile
+                          const isDesktopLast = idx === 5 && totalRest > 6; // 6th item on desktop
+
+                          return (
+                            <div
+                              key={actualIndex}
+                              onClick={() => openLightbox(actualIndex)}
+                              className={`relative h-full min-h-[105px] rounded-xl sm:rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/70 shadow-xs group cursor-pointer transition-all duration-300 hover:shadow-md ${
+                                isMobileHidden ? "hidden md:block" : ""
+                              }`}
+                            >
+                              <Image
+                                src={imgUrl}
+                                alt={`${pkg.title} photo ${actualIndex + 1}`}
+                                fill
+                                sizes="(max-width: 768px) 50vw, 22vw"
+                                className="object-cover object-center transition-all duration-500 group-hover:scale-108"
+                              />
+
+                              {/* Standard Hover Overlay with Expand Icon */}
+                              <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                <span className="w-8 h-8 rounded-full bg-white/25 backdrop-blur-md text-white flex items-center justify-center text-xs border border-white/40 shadow-sm group-hover:scale-110 transition-transform">
+                                  <FaExpand />
+                                </span>
+                              </div>
+
+                              {/* Mobile "+N More" overlay on the 4th item if totalRest > 4 */}
+                              {isMobileLast && (
+                                <div
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    openLightbox(4);
+                                  }}
+                                  className="md:hidden absolute inset-0 bg-slate-950/65 backdrop-blur-[2px] flex flex-col items-center justify-center text-white p-2 text-center transition-all group-hover:bg-slate-950/75"
+                                >
+                                  <span className="text-base sm:text-lg font-bold text-white leading-tight">
+                                    +{totalRest - 3}
+                                  </span>
+                                  <span className="text-[9px] font-medium text-slate-200 uppercase tracking-wider mt-0.5">
+                                    More Photos
+                                  </span>
+                                </div>
+                              )}
+
+                              {/* Desktop "+N More" overlay on the 6th item if totalRest > 6 */}
+                              {isDesktopLast && (
+                                <div
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    openLightbox(6);
+                                  }}
+                                  className="hidden md:flex absolute inset-0 bg-slate-950/65 backdrop-blur-[2px] flex-col items-center justify-center text-white p-2 text-center transition-all group-hover:bg-slate-950/75"
+                                >
+                                  <span className="text-base sm:text-lg font-bold text-white leading-tight">
+                                    +{totalRest - 5}
+                                  </span>
+                                  <span className="text-[10px] font-medium text-slate-200 uppercase tracking-wider mt-0.5">
+                                    More Photos
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()}
+                </div>
+
+              </div>
+            )}
+
+            {/* Floating "View All Photos" Action Badge Button */}
+            {galleryImages.length > 1 && (
+              <button
+                type="button"
+                onClick={() => openLightbox(0)}
+                className="hidden md:absolute bottom-7 right-7 bg-white/60 hover:bg-white text-slate-900 px-2 py-1 rounded-xl sm:rounded-2xl text-[10px] border border-slate-200/90 shadow-lg flex items-center gap-2 transition-all duration-200 hover:scale-105 backdrop-blur-md cursor-pointer z-10"
+                aria-label={`View all ${galleryImages.length} photos`}
+              >
+           
+                <span>View All Photos ({galleryImages.length})</span>
+              </button>
+            )}
           </div>
         </section>
+
+        {pkg?.description && (
+          <section className="w-11/12 mx-auto bg-white p-4 md:p-6 rounded-3xl border border-slate-200/70 shadow-xs space-y-3">
+            <p className="text-slate-600 text-sm sm:text-base leading-relaxed whitespace-pre-line font-normal">
+              {pkg.description}
+            </p>
+          </section>
+        )}
 
         {/* ================= MAIN CONTENT & STICKY SIDEBAR ================= */}
         <section className="w-11/12 mx-auto pt-4">
@@ -570,10 +755,10 @@ export default function TourPackageDetailPage() {
                         const bullets = Array.isArray(dayItem.description)
                           ? dayItem.description
                           : Array.isArray(dayItem.bullets)
-                          ? dayItem.bullets
-                          : typeof dayItem.description === "string"
-                          ? dayItem.description.split(". ").filter(Boolean)
-                          : [];
+                            ? dayItem.bullets
+                            : typeof dayItem.description === "string"
+                              ? dayItem.description.split(". ").filter(Boolean)
+                              : [];
 
                         const isLast = idx === pkg.itinerary.length - 1;
 
@@ -812,7 +997,13 @@ export default function TourPackageDetailPage() {
                       <label className="text-[11px] font-bold text-slate-700 block mb-1">
                         Phone / WhatsApp *
                       </label>
-                      <div className={phoneError ? "[&_.PhoneInput]:border-red-400 [&_.PhoneInput]:focus-within:border-red-500" : ""}>
+                      <div
+                        className={
+                          phoneError
+                            ? "[&_.PhoneInput]:border-red-400 [&_.PhoneInput]:focus-within:border-red-500"
+                            : ""
+                        }
+                      >
                         <PhoneInput
                           international
                           defaultCountry="IN"
@@ -827,7 +1018,9 @@ export default function TourPackageDetailPage() {
                         />
                       </div>
                       {phoneError && (
-                        <p className="text-red-500 text-[11px] mt-1 font-medium">{phoneError}</p>
+                        <p className="text-red-500 text-[11px] mt-1 font-medium">
+                          {phoneError}
+                        </p>
                       )}
                     </div>
 
@@ -873,7 +1066,6 @@ export default function TourPackageDetailPage() {
                         </select>
                       </div>
                     </div>
-
 
                     <button
                       type="submit"
@@ -1066,11 +1258,11 @@ export default function TourPackageDetailPage() {
                           <div className="flex items-baseline gap-1.5 flex-wrap">
                             {item.oldPrice && (
                               <span className="text-xs text-slate-400 line-through font-normal">
-                               INR ₹{item.oldPrice}
+                                INR ₹{item.oldPrice}
                               </span>
                             )}
                             <span className="text-lg sm:text-xl font-semibold text-slate-950 tracking-tight">
-                             INR ₹{item.price}
+                              INR ₹{item.price}
                             </span>
                           </div>
 
@@ -1088,58 +1280,72 @@ export default function TourPackageDetailPage() {
         )}
 
         {/* ================= LIGHTBOX MODAL ================= */}
-        {isLightboxOpen && (
+        {isLightboxOpen && galleryImages.length > 0 && (
           <div
-            className="fixed inset-0 z-[9999] bg-slate-950/95 backdrop-blur-xl flex flex-col justify-between p-4 sm:p-6 text-white transition-all duration-300"
+            className="fixed inset-0 z-[9999] bg-slate-950/95 backdrop-blur-xl flex flex-col justify-between p-3 sm:p-6 text-white transition-all duration-300 select-none"
             onClick={closeLightbox}
           >
             {/* Header Controls */}
             <div
-              className="flex items-center justify-between w-full max-w-6xl mx-auto pt-2 pb-4 z-10"
+              className="flex items-center justify-between w-full max-w-6xl mx-auto pt-1 pb-3 sm:pb-4 z-10"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center gap-3">
-                <span className="bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-semibold border border-white/15 flex items-center gap-2">
-                  <FaImages className="text-[#19a64b]" />
-                  <span>
-                    {pkg.title} Gallery ({lightboxIndex + 1} / {galleryImages.length})
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                <span className="bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-semibold border border-white/15 flex items-center gap-2 truncate">
+                  <FaImages className="text-[#19a64b] shrink-0" />
+                  <span className="truncate max-w-[200px] sm:max-w-[340px]">
+                    {pkg.title}
+                  </span>
+                  <span className="text-slate-300 font-normal shrink-0">
+                    ({lightboxIndex + 1} of {galleryImages.length})
                   </span>
                 </span>
               </div>
 
-              <button
-                onClick={closeLightbox}
-                className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors text-lg border border-white/20 cursor-pointer"
-                aria-label="Close Lightbox"
-              >
-                <FaXmark />
-              </button>
+              <div className="flex items-center gap-2">
+                <span className="hidden sm:inline-block text-[11px] text-slate-400 font-normal mr-2">
+                  Press{" "}
+                  <kbd className="px-1.5 py-0.5 bg-white/10 rounded-md border border-white/20 text-white font-mono text-[10px]">
+                    Esc
+                  </kbd>{" "}
+                  to close
+                </span>
+                <button
+                  type="button"
+                  onClick={closeLightbox}
+                  className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-colors text-lg border border-white/20 cursor-pointer shrink-0"
+                  aria-label="Close Lightbox"
+                >
+                  <FaXmark />
+                </button>
+              </div>
             </div>
 
             {/* Main Stage with Navigation Arrows */}
             <div
-              className="relative flex-1 flex items-center justify-center w-full max-w-6xl mx-auto my-auto"
+              className="relative flex-1 flex items-center justify-center w-full max-w-6xl mx-auto my-auto min-h-0"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Left Arrow */}
               {galleryImages.length > 1 && (
                 <button
+                  type="button"
                   onClick={prevLightboxImage}
-                  className="absolute left-2 sm:left-4 z-20 w-11 h-11 rounded-full bg-black/60 hover:bg-[#19a64b] text-white flex items-center justify-center backdrop-blur-md border border-white/20 transition-all duration-200 cursor-pointer shadow-lg"
+                  className="absolute left-1 sm:left-4 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/60 hover:bg-[#19a64b] text-white flex items-center justify-center backdrop-blur-md border border-white/20 transition-all duration-200 cursor-pointer shadow-xl hover:scale-105"
                   aria-label="Previous Image"
                 >
-                  <FaChevronLeft className="text-base" />
+                  <FaChevronLeft className="text-sm sm:text-base" />
                 </button>
               )}
 
               {/* Centered Active Image */}
-              <div className="relative w-full h-[55vh] sm:h-[72vh] rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center bg-black/40">
+              <div className="relative w-full h-[52vh] sm:h-[66vh] md:h-[70vh] rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center bg-black/40">
                 <Image
                   src={galleryImages[lightboxIndex]}
-                  alt={`${pkg.title} large photo ${lightboxIndex + 1}`}
+                  alt={`${pkg.title} photo ${lightboxIndex + 1}`}
                   fill
-                  sizes="(max-width: 1200px) 100vw, 1200px"
-                  quality={100}
+                  sizes="(max-width: 1280px) 100vw, 1280px"
+                  quality={95}
                   priority
                   className="object-contain"
                 />
@@ -1148,39 +1354,42 @@ export default function TourPackageDetailPage() {
               {/* Right Arrow */}
               {galleryImages.length > 1 && (
                 <button
+                  type="button"
                   onClick={nextLightboxImage}
-                  className="absolute right-2 sm:right-4 z-20 w-11 h-11 rounded-full bg-black/60 hover:bg-[#19a64b] text-white flex items-center justify-center backdrop-blur-md border border-white/20 transition-all duration-200 cursor-pointer shadow-lg"
+                  className="absolute right-1 sm:right-4 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/60 hover:bg-[#19a64b] text-white flex items-center justify-center backdrop-blur-md border border-white/20 transition-all duration-200 cursor-pointer shadow-xl hover:scale-105"
                   aria-label="Next Image"
                 >
-                  <FaChevronRight className="text-base" />
+                  <FaChevronRight className="text-sm sm:text-base" />
                 </button>
               )}
             </div>
 
-            {/* Bottom Thumbnail Strip */}
+            {/* Bottom Thumbnail Strip showing EVERY image */}
             {galleryImages.length > 1 && (
               <div
-                className="w-full max-w-3xl mx-auto pt-4 flex items-center justify-center gap-2.5 overflow-x-auto no-scrollbar z-10"
+                className="w-full max-w-4xl mx-auto pt-3 pb-1 flex items-center justify-start sm:justify-center gap-2 sm:gap-2.5 overflow-x-auto no-scrollbar z-10 px-2"
                 onClick={(e) => e.stopPropagation()}
               >
                 {galleryImages.map((imgUrl, idx) => (
-                  <div
+                  <button
                     key={idx}
+                    type="button"
                     onClick={() => setLightboxIndex(idx)}
-                    className={`relative w-16 h-12 sm:w-20 sm:h-14 rounded-xl overflow-hidden cursor-pointer border-2 transition-all duration-200 shrink-0 ${
+                    className={`relative w-14 h-11 sm:w-20 sm:h-14 rounded-xl overflow-hidden cursor-pointer border-2 transition-all duration-200 shrink-0 ${
                       lightboxIndex === idx
-                        ? "border-[#19a64b] scale-105 ring-2 ring-[#19a64b]/40 shadow-md"
-                        : "border-transparent opacity-50 hover:opacity-100"
+                        ? "border-[#19a64b] scale-105 ring-2 ring-[#19a64b]/60 shadow-lg opacity-100"
+                        : "border-transparent opacity-45 hover:opacity-90 hover:scale-100"
                     }`}
+                    aria-label={`Go to photo ${idx + 1}`}
                   >
                     <Image
                       src={imgUrl}
                       alt={`Thumbnail ${idx + 1}`}
                       fill
                       sizes="80px"
-                      className="object-cover object-center"
+                      className="object-cover"
                     />
-                  </div>
+                  </button>
                 ))}
               </div>
             )}

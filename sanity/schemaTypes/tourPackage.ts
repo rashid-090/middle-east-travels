@@ -33,6 +33,13 @@ export const tourPackage = defineType({
       description: 'e.g. Azerbaijan Tour Packages, Thailand Exotic Island Escape',
     }),
     defineField({
+      name: 'description',
+      title: 'Package Description',
+      type: 'text',
+      rows: 4,
+      description: 'Detailed description of the tour package',
+    }),
+    defineField({
       name: 'category',
       title: 'Category',
       type: 'array',
@@ -124,14 +131,73 @@ export const tourPackage = defineType({
       of: [{ type: 'image', options: { hotspot: true } }],
     }),
     defineField({
+      name: 'itinerary',
+      title: 'Day-by-Day Itinerary',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          title: 'Day Plan',
+          fields: [
+            defineField({
+              name: 'day',
+              title: 'Day Number',
+              type: 'number',
+            }),
+            defineField({
+              name: 'title',
+              title: 'Day Title',
+              type: 'string',
+            }),
+            defineField({
+              name: 'description',
+              title: 'Day Description (Bullet Points)',
+              type: 'array',
+              of: [{ type: 'string' }],
+              description: 'Add bullet points for this day plan',
+            }),
+          ],
+        },
+      ],
+    }),
+     defineField({
+      name: 'inclusions',
+      title: 'Inclusions List',
+      type: 'array',
+      of: [{ type: 'string' }],
+    }),
+    defineField({
+      name: 'exclusions',
+      title: 'Exclusions List',
+      type: 'array',
+      of: [{ type: 'string' }],
+    }),
+    
+    defineField({
       name: 'overview',
       title: 'Overview',
       type: 'text',
       rows: 4,
     }),
+    
+    defineField({
+      name: 'keyHighlights',
+      title: 'Key Highlights & Experiences (Bullet Points)',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'Bullet points highlighting key experiences',
+    }),
+
+     defineField({
+      name: 'highlights',
+      title: 'Card Front Highlight (Bullet Points)',
+      type: 'array',
+      of: [{ type: 'string' }],
+    }),
+    
     defineField({
       name: 'inclusionIcons',
-      title: 'Inclusion Icons & Labels',
+      title: 'Card Front Icons & Labels',
       type: 'array',
       of: [
         {
@@ -162,61 +228,8 @@ export const tourPackage = defineType({
         },
       ],
     }),
-    defineField({
-      name: 'highlights',
-      title: 'Card Front Highlight (Bullet Points)',
-      type: 'array',
-      of: [{ type: 'string' }],
-    }),
-    defineField({
-      name: 'keyHighlights',
-      title: 'Key Highlights & Experiences (Bullet Points)',
-      type: 'array',
-      of: [{ type: 'string' }],
-      description: 'Bullet points highlighting key experiences',
-    }),
-    defineField({
-      name: 'itinerary',
-      title: 'Day-by-Day Itinerary',
-      type: 'array',
-      of: [
-        {
-          type: 'object',
-          title: 'Day Plan',
-          fields: [
-            defineField({
-              name: 'day',
-              title: 'Day Number',
-              type: 'number',
-            }),
-            defineField({
-              name: 'title',
-              title: 'Day Title',
-              type: 'string',
-            }),
-            defineField({
-              name: 'description',
-              title: 'Day Description (Bullet Points)',
-              type: 'array',
-              of: [{ type: 'string' }],
-              description: 'Add bullet points for this day plan',
-            }),
-          ],
-        },
-      ],
-    }),
-    defineField({
-      name: 'inclusions',
-      title: 'Inclusions List',
-      type: 'array',
-      of: [{ type: 'string' }],
-    }),
-    defineField({
-      name: 'exclusions',
-      title: 'Exclusions List',
-      type: 'array',
-      of: [{ type: 'string' }],
-    }),
+   
+   
     defineField({
       name: 'bannerCard',
       title: 'Banner Card',
