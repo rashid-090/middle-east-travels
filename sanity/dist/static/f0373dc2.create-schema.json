@@ -707,6 +707,52 @@
         ],
         "name": "highlights",
         "type": "array"
+      },
+      {
+        "description": "Custom question and answer items for this visa service",
+        "of": [
+          {
+            "fields": [
+              {
+                "validation": [
+                  {
+                    "level": "error",
+                    "rules": [
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      }
+                    ]
+                  }
+                ],
+                "name": "question",
+                "type": "string"
+              },
+              {
+                "rows": 3,
+                "validation": [
+                  {
+                    "level": "error",
+                    "rules": [
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      }
+                    ]
+                  }
+                ],
+                "name": "answer",
+                "type": "text"
+              }
+            ],
+            "type": "object",
+            "name": "faqItem",
+            "title": "FAQ Item"
+          }
+        ],
+        "name": "faqs",
+        "type": "array",
+        "title": "Frequently Asked Questions (FAQs)"
       }
     ],
     "name": "visaService",
