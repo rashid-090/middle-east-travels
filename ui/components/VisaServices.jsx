@@ -4,36 +4,21 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import TouchMarquee from "./TouchMarquee";
-import { FaArrowRight, FaFire, FaCrown, FaStar, FaTag } from "react-icons/fa6";
-import { HiOutlineCheckBadge, HiSparkles } from "react-icons/hi2";
-import { visaPackagesData } from "@/data/allData.js";
+import { FaArrowRight, FaPassport } from "react-icons/fa6";
+import { HiOutlineCheckBadge } from "react-icons/hi2";
 import { IoTicketOutline } from "react-icons/io5";
 import { client, urlFor } from "@/lib/sanity";
 
-const getBadgeIcon = (type) => {
-  switch (type) {
-    case "fire-orange":
-    case "fire-red":
-      return <FaFire className="text-orange-500 text-xs" />;
-    case "tag-emerald":
-      return <FaTag className="text-emerald-500 text-xs" />;
-    case "crown-amber":
-      return <FaCrown className="text-amber-500 text-xs" />;
-    case "sparkles-purple":
-      return <HiSparkles className="text-purple-500 text-xs" />;
-    default:
-      return <FaStar className="text-amber-400 text-xs" />;
-  }
-};
-
 export default function VisaServices() {
-  const [visaServices, setVisaServices] = useState(visaPackagesData);
+  const [visaServices, setVisaServices] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isSubscribed = true;
 
     async function fetchVisaServices() {
       try {
+        setIsLoading(true);
         const query = `*[_type == "visaService"] | order(orderRank asc, _createdAt desc){
           _id,
           title,
@@ -46,24 +31,35 @@ export default function VisaServices() {
           highlights
         }`;
         const data = await client.fetch(query);
-        if (isSubscribed && Array.isArray(data) && data.length > 0) {
-          const formatted = data.map((item) => ({
-            id: item._id,
-            title: item.title,
-            slug: item.slug?.current || item.slug || item._id,
-            duration: item.duration || "",
-            validity: item.validity || "",
-            price: item.price || "",
-            badge: item.badge || "",
-            highlights: item.highlights || [],
-            image: item.image
-              ? urlFor(item.image)?.auto("format").quality(80).url()
-              : "/visapageban.webp",
-          }));
-          setVisaServices(formatted);
+        if (isSubscribed) {
+          if (Array.isArray(data) && data.length > 0) {
+            const formatted = data.map((item) => ({
+              id: item._id,
+              title: item.title,
+              slug: item.slug?.current || item.slug || item._id,
+              duration: item.duration || "",
+              validity: item.validity || "",
+              price: item.price || "",
+              badge: item.badge || "",
+              highlights: item.highlights || [],
+              image: item.image
+                ? urlFor(item.image)?.auto("format").quality(80).url()
+                : "/visapageban.webp",
+            }));
+            setVisaServices(formatted);
+          } else {
+            setVisaServices([]);
+          }
         }
       } catch (err) {
         console.error("Error fetching visa services from Sanity:", err);
+        if (isSubscribed) {
+          setVisaServices([]);
+        }
+      } finally {
+        if (isSubscribed) {
+          setIsLoading(false);
+        }
       }
     }
 
@@ -84,7 +80,7 @@ export default function VisaServices() {
               Visa Services for{" "}
               <span className="text-primary">Your International Journey</span>
             </h2>
-            <p>Simple, reliable visa assistance for your next trip. </p>
+            <p>Simple, reliable visa assistance for your next trip.</p>
           </div>
 
           <Link
@@ -96,93 +92,131 @@ export default function VisaServices() {
           </Link>
         </div>
 
-        {/* Touch & Auto-Scroll Marquee Container */}
-        <div className="w-full py-2">
-          <TouchMarquee speed={1.2}>
-            {visaServices.map((item) => (
+        {/* Content Section: Skeleton Loading / Empty State / Marquee */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 py-2">
+            {[1, 2, 3, 4].map((n) => (
               <div
-                key={item.id}
-                className="w-[300px] lg:w-[320px] px-2.5 py-2 shrink-0"
+                key={n}
+                className="bg-white rounded-[2.25rem] border border-slate-200/80 p-4 space-y-4 animate-pulse shadow-xs"
               >
-                <Link
-                  href={`/visas/${item.slug || item.id}`}
-                  className="bg-white rounded-[2.25rem] overflow-hidden border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full group block"
+                <div className="w-full aspect-[4/3] bg-slate-200 rounded-2xl" />
+                <div className="h-5 bg-slate-200 rounded-md w-3/4" />
+                <div className="space-y-2 py-1">
+                  <div className="h-3.5 bg-slate-200 rounded-md w-full" />
+                  <div className="h-3.5 bg-slate-200 rounded-md w-2/3" />
+                </div>
+                <div className="border-t border-slate-100 pt-4 flex items-center justify-between">
+                  <div className="space-y-1">
+                    <div className="h-3 bg-slate-200 rounded-md w-14" />
+                    <div className="h-5 bg-slate-200 rounded-md w-24" />
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-slate-200" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : visaServices.length === 0 ? (
+          <div className="bg-white rounded-3xl border border-slate-200/90 p-10 text-center space-y-3 max-w-md mx-auto my-4 shadow-xs">
+            <div className="w-14 h-14 rounded-full bg-emerald-100 text-primary flex items-center justify-center text-2xl mx-auto">
+              <FaPassport />
+            </div>
+            <h3 className="text-base font-semibold text-[#021b38]">
+              No Visa Services Found
+            </h3>
+            <p className="text-xs text-slate-500 font-normal">
+              No visa services are currently available. Please check back later.
+            </p>
+          </div>
+        ) : (
+          <div className="w-full py-2">
+            <TouchMarquee speed={1.2}>
+              {visaServices.map((item) => (
+                <div
+                  key={item.id}
+                  className="w-[300px] lg:w-[320px] px-2.5 py-2 shrink-0"
                 >
-                  <div>
-                    {/* Top Smooth Rounded Image Container */}
-                    <div className="relative w-full aspect-[4/3] overflow-hidden mb-4 bg-slate-100">
-                      <Image
-                        src={item.image}
-                        alt={item.title}
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
-                        quality={85}
-                        className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                      />
+                  <Link
+                    href={`/visas/${item.slug || item.id}`}
+                    className="bg-white rounded-[2.25rem] overflow-hidden border border-slate-200/80 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between h-full group block"
+                  >
+                    <div>
+                      {/* Top Smooth Rounded Image Container */}
+                      <div className="relative w-full aspect-[4/3] overflow-hidden mb-4 bg-slate-100">
+                        <Image
+                          src={item.image}
+                          alt={item.title}
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+                          quality={85}
+                          className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                        />
 
-                      {/* Badge Overlay at Top-Right if available */}
-                      {item.badge && (
-                        <span className="absolute flex items-center gap-2 top-4 left-3 bg-white/95 backdrop-blur-xs text-[#021b38] text-[11px] font-semibold px-2.5 py-1 rounded-full shadow-xs z-10">
-                          <IoTicketOutline className="text-primary" />
-                          {item.badge}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="p-5 pt-0">
-                      {/* Title */}
-                      <h3 className="text-lg font-semibold text-primary leading-snug tracking-tight mb-1">
-                        {item.title}
-                      </h3>
-
-                      {item.highlights && item.highlights.length > 0 ? (
-                        <ul className="space-y-0.5 py-2">
-                          {item?.highlights
-                            ?.slice(0, 2)
-                            .map((highlight, index) => (
-                              <li
-                                key={index}
-                                className="flex items-start gap-2 text-xs text-slate-600 font-normal leading-snug"
-                              >
-                                <HiOutlineCheckBadge className="text-primary text-sm shrink-0 mt-0.5" />
-                                <span>{highlight}</span>
-                              </li>
-                            ))}
-                        </ul>
-                      ) : (
-                        <p className="text-xs text-slate-500 font-normal leading-relaxed">
-                          {item.duration}
-                        </p>
-                      )}
-
-                      {/* Bottom Border & Price Section */}
-                      <div className="border-t border-slate-100 pt-4 mt-auto flex items-center justify-between">
-                        <div className="space-y-0.5">
-                          <span className="text-[11px] text-slate-400 font-normal block leading-tight">
-                            Starting from
+                        {/* Badge Overlay */}
+                        {item.badge && (
+                          <span className="absolute flex items-center gap-2 top-4 left-3 bg-white/95 backdrop-blur-xs text-[#021b38] text-[11px] font-semibold px-2.5 py-1 rounded-full shadow-xs z-10">
+                            <IoTicketOutline className="text-primary" />
+                            {item.badge}
                           </span>
-                          <span className="text-lg sm:text-xl font-semibold text-slate-950 tracking-tight">
-                            {item.price
-                              ? String(item.price).includes("₹") ||
-                                String(item.price).includes("INR")
-                                ? item.price
-                                : `INR ₹${item.price}`
-                              : ""}
-                          </span>
-                        </div>
+                        )}
+                      </div>
 
-                        <div className="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-primary text-slate-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs">
-                          <FaArrowRight className="text-xs" />
+                      <div className="p-5 pt-0">
+                        {/* Title */}
+                        <h3 className="text-lg font-semibold text-primary leading-snug tracking-tight mb-1">
+                          {item.title}
+                        </h3>
+
+                        {item.highlights && item.highlights.length > 0 ? (
+                          <ul className="space-y-0.5 py-2">
+                            {item?.highlights
+                              ?.slice(0, 2)
+                              .map((highlight, index) => (
+                                <li
+                                  key={index}
+                                  className="flex items-start gap-2 text-xs text-slate-600 font-normal leading-snug"
+                                >
+                                  <HiOutlineCheckBadge className="text-primary text-sm shrink-0 mt-0.5" />
+                                  <span>{highlight}</span>
+                                </li>
+                              ))}
+                          </ul>
+                        ) : (
+                          <p className="text-xs text-slate-500 font-normal leading-relaxed">
+                            {item.duration}
+                          </p>
+                        )}
+
+                        {/* Bottom Border & Price Section */}
+                        <div className="border-t border-slate-100 pt-4 mt-auto flex items-center justify-between">
+                          <div className="space-y-0.5">
+                            <span className="text-[11px] text-slate-400 font-normal block leading-tight">
+                              Starting from
+                            </span>
+                            <span className="text-lg sm:text-xl font-semibold text-slate-950 tracking-tight">
+                              {item.price
+                                ? String(item.price).includes("₹") ||
+                                  String(item.price).includes("INR")
+                                  ? item.price
+                                  : `INR ₹${item.price}`
+                                : ""}
+                            </span>
+                          </div>
+
+                          <div className="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-primary text-slate-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs">
+                            <FaArrowRight className="text-xs" />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              </div>
-            ))}
-          </TouchMarquee>
-        </div>
+                  </Link>
+                </div>
+              ))}
+            </TouchMarquee>
+          </div>
+        )}
       </div>
     </section>
   );
 }
+

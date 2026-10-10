@@ -11,7 +11,6 @@ import {
   FaChevronLeft,
   FaChevronRight,
 } from "react-icons/fa6";
-import { visaPackagesData } from "@/data/allData";
 import { client, urlFor } from "@/lib/sanity";
 import { IoTicketOutline } from "react-icons/io5";
 import { HiOutlineCheckBadge } from "react-icons/hi2";
@@ -187,44 +186,13 @@ export default function VisasListingPage() {
           setVisasData(formatted);
           setTotalCount(data.total);
         } else {
-          // Fallback dataset slicing logic
-          const filteredFallback = visaPackagesData.filter((item) => {
-            const matchesSearch =
-              !debouncedQuery ||
-              (item.title && item.title.toLowerCase().includes(debouncedQuery.toLowerCase())) ||
-              (item.duration && item.duration.toLowerCase().includes(debouncedQuery.toLowerCase()));
-
-            let matchesRegion = true;
-            if (selectedRegion !== "All Regions" && selectedRegion !== "All") {
-              const t = (item.title || "").toLowerCase();
-              if (selectedRegion === "Middle East") {
-                matchesRegion = ["uae", "saudi", "qatar", "oman", "dubai", "kuwait", "bahrain"].some((r) => t.includes(r));
-              } else if (selectedRegion === "Asia") {
-                matchesRegion = ["singapore", "thailand", "japan", "malaysia", "bali", "vietnam"].some((r) => t.includes(r));
-              } else if (selectedRegion === "Europe") {
-                matchesRegion = ["uk", "schengen", "europe"].some((r) => t.includes(r));
-              } else if (selectedRegion === "Americas") {
-                matchesRegion = ["usa", "canada"].some((r) => t.includes(r));
-              }
-            }
-            return matchesSearch && matchesRegion;
-          }).sort((a, b) => {
-            const pA = parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0;
-            const pB = parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0;
-            if (sortBy === "price-low") return pA - pB;
-            if (sortBy === "price-high") return pB - pA;
-            return 0;
-          });
-
-          const sliced = filteredFallback.slice(start, end);
+          setVisasData([]);
+          setTotalCount(0);
           if (cacheRef.current.size > 50) {
             const firstKey = cacheRef.current.keys().next().value;
             cacheRef.current.delete(firstKey);
           }
-          cacheRef.current.set(cacheKey, { items: sliced, total: filteredFallback.length });
-
-          setTotalCount(filteredFallback.length);
-          setVisasData(sliced);
+          cacheRef.current.set(cacheKey, { items: [], total: 0 });
         }
       } catch (error) {
         // Silently ignore aborted requests
@@ -233,10 +201,8 @@ export default function VisasListingPage() {
         }
         console.error("Error fetching visa services from Sanity API:", error);
         if (isSubscribed && requestIdRef.current === currentRequestId) {
-          const start = (currentPage - 1) * ITEMS_PER_PAGE;
-          const end = currentPage * ITEMS_PER_PAGE;
-          setTotalCount(visaPackagesData.length);
-          setVisasData(visaPackagesData.slice(start, end));
+          setTotalCount(0);
+          setVisasData([]);
         }
       } finally {
         if (isSubscribed && requestIdRef.current === currentRequestId) {

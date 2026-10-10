@@ -61,6 +61,40 @@ export const visaService = defineType({
       of: [{ type: 'string' }],
       description: 'Bullet point highlight items',
     }),
+    defineField({
+      name: 'faqs',
+      title: 'Frequently Asked Questions (FAQs)',
+      type: 'array',
+      description: 'Custom question and answer items for this visa service',
+      of: [
+        {
+          type: 'object',
+          name: 'faqItem',
+          title: 'FAQ Item',
+          fields: [
+            defineField({
+              name: 'question',
+              title: 'Question',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'answer',
+              title: 'Answer',
+              type: 'text',
+              rows: 3,
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'question',
+              subtitle: 'answer',
+            },
+          },
+        },
+      ],
+    }),
   ],
   preview: {
     select: {

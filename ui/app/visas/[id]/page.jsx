@@ -26,12 +26,14 @@ import {
   FaLandmark,
   FaRoute,
   FaEnvelopeOpenText,
+  FaChevronDown,
+  FaChevronUp,
+  FaCircleQuestion,
 } from "react-icons/fa6";
 import { GiAirplaneDeparture } from "react-icons/gi";
 import { PiBag } from "react-icons/pi";
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { HiOutlineCheckBadge } from "react-icons/hi2";
-import { visaPackagesData } from "@/data/allData";
 import { client, urlFor } from "@/lib/sanity";
 
 export default function VisaDetailPage() {
@@ -56,6 +58,7 @@ export default function VisaDetailPage() {
           badge,
           image,
           highlights,
+          faqs,
           overview
         }`;
         const data = await client.fetch(query, { id: String(rawId) });
@@ -70,12 +73,16 @@ export default function VisaDetailPage() {
             badge: data.badge || "",
             image: data.image ? urlFor(data.image)?.width(1000).auto("format").quality(85).url() : null,
             highlights: data.highlights || [],
+            faqs: data.faqs || [],
             overview: data.overview || "",
           };
           setSanityVisa(formatted);
+        } else {
+          setSanityVisa(null);
         }
       } catch (error) {
         console.error("Error fetching visa detail from Sanity:", error);
+        setSanityVisa(null);
       } finally {
         setIsLoading(false);
       }
@@ -84,19 +91,7 @@ export default function VisaDetailPage() {
     fetchVisaDetail();
   }, [rawId]);
 
-  // Find fallback visa item by id or slug
-  const fallbackItem =
-    visaPackagesData.find(
-      (v) =>
-        String(v.id) === String(rawId) ||
-        v.slug === String(rawId) ||
-        v.title
-          .toLowerCase()
-          .replace(/\s+/g, "-")
-          .includes(String(rawId).toLowerCase())
-    ) || visaPackagesData[0];
-
-  const visaItem = sanityVisa || fallbackItem;
+  const visaItem = sanityVisa;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -108,6 +103,7 @@ export default function VisaDetailPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!visaItem) return;
     const text = `Hi! I want to enquire about *${visaItem.title}* (%23${visaItem.id}).%0A%0AName: ${formData.name}%0APhone: ${formData.phone}%0AEmail: ${formData.email || "N/A"}%0ATravel Date: ${formData.travelDate || "N/A"}%0ANotes: ${formData.notes || "None"}`;
     window.open(`https://wa.me/7025144666?text=${text}`, "_blank");
   };
@@ -123,10 +119,125 @@ export default function VisaDetailPage() {
   const countryName = visaItem?.title ? visaItem.title.split(" ")[0] : "UK";
   const tagTitle = `${countryName} VISA`.toUpperCase();
 
+  // FAQ Accordion State
+  const [openFaq, setOpenFaq] = useState(0);
+  const toggleFaq = (idx) => {
+    setOpenFaq(openFaq === idx ? null : idx);
+  };
+
+  const faqs =
+    visaItem?.faqs && visaItem.faqs.length > 0
+      ? visaItem.faqs.map((f) => ({
+          q: f.question || f.q,
+          a: f.answer || f.a,
+        }))
+      : [];
+
   // Price formatting
   const displayPrice = visaItem?.price
     ? String(visaItem.price).replace(/INR|₹|\/-/g, "").trim()
     : "21,500";
+
+  // Loading Skeleton State
+  if (isLoading) {
+    return (
+      <div className="bg-slate-50 min-h-screen text-slate-900 pb-16 animate-pulse">
+        {/* Skeleton Hero Header */}
+        <section className="bg-[#edf8f3] border-b border-slate-200/80 min-h-[420px] lg:min-h-[500px] flex items-center py-10 lg:py-14">
+          <div className="w-11/12 mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              <div className="lg:col-span-7 space-y-5">
+                <div className="space-y-3">
+                  <div className="h-10 sm:h-12 bg-slate-300/70 rounded-xl w-3/4" />
+                  <div className="h-8 sm:h-10 bg-emerald-200/80 rounded-xl w-1/3" />
+                </div>
+                <div className="space-y-2 max-w-xl">
+                  <div className="h-4 bg-slate-300/60 rounded w-full" />
+                  <div className="h-4 bg-slate-300/60 rounded w-5/6" />
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4">
+                  {[1, 2, 3, 4].map((n) => (
+                    <div key={n} className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-2xl bg-emerald-200/60 shrink-0" />
+                      <div className="space-y-1">
+                        <div className="h-3 bg-slate-300/70 rounded w-12" />
+                        <div className="h-3 bg-slate-300/70 rounded w-16" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="lg:col-span-5 flex justify-start lg:justify-end">
+                <div className="bg-white p-6 sm:p-7 rounded-3xl border border-slate-100 shadow-xl max-w-sm w-full space-y-5">
+                  <div className="space-y-2">
+                    <div className="h-3 bg-slate-200 rounded w-20" />
+                    <div className="h-8 bg-slate-200 rounded w-36" />
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-4 bg-slate-200 rounded w-full" />
+                    <div className="h-4 bg-slate-200 rounded w-4/5" />
+                  </div>
+                  <div className="h-12 bg-emerald-200 rounded-full w-full" />
+                  <div className="h-10 bg-slate-100 rounded-full w-full" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Skeleton Details Body */}
+        <section className="w-11/12 mx-auto mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+          <div className="lg:col-span-7 space-y-6">
+            <div className="h-7 bg-slate-200 rounded-lg w-1/3" />
+            <div className="space-y-3">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <div
+                  key={n}
+                  className="h-14 bg-white rounded-2xl border border-slate-200/80 p-4"
+                />
+              ))}
+            </div>
+          </div>
+          <div className="lg:col-span-5 space-y-6">
+            <div className="w-full aspect-square rounded-3xl bg-slate-200" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="h-20 bg-white rounded-3xl border border-slate-200/80" />
+              <div className="h-20 bg-white rounded-3xl border border-slate-200/80" />
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  // Not Found State
+  if (!visaItem) {
+    return (
+      <div className="bg-slate-50 min-h-[75vh] flex items-center justify-center py-20 px-4">
+        <div className="bg-white rounded-3xl border border-slate-200/90 p-8 sm:p-12 text-center max-w-md mx-auto shadow-xs space-y-5">
+          <div className="w-16 h-16 rounded-full bg-emerald-100 text-primary flex items-center justify-center text-3xl mx-auto">
+            <FaPassport />
+          </div>
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-[#021b38]">
+              Visa Service Not Found
+            </h1>
+            <p className="text-sm text-slate-500 font-normal">
+              The visa package you are looking for is not available or has been removed.
+            </p>
+          </div>
+          <Link
+            href="/visas"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-white text-sm font-semibold shadow-md hover:bg-emerald-700 transition-all cursor-pointer"
+          >
+            <span>Browse All Visas</span>
+            <FaArrowRight className="text-xs" />
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-slate-50 min-h-screen text-slate-900 pb-16">
@@ -143,7 +254,7 @@ export default function VisaDetailPage() {
             fetchPriority="high"
             sizes="100vw"
             quality={90}
-            className="object-cover object-right opacity-80 lg:opacity-95"
+            className="object-cover object-bottom-right opacity-80 lg:opacity-95"
           />
           {/* Smooth Gradient Blend from Left Background (#edf8f3) to Right Image */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#edf8f3] via-[#edf8f3]/95 md:via-[#edf8f3]/40 to-transparent" />
@@ -157,9 +268,10 @@ export default function VisaDetailPage() {
               {/* Main Heading */}
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-medium text-[#021b38] tracking-tight leading-[1.12]">
                 <div>
-                  {visaItem.title.includes("Visa")
-                    ? visaItem.title
-                    : `${visaItem.title} Visa`}
+                  {
+                    (visaItem.title.includes("Visa")
+                      ? visaItem.title
+                      : `${visaItem.title} Visa`)}
                 </div>
                 <div className="text-[#008c45] mt-1">for Indians</div>
               </h1>
@@ -177,7 +289,7 @@ export default function VisaDetailPage() {
                   <div className="w-11 h-11 rounded-2xl bg-[#dcf2e5] border border-emerald-300/40 flex items-center justify-center text-[#008c45] shrink-0 shadow-2xs">
                     <FaUserGroup className="text-base" />
                   </div>
-                  <span className="text-xs font-bold text-slate-800 leading-tight">
+                  <span className="text-xs font-semibold text-slate-800 leading-tight">
                     Expert
                     <br />
                     Guidance
@@ -189,7 +301,7 @@ export default function VisaDetailPage() {
                   <div className="w-11 h-11 rounded-2xl bg-[#dcf2e5] border border-emerald-300/40 flex items-center justify-center text-[#008c45] shrink-0 shadow-2xs">
                     <FaShieldHalved className="text-base" />
                   </div>
-                  <span className="text-xs font-bold text-slate-800 leading-tight">
+                  <span className="text-xs font-semibold text-slate-800 leading-tight">
                     Hassle Free
                     <br />
                     Process
@@ -201,7 +313,7 @@ export default function VisaDetailPage() {
                   <div className="w-11 h-11 rounded-2xl bg-[#dcf2e5] border border-emerald-300/40 flex items-center justify-center text-[#008c45] shrink-0 shadow-2xs">
                     <FaFileLines className="text-base" />
                   </div>
-                  <span className="text-xs font-bold text-slate-800 leading-tight">
+                  <span className="text-xs font-semibold text-slate-800 leading-tight">
                     High
                     <br />
                     Success Rate
@@ -213,7 +325,7 @@ export default function VisaDetailPage() {
                   <div className="w-11 h-11 rounded-2xl bg-[#dcf2e5] border border-emerald-300/40 flex items-center justify-center text-[#008c45] shrink-0 shadow-2xs">
                     <FaHeadset className="text-base" />
                   </div>
-                  <span className="text-xs font-bold text-slate-800 leading-tight">
+                  <span className="text-xs font-semibold text-slate-800 leading-tight">
                     Personalized
                     <br />
                     Support
@@ -536,6 +648,79 @@ export default function VisaDetailPage() {
           </div>
         </div>
       </section>
+
+      {/* ================= FAQ SECTION ================= */}
+      {faqs.length > 0 && (
+        <section className="w-11/12 mx-auto mt-16 lg:mt-24">
+          <div className="max-w-4xl mx-auto">
+            {/* Section Header */}
+            <div className="text-center space-y-3 mb-10">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#e8f6ee] text-[#008c45] text-xs font-semibold tracking-wider uppercase border border-emerald-200/50">
+                <FaCircleQuestion className="text-sm" />
+                Frequently Asked Questions
+              </div>
+              <h2 className="text-3xl font-medium text-[#021b38] leading-tight">
+                Got Questions? We Have Answers
+              </h2>
+            </div>
+
+            {/* Accordion List */}
+            <div className="space-y-4">
+              {faqs.map((faq, index) => {
+                const isOpen = openFaq === index;
+                return (
+                  <div
+                    key={index}
+                    className={`border rounded-2xl transition-all duration-300 ease-in-out bg-white overflow-hidden shadow-2xs ${
+                      isOpen
+                        ? "border-[#008c45]/40 shadow-sm"
+                        : "border-slate-200/80 hover:border-slate-300"
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => toggleFaq(index)}
+                      className="w-full text-left px-5 sm:px-6 py-4.5 sm:py-5 flex items-center justify-between gap-4 cursor-pointer focus:outline-none"
+                      aria-expanded={isOpen}
+                    >
+                      <span
+                        className={`text-sm sm:text-base font-semibold transition-colors duration-300 ${
+                          isOpen ? "text-[#008c45]" : "text-[#021b38]"
+                        }`}
+                      >
+                        {faq.q}
+                      </span>
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-transform duration-300 ease-in-out ${
+                          isOpen
+                            ? "bg-[#e8f6ee] text-[#008c45] rotate-180"
+                            : "bg-slate-100 text-slate-500"
+                        }`}
+                      >
+                        <FaChevronDown className="text-xs" />
+                      </div>
+                    </button>
+
+                    <div
+                      className={`grid transition-all duration-300 ease-in-out ${
+                        isOpen
+                          ? "grid-rows-[1fr] opacity-100"
+                          : "grid-rows-[0fr] opacity-0"
+                      }`}
+                    >
+                      <div className="overflow-hidden">
+                        <div className="px-5 sm:px-6 pb-5 pt-0 text-slate-600 text-xs sm:text-sm leading-relaxed border-t border-slate-100">
+                          <p className="pt-3">{faq.a}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
