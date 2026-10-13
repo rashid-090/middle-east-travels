@@ -446,8 +446,81 @@ export default function VisaDetailPage() {
           })}
         </div>
       </section>
+
+        {/* ========Early Slots====== */}
+        <section className="w-11/12 mx-auto pb-5 md:pb-10">
+          <div className="bg-[#f2faf5] border border-[#d4ede0] rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:px-8 lg:py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 sm:gap-6 shadow-xs">
+            {/* Left: Icon & Text */}
+            <div className="flex items-center gap-4 sm:gap-5">
+              <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-[#daf3e4] text-[#008c45] flex items-center justify-center shrink-0 shadow-2xs">
+                <svg
+                  className="w-7 h-7 sm:w-8 sm:h-8"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    x="3"
+                    y="4.5"
+                    width="18"
+                    height="16.5"
+                    rx="3"
+                    stroke="#008c45"
+                    strokeWidth="2"
+                  />
+                  <path
+                    d="M3 9.5H21"
+                    stroke="#008c45"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M8 2.5V5.5"
+                    stroke="#008c45"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M16 2.5V5.5"
+                    stroke="#008c45"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M8.5 13.5L9 12L9.5 13.5L11 14L9.5 14.5L9 16L8.5 14.5L7 14L8.5 13.5Z"
+                    fill="#008c45"
+                  />
+                  <path
+                    d="M14.5 15.5L15 14.2L15.5 15.5L16.8 16L15.5 16.5L15 17.8L14.5 16.5L13.2 16L14.5 15.5Z"
+                    fill="#008c45"
+                  />
+                </svg>
+              </div>
+
+              <div>
+                <h3 className="text-xl sm:text-2xl font-medium text-[#021b38] tracking-tight">
+                  Early Slots Available
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 mt-1 font-normal leading-relaxed">
+                  Limited appointment slots available for {countryName} visa. Contact our team now to book your slot.
+                </p>
+              </div>
+            </div>
+
+            {/* Right: Button */}
+            <Link
+              href="/contact-us"
+              className="shrink-0 w-full sm:w-auto bg-[#008c45] hover:bg-[#00783b] active:scale-[0.98] text-white font-medium sm:font-semibold text-xs sm:text-sm py-3 px-6 md:py-4 md:px-7 rounded-full flex items-center justify-center gap-2 transition-all duration-200 shadow-xs cursor-pointer group"
+            >
+              <span>Book Your Slot Now</span>
+              <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform duration-200" />
+            </Link>
+          </div>
+        </section>
+        {/* ========Early Slots====== */}
+
       {/* ================= HOW TO GET YOUR VISA ================= */}
-      <section className="w-11/12 mx-auto py-12 sm:py-16 border-t border-slate-200/60">
+      <section className="w-11/12 mx-auto py-12 sm:py-16">
         {/* Section Heading */}
         <div className="space-y-1 mb-20 text-center">
           <h2 className="text-3xl sm:text-4xl font-medium text-[#021b38] leading-tight">
