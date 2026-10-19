@@ -13,6 +13,7 @@ import Counts from "@/components/Counts";
 import Blogs from "@/components/Blogs";
 import Testimonials from "@/components/Testimonials";
 import Team from "@/components/Team";
+import AboutReel from "@/components/AboutReel";
 
 export default function AboutUsPage() {
   return (
@@ -20,7 +21,7 @@ export default function AboutUsPage() {
     <div className="h-full bg-slate-50 text-slate-900 flex flex-col font-sans">
       <main className="flex-1">
         {/* ================= STORY & MISSION SECTION (2 COLS) ================= */}
-        <section className="w-11/12 mx-auto pt-10 pb-20">
+        <section className="w-11/12 mx-auto pt-10 pb-12 sm:pb-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left Column: Image with Floating Card (5 COLS) */}
             <div className="lg:col-span-5 relative">
@@ -55,7 +56,7 @@ export default function AboutUsPage() {
               </div>
 
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-At Middle East Travels & Tourism, we believe that every traveller has different needs, preferences, and budgets. That's why we offer customized travel solutions designed around your requirements.
+At Middle East Travels & Tourism, we believe that every traveller has different needs, preferences, and budgets. That&apos;s why we offer customized travel solutions designed around your requirements.
               </p>
 
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
@@ -104,6 +105,9 @@ We serve travellers from Calicut and across Kerala, providing reliable travel se
             </div>
           </div>
         </section>
+
+        {/* ================= REEL / VIDEO PLAYER SECTION ================= */}
+        <AboutReel />
       </main>
     </div>
 

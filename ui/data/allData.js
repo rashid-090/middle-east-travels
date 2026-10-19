@@ -1441,15 +1441,15 @@ export const teamMembersData = [
     linkedin: "",
     email: "",
   },
-  {
-    id: 4,
-    name: "Dr. Shameel Bin Jameel",
-    designation: "Managing Partner",
-    image: "/team/team4.webp",
-    instagram: "https://www.instagram.com/shameelbinjameelpk?stkn=MW9pbmdvMzd6N3l6cA==",
-    linkedin: "",
-    email: "",
-  },
+  // {
+  //   id: 4,
+  //   name: "Dr. Shameel Bin Jameel",
+  //   designation: "Managing Partner",
+  //   image: "/team/team4.webp",
+  //   instagram: "https://www.instagram.com/shameelbinjameelpk?stkn=MW9pbmdvMzd6N3l6cA==",
+  //   linkedin: "",
+  //   email: "",
+  // },
 ];
 
 export const happyCustomersData = [
