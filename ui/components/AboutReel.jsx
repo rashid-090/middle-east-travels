@@ -240,52 +240,7 @@ export default function AboutReel() {
           </p>
 
           {/* 3 Pillars / Feature Points */}
-          <div className="space-y-3.5 pt-1">
-            <div className="flex items-start gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs hover:border-emerald-200 transition-colors">
-              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-[#19a64b] flex items-center justify-center shrink-0 mt-0.5">
-                <FaCompass className="text-base" />
-              </div>
-              <div>
-                <h4 className="text-xs sm:text-sm font-semibold text-[#021b38]">
-                  Real Moments & Verified Tours
-                </h4>
-                <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-relaxed">
-                  Authentic glimpses of our holiday groups, bespoke family trips,
-                  and milestone celebrations across Asia, Europe, and the Middle East.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs hover:border-emerald-200 transition-colors">
-              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-[#19a64b] flex items-center justify-center shrink-0 mt-0.5">
-                <FaCircleCheck className="text-base" />
-              </div>
-              <div>
-                <h4 className="text-xs sm:text-sm font-semibold text-[#021b38]">
-                  Dedicated Ground & Visa Specialists
-                </h4>
-                <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-relaxed">
-                  A glimpse into our daily hustle — verifying documents, coordinating
-                  embassy submissions, and securing express visa stamps.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs hover:border-emerald-200 transition-colors">
-              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-[#19a64b] flex items-center justify-center shrink-0 mt-0.5">
-                <FaLocationDot className="text-base" />
-              </div>
-              <div>
-                <h4 className="text-xs sm:text-sm font-semibold text-[#021b38]">
-                  Rooted in Kerala, Connected Globally
-                </h4>
-                <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-relaxed">
-                  Headquartered in Calicut, serving thousands of families, professionals,
-                  and wanderers with trusted 24/7 travel care.
-                </p>
-              </div>
-            </div>
-          </div>
+          
 
           {/* Action CTAs */}
           <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -397,29 +352,7 @@ export default function AboutReel() {
               {/* RIGHT SIDEBAR: REEL QUICK ACTIONS */}
               <div className="absolute right-3 bottom-14 z-20 flex flex-col items-center gap-3.5 pointer-events-auto">
                 {/* Like Button */}
-                <button
-                  type="button"
-                  onClick={handleLike}
-                  title="Like Reel"
-                  className="flex flex-col items-center gap-1 group/btn"
-                >
-                  <div
-                    className={`w-9 h-9 rounded-full backdrop-blur-md flex items-center justify-center border transition-all active:scale-90 shadow-md ${
-                      isLiked
-                        ? "bg-rose-500/80 border-rose-400 text-white"
-                        : "bg-black/40 border-white/15 text-white hover:bg-black/60"
-                    }`}
-                  >
-                    <FaHeart
-                      className={`text-sm ${
-                        isLiked ? "text-white" : "text-white"
-                      }`}
-                    />
-                  </div>
-                  <span className="text-[10px] text-white/90 font-medium">
-                    {likes}
-                  </span>
-                </button>
+                
 
                 {/* Share Button */}
                 <button
@@ -461,7 +394,7 @@ export default function AboutReel() {
                       style={{ width: `${progress}%` }}
                     />
                   </div>
-                  <span className="text-[9px] text-white/80 font-mono shrink-0">
+                  <span className="text-[9px] text-white/80  shrink-0">
                     {formatTime(currentTime)}
                   </span>
                 </div>
