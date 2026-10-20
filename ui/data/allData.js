@@ -1310,10 +1310,12 @@ export const heroBanners = [
   {
     id: 1,
     bgImage: "/hero/banner1.webp",
+    mobbgImage: "/hero/banner1-mob.webp",
   },
   {
     id: 2,
     bgImage: "/hero/banner2.webp",
+    mobbgImage: "/hero/banner2-mob.webp",
   },
 ];
 

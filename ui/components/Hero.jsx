@@ -403,6 +403,7 @@ export default function Hero() {
             transition={{ duration: 1.2, ease: "easeInOut" }}
             className="absolute inset-0 w-full h-full"
           >
+            {/* Desktop Banner Image */}
             <Image
               src={currentBanner.bgImage}
               alt="Tropical Beach Hero Background"
@@ -412,7 +413,19 @@ export default function Hero() {
               fetchPriority="high"
               sizes="100vw"
               quality={90}
-              className="object-cover object-center"
+              className="hidden md:block object-cover object-center"
+            />
+            {/* Mobile Banner Image */}
+            <Image
+              src={currentBanner.mobbgImage || currentBanner.bgImage}
+              alt="Tropical Beach Hero Background"
+              fill
+              priority
+              loading="eager"
+              fetchPriority="high"
+              sizes="100vw"
+              quality={90}
+              className="block md:hidden object-cover object-center"
             />
             {/* Gradient Overlays for optimal text contrast */}
             <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/25 to-black/10 z-10 pointer-events-none" />
