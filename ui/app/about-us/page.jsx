@@ -109,11 +109,12 @@ We serve travellers from Calicut and across Kerala, providing reliable travel se
         {/* ================= REEL / VIDEO PLAYER SECTION ================= */}
         <AboutReel />
       </main>
+            <Team/>
     </div>
 
     <Counts/>
     <Testimonials/>
-    <Team/>
+
     </>
   );
 }

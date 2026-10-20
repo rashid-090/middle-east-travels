@@ -94,7 +94,7 @@ export default function Team() {
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#19a64b]/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-10 w-80 h-80 bg-sky-500/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="w-11/12 max-w-7xl mx-auto relative z-10">
+      <div className="w-11/12 mx-auto relative z-10">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-3 max-w-2xl">
