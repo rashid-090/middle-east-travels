@@ -17,6 +17,7 @@ import {
   FaArrowRight,
   FaLocationDot,
   FaCompass,
+  FaFacebook,
 } from "react-icons/fa6";
 
 export default function AboutReel() {
@@ -227,16 +228,12 @@ export default function AboutReel() {
 
           {/* Heading */}
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#021b38] tracking-tight leading-tight">
-            See Middle East Travels <br />
-            <span className="text-[#19a64b]">In Live Action</span>
+            Our <span className="text-[#19a64b]">Journey</span>
           </h2>
 
           {/* Narrative text */}
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-            Every memorable trip begins with people who genuinely care about your
-            journey. Take a quick look behind the scenes at Middle East Travels &
-            Tourism — from our consultation counters in Calicut to our happy tour
-            groups exploring dream destinations worldwide.
+            Founded in 1996, Middle East Travels & Tourism has grown over nearly three decades into a trusted name in the travel industry, built on a foundation of reliability, expert leadership, and word-of-mouth excellence. Led by Managing Partner Ashraf Alangad, alongside Mohammed Al Marzooqi, our agency specializes in seamless visa processing and premium holiday packages, handling around 160,000 visas with high standards of service. From humble beginnings to scaling through global challenges, our journey is defined by our commitment to making every client's travel experience smooth, secure, and unforgettable.
           </p>
 
           {/* 3 Pillars / Feature Points */}
@@ -253,13 +250,22 @@ export default function AboutReel() {
             </Link>
 
             <a
-              href="https://www.instagram.com/middleeast_travels/"
+              href="https://www.facebook.com/ashraf.mett/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs sm:text-sm border border-slate-200/80 shadow-xs active:scale-95 transition-all cursor-pointer group"
+              className="inline-flex items-center gap-2 p-4 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs sm:text-sm border border-slate-200/80 shadow-xs active:scale-95 transition-all cursor-pointer group"
+            >
+              <FaFacebook className="text-blue-500 text-base group-hover:scale-110 transition-transform" />
+              
+            </a>
+            <a
+              href="https://www.instagram.com/mettashraf?obrf=MTNqaDVzM2YzeWlnag=="
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 p-4 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs sm:text-sm border border-slate-200/80 shadow-xs active:scale-95 transition-all cursor-pointer group"
             >
               <FaInstagram className="text-pink-600 text-base group-hover:scale-110 transition-transform" />
-              <span>Follow on Instagram</span>
+              
             </a>
           </div>
         </div>
