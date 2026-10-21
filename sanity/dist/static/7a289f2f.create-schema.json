@@ -683,6 +683,37 @@
       },
       {
         "options": {
+          "list": [
+            {
+              "title": "Tourist",
+              "value": "Tourist"
+            },
+            {
+              "title": "Business",
+              "value": "Business"
+            },
+            {
+              "title": "Family",
+              "value": "Family"
+            }
+          ]
+        },
+        "initialValue": [
+          "Tourist",
+          "Business",
+          "Family"
+        ],
+        "description": "Select visa types to display on the visa inner page",
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "visaTypes",
+        "type": "array"
+      },
+      {
+        "options": {
           "hotspot": true
         },
         "validation": [
@@ -753,6 +784,23 @@
         "name": "faqs",
         "type": "array",
         "title": "Frequently Asked Questions (FAQs)"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "custom"
+              }
+            ]
+          }
+        ],
+        "name": "documentsVisaImage",
+        "type": "image"
       }
     ],
     "name": "visaService",
