@@ -424,7 +424,7 @@ export default function VisasListingPage() {
                 No Visa Services Found
               </h3>
               <p className="text-xs text-slate-500 font-normal">
-                We couldn't find any visa packages matching your criteria. Try resetting search terms.
+                We couldn&apos;t find any visa packages matching your criteria. Try resetting search terms.
               </p>
             </div>
             <button
@@ -439,9 +439,10 @@ export default function VisasListingPage() {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {visasData.map((item) => (
-                <div
+                <Link
                   key={item.id}
-                  className="bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between group"
+                  href={`/visas/${item.slug || item.id}`}
+                  className="bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between group block"
                 >
                   <div>
                     {/* Top Image Container */}
@@ -503,16 +504,14 @@ export default function VisasListingPage() {
                       </span>
                     </div>
 
-                    {/* Circular Arrow CTA Button */}
-                    <Link
-                      href={`/visas/${item.slug || item.id}`}
-                      className="w-9 h-9 rounded-full bg-slate-100 group-hover:bg-primary text-slate-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs shrink-0 cursor-pointer"
-                      aria-label={`View details for ${item.title}`}
+                    {/* Circular Arrow CTA Icon */}
+                    <div
+                      className="w-9 h-9 rounded-full bg-slate-100 group-hover:bg-primary text-slate-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs shrink-0"
                     >
                       <FaArrowRight className="text-xs" />
-                    </Link>
+                    </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
 
