@@ -218,7 +218,7 @@ export default function VisaServicesPage() {
       </section>
 
       {/* ================= WHY CHOOSE US SECTION ================= */}
-      <section className="w-11/12 mx-auto pb-10 lg:pb-16">
+      <section className="w-11/12 mx-auto ">
         <div className="bg-white rounded-3xl border border-slate-100/90 shadow-xs overflow-hidden p-6 sm:p-8 lg:p-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
             
@@ -357,82 +357,7 @@ export default function VisaServicesPage() {
         </div>
       </section>
 
-      {/* ================= VISA CATEGORIES SECTION ================= */}
-      <section className="w-11/12 mx-auto">
-        <div className="space-y-8">
-          {/* Header Tag */}
-          <div className="flex items-center justify-center gap-2">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-medium text-[#021b38] tracking-tight">
-              Visa Categories
-            </h2>
-          </div>
 
-          {/* 4 Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            
-            {/* Card 1: Tourist Visa */}
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-xs hover:shadow-md transition-all duration-300 p-6 flex flex-col items-center text-center space-y-3 group">
-              <div className="w-14 h-14 rounded-full bg-emerald-100/80 text-primary flex items-center justify-center text-2xl group-hover:scale-105 transition-transform duration-300">
-                <FaPlaneDeparture />
-              </div>
-              <div className="space-y-1">
-                <h3 className="font-semibold text-[#021b38] text-base sm:text-lg">
-                  Tourist Visa
-                </h3>
-                <p className="text-slate-500 text-xs font-normal max-w-[200px] mx-auto leading-relaxed">
-                  For holidays and leisure travel
-                </p>
-              </div>
-            </div>
-
-            {/* Card 2: Business Visa */}
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-xs hover:shadow-md transition-all duration-300 p-6 flex flex-col items-center text-center space-y-3 group">
-              <div className="w-14 h-14 rounded-full bg-emerald-100/80 text-primary flex items-center justify-center text-2xl group-hover:scale-105 transition-transform duration-300">
-                <FaBriefcase />
-              </div>
-              <div className="space-y-1">
-                <h3 className="font-semibold text-[#021b38] text-base sm:text-lg">
-                  Business Visa
-                </h3>
-                <p className="text-slate-500 text-xs font-normal max-w-[200px] mx-auto leading-relaxed">
-                  For business meetings and corporate travel
-                </p>
-              </div>
-            </div>
-
-            {/* Card 3: Transit Visa */}
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-xs hover:shadow-md transition-all duration-300 p-6 flex flex-col items-center text-center space-y-3 group">
-              <div className="w-14 h-14 rounded-full bg-emerald-100/80 text-primary flex items-center justify-center text-2xl group-hover:scale-105 transition-transform duration-300">
-                <FaGraduationCap />
-              </div>
-              <div className="space-y-1">
-                <h3 className="font-semibold text-[#021b38] text-base sm:text-lg">
-                  Transit Visa
-                </h3>
-                <p className="text-slate-500 text-xs font-normal max-w-[200px] mx-auto leading-relaxed">
-                  For short stopovers while travelling to another country
-                </p>
-              </div>
-            </div>
-
-            {/* Card 4: Family Visit Visa */}
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-xs hover:shadow-md transition-all duration-300 p-6 flex flex-col items-center text-center space-y-3 group">
-              <div className="w-14 h-14 rounded-full bg-emerald-100/80 text-primary flex items-center justify-center text-2xl group-hover:scale-105 transition-transform duration-300">
-                <FaUserGroup />
-              </div>
-              <div className="space-y-1">
-                <h3 className="font-semibold text-[#021b38] text-base sm:text-lg">
-                  Family Visit Visa
-                </h3>
-                <p className="text-slate-500 text-xs font-normal max-w-[200px] mx-auto leading-relaxed">
-                  For visiting family and relatives
-                </p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
 
   {/* ================= VisaServices SECTION ================= */}
       <VisaServices/>
