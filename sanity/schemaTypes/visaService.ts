@@ -46,6 +46,21 @@ export const visaService = defineType({
       type: 'string',
     }),
     defineField({
+      name: 'visaTypes',
+      title: 'Visa Types',
+      type: 'array',
+      of: [{ type: 'string' }],
+      options: {
+        list: [
+          { title: 'Tourist', value: 'Tourist' },
+          { title: 'Business', value: 'Business' },
+          { title: 'Family', value: 'Family' },
+        ],
+      },
+      initialValue: ['Tourist', 'Business', 'Family'],
+      description: 'Select visa types to display on the visa inner page',
+    }),
+    defineField({
       name: 'image',
       title: 'Image',
       type: 'image',
@@ -94,6 +109,15 @@ export const visaService = defineType({
           },
         },
       ],
+    }),
+    defineField({
+      name: 'documentsVisaImage',
+      title: 'Documents Visa Image',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+      validation: (Rule) => Rule.custom(validateMaxImageSize(2)),
     }),
   ],
   preview: {

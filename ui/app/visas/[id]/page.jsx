@@ -56,7 +56,9 @@ export default function VisaDetailPage() {
           validity,
           price,
           badge,
+          visaTypes,
           image,
+          documentsVisaImage,
           highlights,
           faqs,
           overview
@@ -71,7 +73,9 @@ export default function VisaDetailPage() {
             validity: data.validity || "",
             price: data.price || "",
             badge: data.badge || "",
+            visaTypes: Array.isArray(data.visaTypes) ? data.visaTypes : ["Tourist", "Business", "Family"],
             image: data.image ? urlFor(data.image)?.width(1000).auto("format").quality(85).url() : null,
+            documentsVisaImage: data.documentsVisaImage ? urlFor(data.documentsVisaImage)?.width(1000).auto("format").quality(85).url() : null,
             highlights: data.highlights || [],
             faqs: data.faqs || [],
             overview: data.overview || "",
@@ -407,7 +411,20 @@ export default function VisaDetailPage() {
               icon: HiOutlineUserGroup,
               iconBg: "bg-[#dcf2e5] text-[#0f8a3c]",
             },
-          ].map((type) => {
+          ]
+            .filter((type) => {
+              if (
+                !visaItem?.visaTypes ||
+                !Array.isArray(visaItem.visaTypes) ||
+                visaItem.visaTypes.length === 0
+              ) {
+                return true;
+              }
+              return visaItem.visaTypes.some(
+                (vt) => String(vt).toLowerCase() === type.id.toLowerCase()
+              );
+            })
+            .map((type) => {
             const IconComp = type.icon;
             return (
               <div
@@ -677,8 +694,8 @@ export default function VisaDetailPage() {
             {/* Passport Image Card */}
             <div className="relative w-full aspect-square rounded-3xl overflow-hidden shadow-xs border border-slate-200/70 bg-slate-100">
               <Image
-                src={"/immigration_banner_bg.jpg"}
-                alt={`${visaItem.title} Passport and Landmark`}
+                src={visaItem?.documentsVisaImage || "/immigration_banner_bg.jpg"}
+                alt={`${visaItem?.title || "Visa"} Passport and Landmark`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 40vw"
                 className="object-cover object-left"
