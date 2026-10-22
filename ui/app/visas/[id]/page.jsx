@@ -53,8 +53,10 @@ export default function VisaDetailPage() {
           title,
           slug,
           duration,
+          secondaryDuration,
           validity,
           price,
+          secondaryPrice,
           badge,
           visaTypes,
           image,
@@ -70,12 +72,24 @@ export default function VisaDetailPage() {
             title: data.title,
             slug: data.slug?.current || data.slug || data._id,
             duration: data.duration || "",
+            secondaryDuration: data.secondaryDuration || "",
             validity: data.validity || "",
             price: data.price || "",
+            secondaryPrice: data.secondaryPrice || "",
             badge: data.badge || "",
-            visaTypes: Array.isArray(data.visaTypes) ? data.visaTypes : ["Tourist", "Business", "Family"],
-            image: data.image ? urlFor(data.image)?.width(1000).auto("format").quality(85).url() : null,
-            documentsVisaImage: data.documentsVisaImage ? urlFor(data.documentsVisaImage)?.width(1000).auto("format").quality(85).url() : null,
+            visaTypes: Array.isArray(data.visaTypes)
+              ? data.visaTypes
+              : ["Tourist", "Business", "Family"],
+            image: data.image
+              ? urlFor(data.image)?.width(1000).auto("format").quality(85).url()
+              : null,
+            documentsVisaImage: data.documentsVisaImage
+              ? urlFor(data.documentsVisaImage)
+                  ?.width(1000)
+                  .auto("format")
+                  .quality(85)
+                  .url()
+              : null,
             highlights: data.highlights || [],
             faqs: data.faqs || [],
             overview: data.overview || "",
@@ -139,8 +153,16 @@ export default function VisaDetailPage() {
 
   // Price formatting
   const displayPrice = visaItem?.price
-    ? String(visaItem.price).replace(/INR|₹|\/-/g, "").trim()
+    ? String(visaItem.price)
+        .replace(/INR|₹|\/-/g, "")
+        .trim()
     : "21,500";
+
+  const displaySecondaryPrice = visaItem?.secondaryPrice
+    ? String(visaItem.secondaryPrice)
+        .replace(/INR|₹|\/-/g, "")
+        .trim()
+    : "";
 
   // Loading Skeleton State
   if (isLoading) {
@@ -228,7 +250,8 @@ export default function VisaDetailPage() {
               Visa Service Not Found
             </h1>
             <p className="text-sm text-slate-500 font-normal">
-              The visa package you are looking for is not available or has been removed.
+              The visa package you are looking for is not available or has been
+              removed.
             </p>
           </div>
           <Link
@@ -272,10 +295,9 @@ export default function VisaDetailPage() {
               {/* Main Heading */}
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-medium text-[#021b38] tracking-tight leading-[1.12]">
                 <div>
-                  {
-                    (visaItem.title.includes("Visa")
-                      ? visaItem.title
-                      : `${visaItem.title} Visa`)}
+                  {visaItem.title.includes("Visa")
+                    ? visaItem.title
+                    : `${visaItem.title} Visa`}
                 </div>
                 <div className="text-[#008c45] mt-1">for Indians</div>
               </h1>
@@ -340,7 +362,7 @@ export default function VisaDetailPage() {
 
             {/* Right Column: Floating Price & CTA Card (Exact match to reference image) */}
             <div className="lg:col-span-5 flex justify-start lg:justify-end">
-              <div className="bg-white p-6 sm:p-7 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/60 max-w-sm w-full space-y-5">
+              <div className="bg-white p-6 sm:p-7 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/60 max-w-sm w-full space-y-2">
                 <div>
                   <span className="text-xs font-bold text-slate-800 block">
                     Starting From
@@ -348,15 +370,47 @@ export default function VisaDetailPage() {
                   <div className="text-3xl sm:text-4xl font-semibold text-slate-900 tracking-tight mt-1">
                     ₹ {displayPrice}*
                   </div>
-                  <span className="text-xs text-slate-500 font-medium block mt-1">
-                    {visaItem.title}
-                  </span>
                 </div>
 
-                <div className="space-y-3 pt-1">
+                <div className=" flex items-center gap-2">
+                  <h3 className="text-sm text-[#021b38]">
+                    Processing Time
+                  </h3>
+
+                  <div className=" font-semibold text-primary mt-0.5">
+                    {visaItem.duration || "2 – 4 Weeks"}
+                  </div>
+                </div>
+
+                {/* second price */}
+                {(displaySecondaryPrice || visaItem?.secondaryDuration) && (
+                  <div className="pt-3 border-t border-slate-100 space-y-2">
+                    {displaySecondaryPrice && (
+                      <div>
+                        <div className="text-3xl sm:text-4xl font-semibold text-slate-900 tracking-tight mt-1">
+                          ₹ {displaySecondaryPrice}*
+                        </div>
+                      </div>
+                    )}
+
+                    {visaItem?.secondaryDuration && (
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-sm text-[#021b38]">
+                          Processing Time
+                        </h3>
+
+                        <div className="font-semibold text-primary mt-0.5">
+                          {visaItem.secondaryDuration}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <div className="space-y-3 pt-5">
                   <a
-                                  href={`https://wa.me/7025144666?text=Hi!%20I%20want%20to%20talk%20to%20an%20expert%20about%20${encodeURIComponent(visaItem.title)}.`}
-    target="_blank"
+                    href={`https://wa.me/7025144666?text=Hi!%20I%20want%20to%20talk%20to%20an%20expert%20about%20${encodeURIComponent(visaItem.title)}.`}
+                    target="_blank"
                     className="w-full bg-[#008c45] hover:bg-[#00783b] active:scale-[0.98] text-white font-semibold py-3.5 px-6 rounded-full flex items-center justify-center gap-2 shadow-sm transition-all duration-200 text-sm cursor-pointer"
                   >
                     <span>Check Eligibility</span>
@@ -421,120 +475,121 @@ export default function VisaDetailPage() {
                 return true;
               }
               return visaItem.visaTypes.some(
-                (vt) => String(vt).toLowerCase() === type.id.toLowerCase()
+                (vt) => String(vt).toLowerCase() === type.id.toLowerCase(),
               );
             })
             .map((type) => {
-            const IconComp = type.icon;
-            return (
-              <div
-                key={type.id}
-                className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between space-y-6"
-              >
-                <div>
-                  {/* Top Header: Icon & Price Badge */}
-                  <div className="flex items-start justify-between gap-4 mb-4">
-                    <div
-                      className={`w-12 h-12 rounded-2xl bg-[#e2f5ea] text-[#008c45] flex items-center justify-center text-xl shrink-0 shadow-2xs`}
-                    >
-                      <IconComp />
+              const IconComp = type.icon;
+              return (
+                <div
+                  key={type.id}
+                  className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between space-y-6"
+                >
+                  <div>
+                    {/* Top Header: Icon & Price Badge */}
+                    <div className="flex items-start justify-between gap-4 mb-4">
+                      <div
+                        className={`w-12 h-12 rounded-2xl bg-[#e2f5ea] text-[#008c45] flex items-center justify-center text-xl shrink-0 shadow-2xs`}
+                      >
+                        <IconComp />
+                      </div>
                     </div>
+
+                    {/* Title & Description */}
+                    <h3 className="text-lg font-semibold text-[#021b38] mb-2">
+                      {type.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-normal">
+                      {type.desc}
+                    </p>
                   </div>
 
-                  {/* Title & Description */}
-                  <h3 className="text-lg font-semibold text-[#021b38] mb-2">
-                    {type.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-normal">
-                    {type.desc}
-                  </p>
+                  {/* Apply Button */}
+                  <button
+                    onClick={scrollToEnquiry}
+                    className="w-fit bg-[#008c45] hover:bg-[#00783b] active:scale-[0.98] text-white font-semibold py-3 px-5 rounded-full flex items-center justify-center gap-2 text-xs sm:text-sm shadow-xs transition-all cursor-pointer mt-auto"
+                  >
+                    <span>Apply For Visa</span>
+                    <FaArrowRight className="text-xs" />
+                  </button>
                 </div>
-
-                {/* Apply Button */}
-                <button
-                  onClick={scrollToEnquiry}
-                  className="w-fit bg-[#008c45] hover:bg-[#00783b] active:scale-[0.98] text-white font-semibold py-3 px-5 rounded-full flex items-center justify-center gap-2 text-xs sm:text-sm shadow-xs transition-all cursor-pointer mt-auto"
-                >
-                  <span>Apply For Visa</span>
-                  <FaArrowRight className="text-xs" />
-                </button>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       </section>
 
-        {/* ========Early Slots====== */}
-        <section className="w-11/12 mx-auto pb-5 md:pb-10">
-          <div className="bg-[#f2faf5] border border-[#d4ede0] rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:px-8 lg:py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 sm:gap-6 shadow-xs">
-            {/* Left: Icon & Text */}
-            <div className="flex items-center gap-4 sm:gap-5">
-              <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-[#daf3e4] text-[#008c45] flex items-center justify-center shrink-0 shadow-2xs">
-                <svg
-                  className="w-7 h-7 sm:w-8 sm:h-8"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect
-                    x="3"
-                    y="4.5"
-                    width="18"
-                    height="16.5"
-                    rx="3"
-                    stroke="#008c45"
-                    strokeWidth="2"
-                  />
-                  <path
-                    d="M3 9.5H21"
-                    stroke="#008c45"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M8 2.5V5.5"
-                    stroke="#008c45"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M16 2.5V5.5"
-                    stroke="#008c45"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M8.5 13.5L9 12L9.5 13.5L11 14L9.5 14.5L9 16L8.5 14.5L7 14L8.5 13.5Z"
-                    fill="#008c45"
-                  />
-                  <path
-                    d="M14.5 15.5L15 14.2L15.5 15.5L16.8 16L15.5 16.5L15 17.8L14.5 16.5L13.2 16L14.5 15.5Z"
-                    fill="#008c45"
-                  />
-                </svg>
-              </div>
-
-              <div>
-                <h3 className="text-xl sm:text-2xl font-medium text-[#021b38] tracking-tight">
-                  Early Slots Available
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-600 mt-1 font-normal leading-relaxed">
-                  Limited appointment slots available for {countryName} visa. Contact our team now to book your slot.
-                </p>
-              </div>
+      {/* ========Early Slots====== */}
+      <section className="w-11/12 mx-auto pb-5 md:pb-10">
+        <div className="bg-[#f2faf5] border border-[#d4ede0] rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:px-8 lg:py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 sm:gap-6 shadow-xs">
+          {/* Left: Icon & Text */}
+          <div className="flex items-center gap-4 sm:gap-5">
+            <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-[#daf3e4] text-[#008c45] flex items-center justify-center shrink-0 shadow-2xs">
+              <svg
+                className="w-7 h-7 sm:w-8 sm:h-8"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  x="3"
+                  y="4.5"
+                  width="18"
+                  height="16.5"
+                  rx="3"
+                  stroke="#008c45"
+                  strokeWidth="2"
+                />
+                <path
+                  d="M3 9.5H21"
+                  stroke="#008c45"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M8 2.5V5.5"
+                  stroke="#008c45"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M16 2.5V5.5"
+                  stroke="#008c45"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M8.5 13.5L9 12L9.5 13.5L11 14L9.5 14.5L9 16L8.5 14.5L7 14L8.5 13.5Z"
+                  fill="#008c45"
+                />
+                <path
+                  d="M14.5 15.5L15 14.2L15.5 15.5L16.8 16L15.5 16.5L15 17.8L14.5 16.5L13.2 16L14.5 15.5Z"
+                  fill="#008c45"
+                />
+              </svg>
             </div>
 
-            {/* Right: Button */}
-            <Link
-              href="/contact-us"
-              className="shrink-0 w-full sm:w-auto bg-[#008c45] hover:bg-[#00783b] active:scale-[0.98] text-white font-medium sm:font-semibold text-xs sm:text-sm py-3 px-6 md:py-4 md:px-7 rounded-full flex items-center justify-center gap-2 transition-all duration-200 shadow-xs cursor-pointer group"
-            >
-              <span>Book Your Slot Now</span>
-              <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform duration-200" />
-            </Link>
+            <div>
+              <h3 className="text-xl sm:text-2xl font-medium text-[#021b38] tracking-tight">
+                Early Slots Available
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 mt-1 font-normal leading-relaxed">
+                Limited appointment slots available for {countryName} visa.
+                Contact our team now to book your slot.
+              </p>
+            </div>
           </div>
-        </section>
-        {/* ========Early Slots====== */}
+
+          {/* Right: Button */}
+          <Link
+            href="/contact-us"
+            className="shrink-0 w-full sm:w-auto bg-[#008c45] hover:bg-[#00783b] active:scale-[0.98] text-white font-medium sm:font-semibold text-xs sm:text-sm py-3 px-6 md:py-4 md:px-7 rounded-full flex items-center justify-center gap-2 transition-all duration-200 shadow-xs cursor-pointer group"
+          >
+            <span>Book Your Slot Now</span>
+            <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform duration-200" />
+          </Link>
+        </div>
+      </section>
+      {/* ========Early Slots====== */}
 
       {/* ================= HOW TO GET YOUR VISA ================= */}
       <section className="w-11/12 mx-auto py-12 sm:py-16">
@@ -694,7 +749,9 @@ export default function VisaDetailPage() {
             {/* Passport Image Card */}
             <div className="relative w-full aspect-square rounded-3xl overflow-hidden shadow-xs border border-slate-200/70 bg-slate-100">
               <Image
-                src={visaItem?.documentsVisaImage || "/immigration_banner_bg.jpg"}
+                src={
+                  visaItem?.documentsVisaImage || "/immigration_banner_bg.jpg"
+                }
                 alt={`${visaItem?.title || "Visa"} Passport and Landmark`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 40vw"
@@ -702,23 +759,7 @@ export default function VisaDetailPage() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {/* Visa Processing Time Box */}
-              <div className="bg-[#f4faf7] rounded-3xl p-3 border border-emerald-100/80 shadow-xs flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#e2f5ea] text-[#008c45] flex items-center justify-center text-2xl shrink-0 shadow-2xs">
-                  <FaClock />
-                </div>
-                <div>
-                  <h3 className="text-xs font-medium text-[#021b38]">
-                    Visa Processing Time
-                  </h3>
-             
-                  <div className=" font-semibold text-[#021b38] mt-0.5">
-                    {visaItem.duration || "2 – 4 Weeks"}
-                  </div>
-                </div>
-              </div>
-
+            <div className="grid grid-cols-1">
               {/* Visa Validity Box */}
               <div className="bg-[#f4faf7] rounded-3xl p-3 border border-emerald-100/80 shadow-xs flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-[#e2f5ea] text-[#008c45] flex items-center justify-center text-2xl shrink-0 shadow-2xs">
@@ -731,7 +772,6 @@ export default function VisaDetailPage() {
                   <div className="font-semibold text-[#021b38]">
                     Up to {visaItem.validity || "6 Months"}
                   </div>
-                 
                 </div>
               </div>
             </div>

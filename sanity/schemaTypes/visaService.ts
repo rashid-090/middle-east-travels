@@ -25,21 +25,28 @@ export const visaService = defineType({
       },
       validation: (Rule) => Rule.required(),
     }),
+       
+    defineField({
+      name: 'price',
+      title: 'Price',
+      type: 'string',
+    }),
     defineField({
       name: 'duration',
       title: 'Duration / Processing Time',
       type: 'string',
     }),
     defineField({
-      name: 'validity',
-      title: 'Validity',
+      name: 'secondaryPrice',
+      title: 'Secondary Price',
       type: 'string',
     }),
     defineField({
-      name: 'price',
-      title: 'Price',
+      name: 'secondaryDuration',
+      title: 'Secondary Duration / Processing Time',
       type: 'string',
     }),
+
     defineField({
       name: 'badge',
       title: 'Badge',
@@ -68,6 +75,11 @@ export const visaService = defineType({
         hotspot: true,
       },
       validation: (Rule) => Rule.custom(validateMaxImageSize(2)),
+    }),
+     defineField({
+      name: 'validity',
+      title: 'Validity',
+      type: 'string',
     }),
     defineField({
       name: 'highlights',
