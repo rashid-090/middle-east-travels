@@ -193,7 +193,7 @@ export default function VisaServices() {
                             <span className="text-[11px] text-slate-400 font-normal block leading-tight">
                               Starting from
                             </span>
-                            <span className="text-lg sm:text-xl font-semibold text-slate-950 tracking-tight">
+                            <span className="text-lg font-semibold text-slate-950 tracking-tight">
                               {item.price
                                 ? String(item.price).includes("₹") ||
                                   String(item.price).includes("INR")

@@ -29,6 +29,9 @@ import {
   FaChevronDown,
   FaChevronUp,
   FaCircleQuestion,
+  FaStamp,
+  FaCreditCard,
+  FaPlane,
 } from "react-icons/fa6";
 import { GiAirplaneDeparture } from "react-icons/gi";
 import { PiBag } from "react-icons/pi";
@@ -62,6 +65,7 @@ export default function VisaDetailPage() {
           image,
           documentsVisaImage,
           highlights,
+          processSteps,
           faqs,
           overview
         }`;
@@ -91,6 +95,7 @@ export default function VisaDetailPage() {
                   .url()
               : null,
             highlights: data.highlights || [],
+            processSteps: Array.isArray(data.processSteps) ? data.processSteps : [],
             faqs: data.faqs || [],
             overview: data.overview || "",
           };
@@ -150,6 +155,51 @@ export default function VisaDetailPage() {
           a: f.answer || f.a,
         }))
       : [];
+
+  const processSteps =
+    visaItem?.processSteps && visaItem.processSteps.length > 0
+      ? visaItem.processSteps
+      : [];
+
+  const getStepIcon = (iconType, index) => {
+    switch (iconType) {
+      case "file":
+      case "consultation":
+        return FaFileLines;
+      case "document":
+        return FaFileCircleCheck;
+      case "calendar":
+      case "appointment":
+        return FaCalendarDays;
+      case "user":
+      case "interview":
+        return FaUserCheck;
+      case "passport":
+        return FaPassport;
+      case "stamp":
+      case "approval":
+        return FaStamp;
+      case "payment":
+      case "card":
+        return FaCreditCard;
+      case "plane":
+      case "travel":
+        return FaPlane;
+      case "clock":
+        return FaClock;
+      case "support":
+        return FaHeadset;
+      default: {
+        const defaults = [
+          FaFileLines,
+          FaFileCircleCheck,
+          FaCalendarDays,
+          FaUserCheck,
+        ];
+        return defaults[index % defaults.length];
+      }
+    }
+  };
 
   // Price formatting
   const displayPrice = visaItem?.price
@@ -592,78 +642,61 @@ export default function VisaDetailPage() {
       {/* ========Early Slots====== */}
 
       {/* ================= HOW TO GET YOUR VISA ================= */}
-      <section className="w-11/12 mx-auto py-12 sm:py-16">
-        {/* Section Heading */}
-        <div className="space-y-1 mb-20 text-center">
-          <h2 className="text-3xl sm:text-4xl font-medium text-[#021b38] leading-tight">
-            How to Get Your{" "}
-            <span className="text-primary">{countryName} Visa</span>
-          </h2>
-          <p className="text-slate-500 text-xs sm:text-sm font-normal">
-            We make the process simple and stress-free.
-          </p>
-        </div>
+      {processSteps.length > 0 && (
+        <section className="w-11/12 mx-auto py-12 sm:py-16">
+          {/* Section Heading */}
+          <div className="space-y-1 mb-20 text-center">
+            <h2 className="text-3xl sm:text-4xl font-medium text-[#021b38] leading-tight">
+              How to Get Your{" "}
+              <span className="text-primary">{countryName} Visa</span>
+            </h2>
+            <p className="text-slate-500 text-xs sm:text-sm font-normal">
+              We make the process simple and stress-free.
+            </p>
+          </div>
 
-        {/* Steps Flow Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-4 relative items-start">
-          {[
-            {
-              step: "1. Consultation",
-              desc: "Share your travel plan and check eligibility",
-              icon: FaFileLines,
-            },
-            {
-              step: "2. Document Preparation",
-              desc: "We guide you with the required documents",
-              icon: FaFileCircleCheck,
-            },
-            {
-              step: "3. Appointment Booking",
-              desc: "We schedule your visa appointment",
-              icon: FaCalendarDays,
-            },
-            {
-              step: "4. Attend Interview",
-              desc: "Our team will assist you for a successful interview",
-              icon: FaUserCheck,
-            },
-          ].map((item, idx, arr) => {
-            const StepIcon = item.icon;
-            const isLast = idx === arr.length - 1;
+          {/* Steps Flow Row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-4 relative items-start">
+            {processSteps.map((item, idx, arr) => {
+              const StepIcon = getStepIcon(item.iconType || item.icon, idx);
+              const isLast = idx === arr.length - 1;
+              const stepTitle = item.title || item.step || `Step ${idx + 1}`;
+              const stepDesc = item.description || item.desc || "";
 
-            return (
-              <div
-                key={idx}
-                className="flex flex-col items-center text-center relative group"
-              >
-                {/* Connector Arrow (Visible on desktop between items) */}
-                {!isLast && (
-                  <div className="hidden lg:block absolute top-7 left-[65%] right-[-35%] z-0 pointer-events-none">
-                    <div className="w-full border-t-2 border-dashed border-emerald-500/50 relative flex items-center justify-end">
-                      <span className="w-0 h-0 border-y-[4px] border-y-transparent border-l-[8px] border-l-emerald-600 absolute -right-1"></span>
+              return (
+                <div
+                  key={item._key || idx}
+                  className="flex flex-col items-center text-center relative group"
+                >
+                  {/* Connector Arrow (Visible on desktop between items) */}
+                  {!isLast && (
+                    <div className="hidden lg:block absolute top-7 left-[65%] right-[-35%] z-0 pointer-events-none">
+                      <div className="w-full border-t-2 border-dashed border-emerald-500/50 relative flex items-center justify-end">
+                        <span className="w-0 h-0 border-y-[4px] border-y-transparent border-l-[8px] border-l-emerald-600 absolute -right-1"></span>
+                      </div>
                     </div>
+                  )}
+
+                  {/* Circular Icon */}
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#e2f5ea] text-[#008c45] flex items-center justify-center text-2xl sm:text-3xl shrink-0 shadow-2xs relative z-10 group-hover:scale-105 transition-transform duration-300">
+                    <StepIcon />
                   </div>
-                )}
 
-                {/* Circular Icon */}
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#e2f5ea] text-[#008c45] flex items-center justify-center text-2xl sm:text-3xl shrink-0 shadow-2xs relative z-10 group-hover:scale-105 transition-transform duration-300">
-                  <StepIcon />
+                  {/* Step Title */}
+                  <h3 className="text-base sm:text-lg font-semibold text-[#021b38] mt-4 mb-1">
+                    {stepTitle}
+                  </h3>
+
+                  {/* Step Description */}
+                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-[220px] font-normal">
+                    {stepDesc}
+                  </p>
                 </div>
-
-                {/* Step Title */}
-                <h3 className="text-base sm:text-lg font-semibold text-[#021b38] mt-4 mb-1">
-                  {item.step}
-                </h3>
-
-                {/* Step Description */}
-                <p className="text-xs sm:text-sm text-slate-500 leading-relaxed max-w-[220px] font-normal">
-                  {item.desc}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+              );
+            })}
+          </div>
+        </section>
+      )}
       {/* ================= ELIGIBILITY & REQUIRED DOCUMENTS ================= */}
       <section className="w-11/12 mx-auto pt-12 md:pt-16 border-t border-slate-200/60">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">

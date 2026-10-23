@@ -665,17 +665,22 @@
         "type": "slug"
       },
       {
+        "name": "price",
+        "type": "string"
+      },
+      {
         "name": "duration",
         "type": "string",
         "title": "Duration / Processing Time"
       },
       {
-        "name": "validity",
+        "name": "secondaryPrice",
         "type": "string"
       },
       {
-        "name": "price",
-        "type": "string"
+        "name": "secondaryDuration",
+        "type": "string",
+        "title": "Secondary Duration / Processing Time"
       },
       {
         "name": "badge",
@@ -728,6 +733,10 @@
         ],
         "name": "image",
         "type": "image"
+      },
+      {
+        "name": "validity",
+        "type": "string"
       },
       {
         "description": "Bullet point highlight items",

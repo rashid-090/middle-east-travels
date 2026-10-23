@@ -89,6 +89,59 @@ export const visaService = defineType({
       description: 'Bullet point highlight items',
     }),
     defineField({
+      name: 'processSteps',
+      title: 'Process Steps',
+      type: 'array',
+      description: 'Step-by-step process for getting this visa',
+      of: [
+        {
+          type: 'object',
+          name: 'processStep',
+          title: 'Process Step',
+          fields: [
+            defineField({
+              name: 'title',
+              title: 'Title',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'description',
+              title: 'Description',
+              type: 'text',
+              rows: 3,
+            }),
+            defineField({
+              name: 'iconType',
+              title: 'Icon Type',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Consultation / Application (File)', value: 'file' },
+                  { title: 'Document Preparation (Document Check)', value: 'document' },
+                  { title: 'Appointment Booking (Calendar)', value: 'calendar' },
+                  { title: 'Interview / In-Person (User Check)', value: 'user' },
+                  { title: 'Passport / Biometrics (Passport)', value: 'passport' },
+                  { title: 'Visa Approval / Stamping (Stamp)', value: 'stamp' },
+                  { title: 'Payment / Fee (Card)', value: 'payment' },
+                  { title: 'Travel / Departure (Plane)', value: 'plane' },
+                  { title: 'Processing / Waiting (Clock)', value: 'clock' },
+                  { title: 'Expert Assistance (Support)', value: 'support' },
+                ],
+              },
+              initialValue: 'file',
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'title',
+              subtitle: 'description',
+            },
+          },
+        },
+      ],
+    }),
+    defineField({
       name: 'faqs',
       title: 'Frequently Asked Questions (FAQs)',
       type: 'array',
