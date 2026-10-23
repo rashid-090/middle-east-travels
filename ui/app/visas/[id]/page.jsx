@@ -656,7 +656,17 @@ export default function VisaDetailPage() {
           </div>
 
           {/* Steps Flow Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-4 relative items-start">
+          <div
+            className={`grid grid-cols-1 md:grid-cols-2 ${
+              processSteps.length === 3
+                ? "lg:grid-cols-3"
+                : processSteps.length === 2
+                ? "lg:grid-cols-2 max-w-2xl mx-auto"
+                : processSteps.length === 1
+                ? "lg:grid-cols-1 max-w-md mx-auto"
+                : "lg:grid-cols-4"
+            } gap-8 lg:gap-4 relative items-start`}
+          >
             {processSteps.map((item, idx, arr) => {
               const StepIcon = getStepIcon(item.iconType || item.icon, idx);
               const isLast = idx === arr.length - 1;
