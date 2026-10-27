@@ -108,25 +108,27 @@ export default function VisasListingPage() {
 
         if (debouncedQuery) {
           const q = debouncedQuery.replace(/[\\"*]/g, "\\$&");
-          filterConditions.push(`(title match "*${q}*" || duration match "*${q}*")`);
+          filterConditions.push(
+            `(title match "*${q}*" || duration match "*${q}*")`,
+          );
         }
 
         if (selectedRegion !== "All Regions" && selectedRegion !== "All") {
           if (selectedRegion === "Middle East") {
             filterConditions.push(
-              `(title match "*UAE*" || title match "*Saudi*" || title match "*Qatar*" || title match "*Oman*" || title match "*Dubai*" || title match "*Kuwait*" || title match "*Bahrain*")`
+              `(title match "*UAE*" || title match "*Saudi*" || title match "*Qatar*" || title match "*Oman*" || title match "*Dubai*" || title match "*Kuwait*" || title match "*Bahrain*")`,
             );
           } else if (selectedRegion === "Asia") {
             filterConditions.push(
-              `(title match "*Singapore*" || title match "*Thailand*" || title match "*Japan*" || title match "*Malaysia*" || title match "*Bali*" || title match "*Vietnam*")`
+              `(title match "*Singapore*" || title match "*Thailand*" || title match "*Japan*" || title match "*Malaysia*" || title match "*Bali*" || title match "*Vietnam*")`,
             );
           } else if (selectedRegion === "Europe") {
             filterConditions.push(
-              `(title match "*UK*" || title match "*Schengen*" || title match "*Europe*")`
+              `(title match "*UK*" || title match "*Schengen*" || title match "*Europe*")`,
             );
           } else if (selectedRegion === "Americas") {
             filterConditions.push(
-              `(title match "*USA*" || title match "*Canada*")`
+              `(title match "*USA*" || title match "*Canada*")`,
             );
           }
         }
@@ -139,7 +141,11 @@ export default function VisasListingPage() {
           "items": *[${filterString}] ${orderString} [${start}...${end}]{ _id, title, slug, duration, validity, price, badge, image, highlights }
         }`;
 
-        const data = await client.fetch(query, {}, { signal: controller.signal });
+        const data = await client.fetch(
+          query,
+          {},
+          { signal: controller.signal },
+        );
 
         if (!isSubscribed || requestIdRef.current !== currentRequestId) {
           return;
@@ -154,9 +160,7 @@ export default function VisasListingPage() {
             validity: item.validity || "",
             price: item.price || "",
             badge: item.badge || "",
-            image: item.image
-              ? urlFor(item.image)?.url()
-              : "/visapageban.webp",
+            image: item.image ? urlFor(item.image)?.url() : "/visapageban.webp",
             highlights: item.highlights || [],
             link: `/visas/${item.slug?.current || item.slug || item._id}`,
           }));
@@ -164,14 +168,18 @@ export default function VisasListingPage() {
           // Client-side price sorting if applicable
           if (sortBy === "price-low") {
             formatted.sort((a, b) => {
-              const pA = parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0;
-              const pB = parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0;
+              const pA =
+                parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0;
+              const pB =
+                parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0;
               return pA - pB;
             });
           } else if (sortBy === "price-high") {
             formatted.sort((a, b) => {
-              const pA = parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0;
-              const pB = parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0;
+              const pA =
+                parseInt(String(a.price).replace(/[^0-9]/g, ""), 10) || 0;
+              const pB =
+                parseInt(String(b.price).replace(/[^0-9]/g, ""), 10) || 0;
               return pB - pA;
             });
           }
@@ -181,7 +189,10 @@ export default function VisasListingPage() {
             const firstKey = cacheRef.current.keys().next().value;
             cacheRef.current.delete(firstKey);
           }
-          cacheRef.current.set(cacheKey, { items: formatted, total: data.total });
+          cacheRef.current.set(cacheKey, {
+            items: formatted,
+            total: data.total,
+          });
 
           setVisasData(formatted);
           setTotalCount(data.total);
@@ -263,7 +274,6 @@ export default function VisasListingPage() {
     <div className="bg-slate-50 min-h-screen text-slate-900 pb-16">
       {/* ================= HERO BANNER SECTION ================= */}
       <section className="w-full md:w-11/12 mx-auto mb-6 lg:my-8 rounded-none md:rounded-[2rem] overflow-hidden relative shadow-2xl flex flex-col justify-between p-4 py-6 sm:p-10 lg:p-12 lg:py-16 text-white">
-        
         {/* Background Image with Dark Gradient Overlay */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           <Image
@@ -277,7 +287,7 @@ export default function VisasListingPage() {
             quality={95}
             className="object-cover object-center"
           />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/5 via-black/50 to-black/50 md:to-black/0 z-10 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/5 via-black/50 to-black/50 md:to-black/0 z-10 pointer-events-none" />
         </div>
 
         {/* Top Banner Content: Title & Subtitle */}
@@ -287,7 +297,8 @@ export default function VisasListingPage() {
               Find Your <span className="font-semibold">Visa Services</span>
             </h1>
             <p className="text-slate-200 text-xs sm:text-base font-normal w-[90%] md:w-full leading-relaxed pt-1.5">
-              Explore our express tourist, business, and visitor visa options for every destination.
+              Explore our express tourist, business, and visitor visa options
+              for every destination.
             </p>
           </div>
         </div>
@@ -295,10 +306,8 @@ export default function VisasListingPage() {
         {/* Middle Banner: Highly Mobile Responsive Clean Filter Card */}
         <div className="relative z-20">
           <div className="bg-white/95 backdrop-blur-xl border border-white/80 rounded-2xl sm:rounded-3xl p-3 sm:p-5 shadow-2xl space-y-3 sm:space-y-4 text-slate-800">
-            
             {/* Top Row: Search Input & Sort Dropdown Group */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2.5 w-full flex-1">
-              
               {/* Search Bar */}
               <div className="relative flex items-center bg-slate-50 border border-slate-200/90 rounded-xl px-3 sm:px-3.5 py-2 sm:py-2.5 focus-within:border-[#19a64b] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#19a64b]/20 transition-all flex-1">
                 <FaMagnifyingGlass className="text-slate-400 text-xs shrink-0 mr-2 sm:mr-2.5" />
@@ -335,13 +344,15 @@ export default function VisasListingPage() {
                   <option value="price-low" className="bg-white text-slate-900">
                     Price: Low → High
                   </option>
-                  <option value="price-high" className="bg-white text-slate-900">
+                  <option
+                    value="price-high"
+                    className="bg-white text-slate-900"
+                  >
                     Price: High → Low
                   </option>
                 </select>
                 <FaSliders className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none" />
               </div>
-
             </div>
 
             {/* Bottom Row: Region Sub-Filter Pills */}
@@ -363,15 +374,12 @@ export default function VisasListingPage() {
                 </button>
               ))}
             </div>
-
           </div>
         </div>
-
       </section>
 
       {/* ================= 4-COLUMN VISA GRID SECTION ================= */}
       <section id="visa-grid-section" className="w-11/12 mx-auto pt-6">
-        
         {/* Results Counter Header */}
         <div className="flex items-center justify-between mb-6">
           <p className="text-xs sm:text-sm text-slate-500 font-normal">
@@ -383,9 +391,13 @@ export default function VisasListingPage() {
             <span className="font-semibold text-slate-900">
               {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)}
             </span>{" "}
-            of <span className="font-semibold text-slate-900">{totalCount}</span> available visa services
+            of{" "}
+            <span className="font-semibold text-slate-900">{totalCount}</span>{" "}
+            available visa services
           </p>
-          {(selectedRegion !== "All Regions" || searchQuery || sortBy !== "default") && (
+          {(selectedRegion !== "All Regions" ||
+            searchQuery ||
+            sortBy !== "default") && (
             <button
               onClick={resetAllFilters}
               className="text-xs text-primary hover:underline font-semibold cursor-pointer"
@@ -424,7 +436,8 @@ export default function VisasListingPage() {
                 No Visa Services Found
               </h3>
               <p className="text-xs text-slate-500 font-normal">
-                We couldn&apos;t find any visa packages matching your criteria. Try resetting search terms.
+                We couldn&apos;t find any visa packages matching your criteria.
+                Try resetting search terms.
               </p>
             </div>
             <button
@@ -467,19 +480,21 @@ export default function VisasListingPage() {
                     {/* Text Details Section */}
                     <div className="px-5 py-2 space-y-2">
                       <h3 className="text-base sm:text-lg font-semibold group-hover:text-primary transition-colors leading-snug">
-                        {item.title} <span className="text-primary">Visa</span>
+                        {item.title}
                       </h3>
                       {item.highlights && item.highlights.length > 0 ? (
                         <ul className="space-y-0.5 pt-1">
-                          {item?.highlights?.slice(0, 2).map((highlight, index) => (
-                            <li
-                              key={index}
-                              className="flex items-start gap-2 text-xs text-slate-600 font-normal leading-snug"
-                            >
-                              <HiOutlineCheckBadge className="text-primary text-sm shrink-0 mt-0.5" />
-                              <span>{highlight}</span>
-                            </li>
-                          ))}
+                          {item?.highlights
+                            ?.slice(0, 2)
+                            .map((highlight, index) => (
+                              <li
+                                key={index}
+                                className="flex items-start gap-2 text-xs text-slate-600 font-normal leading-snug"
+                              >
+                                <HiOutlineCheckBadge className="text-primary text-sm shrink-0 mt-0.5" />
+                                <span>{highlight}</span>
+                              </li>
+                            ))}
                         </ul>
                       ) : (
                         <p className="text-xs text-slate-500 font-normal leading-relaxed">
@@ -497,7 +512,8 @@ export default function VisasListingPage() {
                       </span>
                       <span className="text-base sm:text-lg font-bold text-[#021b38] tracking-tight">
                         {item.price
-                          ? item.price.includes("₹") || item.price.includes("INR")
+                          ? item.price.includes("₹") ||
+                            item.price.includes("INR")
                             ? item.price
                             : `INR ${item.price}`
                           : ""}
@@ -505,9 +521,7 @@ export default function VisasListingPage() {
                     </div>
 
                     {/* Circular Arrow CTA Icon */}
-                    <div
-                      className="w-9 h-9 rounded-full bg-slate-100 group-hover:bg-primary text-slate-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs shrink-0"
-                    >
+                    <div className="w-9 h-9 rounded-full bg-slate-100 group-hover:bg-primary text-slate-700 group-hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs shrink-0">
                       <FaArrowRight className="text-xs" />
                     </div>
                   </div>
@@ -528,7 +542,11 @@ export default function VisasListingPage() {
                   <span className="font-semibold text-slate-900">
                     {Math.min(currentPage * ITEMS_PER_PAGE, totalCount)}
                   </span>{" "}
-                  of <span className="font-semibold text-slate-900">{totalCount}</span> entries
+                  of{" "}
+                  <span className="font-semibold text-slate-900">
+                    {totalCount}
+                  </span>{" "}
+                  entries
                 </p>
 
                 {/* Pagination Controls */}
@@ -541,27 +559,28 @@ export default function VisasListingPage() {
                     aria-label="Previous Page"
                   >
                     <FaChevronLeft className="text-[10px]" />
-          
                   </button>
 
                   {/* Page Number Buttons */}
                   <div className="flex items-center gap-1">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-                      const isActive = page === currentPage;
-                      return (
-                        <button
-                          key={page}
-                          onClick={() => handlePageChange(page)}
-                          className={`w-9 h-9 rounded-xl text-xs font-semibold flex items-center justify-center transition-all cursor-pointer ${
-                            isActive
-                              ? "bg-primary text-white shadow-md shadow-emerald-600/20 scale-105"
-                              : "bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      );
-                    })}
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (page) => {
+                        const isActive = page === currentPage;
+                        return (
+                          <button
+                            key={page}
+                            onClick={() => handlePageChange(page)}
+                            className={`w-9 h-9 rounded-xl text-xs font-semibold flex items-center justify-center transition-all cursor-pointer ${
+                              isActive
+                                ? "bg-primary text-white shadow-md shadow-emerald-600/20 scale-105"
+                                : "bg-white border border-slate-200/90 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
+                            }`}
+                          >
+                            {page}
+                          </button>
+                        );
+                      },
+                    )}
                   </div>
 
                   {/* Next Button */}
@@ -571,7 +590,6 @@ export default function VisasListingPage() {
                     className="flex items-center justify-center gap-1.5 w-9 h-9 rounded-xl text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-2xs cursor-pointer"
                     aria-label="Next Page"
                   >
-
                     <FaChevronRight className="text-[10px]" />
                   </button>
                 </div>
@@ -579,7 +597,6 @@ export default function VisasListingPage() {
             )}
           </>
         )}
-
       </section>
     </div>
   );
