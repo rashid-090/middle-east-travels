@@ -456,7 +456,7 @@
             "rules": [
               {
                 "flag": "max",
-                "constraint": 7
+                "constraint": 4
               }
             ],
             "message": "You can add a maximum of 7 images to the photo gallery"
