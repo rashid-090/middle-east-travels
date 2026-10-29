@@ -1,6 +1,23 @@
-"use client";
-
 import React from "react";
+
+export const metadata = {
+  title: {
+    absolute:
+      "Certificate Attestation Services in Calicut, Kerala | Middle East Travels",
+  },
+  description:
+    "Fast certificate attestation and apostille services in Calicut. Degree, marriage, birth certificate attestation for UAE, Saudi Arabia, Qatar, Kuwait, and Oman.",
+  alternates: {
+    canonical: "https://middleeasttravels.com/attestation-service",
+  },
+  openGraph: {
+    title:
+      "Certificate Attestation Services in Calicut, Kerala | Middle East Travels",
+    description:
+      "Fast certificate attestation and apostille services in Calicut. Degree, marriage, birth certificate attestation for UAE, Saudi Arabia, Qatar, Kuwait, and Oman.",
+    url: "https://middleeasttravels.com/attestation-service",
+  },
+};
 import Link from "next/link";
 import Image from "next/image";
 import {

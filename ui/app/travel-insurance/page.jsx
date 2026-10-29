@@ -1,6 +1,23 @@
-"use client";
-
 import React from "react";
+
+export const metadata = {
+  title: {
+    absolute:
+      "International Travel Insurance | Schengen & Worldwide Cover | Middle East Travels",
+  },
+  description:
+    "Buy international travel insurance online with Middle East Travels. Instant Schengen visa-approved policies, medical emergency, baggage loss, and trip protection.",
+  alternates: {
+    canonical: "https://middleeasttravels.com/travel-insurance",
+  },
+  openGraph: {
+    title:
+      "International Travel Insurance | Schengen & Worldwide Cover | Middle East Travels",
+    description:
+      "Buy international travel insurance online with Middle East Travels. Instant Schengen visa-approved policies, medical emergency, baggage loss, and trip protection.",
+    url: "https://middleeasttravels.com/travel-insurance",
+  },
+};
 import Link from "next/link";
 import Image from "next/image";
 import { Playball } from "next/font/google";

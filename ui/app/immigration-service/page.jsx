@@ -1,6 +1,23 @@
-"use client";
-
 import React from "react";
+
+export const metadata = {
+  title: {
+    absolute:
+      "Immigration & PR Consultation Services in Calicut | Middle East Travels",
+  },
+  description:
+    "Expert immigration consultation in Calicut, Kerala for Canada, UK, Australia, Europe, and Middle East. Permanent residency, work permits, and settlement solutions.",
+  alternates: {
+    canonical: "https://middleeasttravels.com/immigration-service",
+  },
+  openGraph: {
+    title:
+      "Immigration & PR Consultation Services in Calicut | Middle East Travels",
+    description:
+      "Expert immigration consultation in Calicut, Kerala for Canada, UK, Australia, Europe, and Middle East. Permanent residency, work permits, and settlement solutions.",
+    url: "https://middleeasttravels.com/immigration-service",
+  },
+};
 import Link from "next/link";
 import Image from "next/image";
 import { Playball } from "next/font/google";

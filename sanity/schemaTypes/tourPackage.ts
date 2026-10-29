@@ -147,7 +147,7 @@ export const tourPackage = defineType({
           validation: (Rule) => Rule.custom(validateMaxImageSize(2)),
         },
       ],
-      validation: (Rule) => Rule.max(7).error('You can add a maximum of 7 images to the photo gallery'),
+      validation: (Rule) => Rule.max(4).error('You can add a maximum of 7 images to the photo gallery'),
     }),
     defineField({
       name: 'itinerary',

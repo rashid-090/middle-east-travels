@@ -1,6 +1,23 @@
-"use client";
-
 import React from "react";
+
+export const metadata = {
+  title: {
+    absolute:
+      "Visa Services in Calicut | Tourist, Business & Work Visas | Middle East Travels",
+  },
+  description:
+    "Top-rated visa agency in Calicut, Kerala. Fast-track visa processing for UAE, Saudi Arabia, Qatar, Schengen, UK, USA, Singapore and 50+ countries.",
+  alternates: {
+    canonical: "https://middleeasttravels.com/visa-services",
+  },
+  openGraph: {
+    title:
+      "Visa Services in Calicut | Tourist, Business & Work Visas | Middle East Travels",
+    description:
+      "Top-rated visa agency in Calicut, Kerala. Fast-track visa processing for UAE, Saudi Arabia, Qatar, Schengen, UK, USA, Singapore and 50+ countries.",
+    url: "https://middleeasttravels.com/visa-services",
+  },
+};
 import Link from "next/link";
 import Image from "next/image";
 import VisaServices from "@/components/VisaServices";

@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -14,6 +12,25 @@ import Blogs from "@/components/Blogs";
 import Testimonials from "@/components/Testimonials";
 import Team from "@/components/Team";
 import AboutReel from "@/components/AboutReel";
+
+export const metadata = {
+  title: {
+    absolute:
+      "About Us | Best Travel Agency in Calicut, Kerala | Middle East Travels",
+  },
+  description:
+    "Learn about Middle East Travels, Calicut's premier travel agency with 30+ years of trust. Discover our story, expert team, international visa and tour services.",
+  alternates: {
+    canonical: "https://middleeasttravels.com/about-us",
+  },
+  openGraph: {
+    title:
+      "About Us | Best Travel Agency in Calicut, Kerala | Middle East Travels",
+    description:
+      "Learn about Middle East Travels, Calicut's premier travel agency with 30+ years of trust. Discover our story, expert team, international visa and tour services.",
+    url: "https://middleeasttravels.com/about-us",
+  },
+};
 
 export default function AboutUsPage() {
   return (
