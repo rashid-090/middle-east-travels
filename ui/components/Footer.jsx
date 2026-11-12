@@ -57,7 +57,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="w-full bg-secondary text-white border-t border-slate-800/80 relative z-10 overflow-hidden">
+    <footer className="w-full !bg-[#040608] text-white border-t border-slate-800/80 relative z-10 overflow-hidden">
       {/* Background Glow Decorative Accents */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
@@ -332,7 +332,7 @@ export default function Footer() {
       </div>
 
       {/* ================= BOTTOM COPYRIGHT BAR ================= */}
-      <div className="border-t border-slate-800/80 bg-secondary py-6">
+      <div className="border-t border-slate-800/80 !bg-[#040608] py-6">
         <div className="w-11/12 mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
           <p suppressHydrationWarning>
             © {new Date().getFullYear()} Middle East Travels. All rights
